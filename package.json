@@ -1,16 +1,5 @@
 {
-  "name": "roguelike-survivor-10m",
+  "name": "roguelike-survivor",
   "version": "1.0.0",
-  "description": "10 Minutes Survivor: Hero Arena",
-  "main": "server.js",
-  "scripts": {
-    "start": "node server.js"
-  },
-  "keywords": [
-    "game",
-    "roguelike",
-    "phaser"
-  ],
-  "author": "Muhammadziyo",
-  "license": "MIT"
+  "private": true
 }
