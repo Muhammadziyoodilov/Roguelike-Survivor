@@ -15,8 +15,15 @@ class Player extends Phaser.GameObjects.Sprite {
         this.body.setOffset(this.width / 2 - 12, this.height / 2 - 12);
         this.body.setCollideWorldBounds(true);
         this.setDepth(15);
+
+        // Переменные анимации
         this.walkTimer = 0;
         this.dustTimer = 0;
+        this.animPhase = Math.random() * 100;
+        this.currentWalkFrame = 0;
+
+        // Мягкая динамическая тень под ногами
+        this.shadow = scene.add.image(x, y + 16, 'hero_shadow').setDepth(14);
 
         // Статы с учетом купленных талантов
         this.stats = window.SaveManager.getEffectiveStats(heroId);
@@ -92,6 +99,11 @@ class Player extends Phaser.GameObjects.Sprite {
         this.handleMovement(time, delta);
         this.handleRegen(delta);
 
+        // Обновление позиции тени под ногами
+        if (this.shadow) {
+            this.shadow.setPosition(this.x, this.y + 16);
+        }
+
         if (this.isInvulnerable) {
             this.invulnTime -= delta;
             this.alpha = (Math.floor(time / 60) % 2 === 0) ? 0.3 : 1.0;
@@ -148,11 +160,73 @@ class Player extends Phaser.GameObjects.Sprite {
         const currentSpeed = this.stats.speed;
         this.body.setVelocity(vx * currentSpeed, vy * currentSpeed);
 
-        if (vx < 0) this.flipX = true;
-        else if (vx > 0) this.flipX = false;
+        const isMoving = (vx !== 0 || vy !== 0);
 
-        this.setScale(1.0);
-        this.setAngle(0);
+        if (isMoving) {
+            if (vx < 0) this.flipX = true;
+            else if (vx > 0) this.flipX = false;
+
+            this.walkTimer += delta * (currentSpeed / 100);
+            this.dustTimer += delta;
+
+            // Смена кадров шагов ходьбы
+            const stepCycle = Math.floor(this.walkTimer / 160) % 2;
+            const walkTextureKey = `hero_${this.heroId}_walk_${stepCycle}`;
+            if (this.scene.textures.exists(walkTextureKey)) {
+                if (this.texture.key !== walkTextureKey) this.setTexture(walkTextureKey);
+            } else {
+                const baseKey = `hero_${this.heroId}`;
+                if (this.texture.key !== baseKey) this.setTexture(baseKey);
+            }
+
+            // Динамический наклон тела и подпрыгивание при беге
+            const bob = Math.abs(Math.sin(this.walkTimer * 0.018)) * 2;
+            const tilt = (vx !== 0 ? Math.sign(vx) * 3 : 0) + Math.sin(this.walkTimer * 0.018) * 2;
+            this.setAngle(tilt);
+
+            const scalePulse = Math.sin(this.walkTimer * 0.018) * 0.035;
+            this.setScale(1.0 + scalePulse, 1.0 - scalePulse);
+
+            // Клубы пыли из-под ног
+            if (this.dustTimer > 200) {
+                this.dustTimer = 0;
+                this.createFootstepDust(vx, vy);
+            }
+
+            if (this.shadow) {
+                this.shadow.setScale(1.0 - bob * 0.05, 1.0 - bob * 0.05);
+            }
+        } else {
+            // В покое: Idle-дыхание и возврат базовой текстуры
+            const baseKey = `hero_${this.heroId}`;
+            if (this.texture.key !== baseKey) this.setTexture(baseKey);
+
+            this.animPhase += delta * 0.0035;
+            const breath = Math.sin(this.animPhase) * 0.03;
+            
+            this.setAngle(0);
+            this.setScale(1.0 - breath, 1.0 + breath);
+
+            if (this.shadow) {
+                this.shadow.setScale(1.0 - breath * 0.4, 1.0 - breath * 0.4);
+            }
+        }
+    }
+
+    createFootstepDust(vx, vy) {
+        if (!this.scene || !this.scene.add) return;
+        const dustX = this.x - (vx * 10) + (Math.random() - 0.5) * 6;
+        const dustY = this.y + 15 + (Math.random() - 0.5) * 4;
+        const dust = this.scene.add.circle(dustX, dustY, 2.5 + Math.random() * 1.5, 0x94a3b8, 0.4).setDepth(13);
+        this.scene.tweens.add({
+            targets: dust,
+            scale: 0.2,
+            alpha: 0,
+            y: dustY - 6,
+            duration: 250 + Math.random() * 100,
+            ease: 'Cubic.easeOut',
+            onComplete: () => dust.destroy()
+        });
     }
 
     handleRegen(delta) {
@@ -351,6 +425,10 @@ class Player extends Phaser.GameObjects.Sprite {
         if (this.auraGraphics) {
             this.auraGraphics.destroy();
             this.auraGraphics = null;
+        }
+        if (this.shadow) {
+            this.shadow.destroy();
+            this.shadow = null;
         }
 
         this.setActive(false);

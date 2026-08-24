@@ -695,8 +695,10 @@ class MenuScene extends Phaser.Scene {
 
             this.tweens.add({
                 targets: bigSprite,
-                y: stageY - 4,
-                duration: 1000,
+                y: stageY - 6,
+                scaleY: bigSprite.scaleY * 1.05,
+                scaleX: bigSprite.scaleX * 0.96,
+                duration: 1100,
                 yoyo: true,
                 repeat: -1,
                 ease: 'Sine.easeInOut'
@@ -827,8 +829,8 @@ class MenuScene extends Phaser.Scene {
                 cardGroup.add(battleTxt);
             } else {
                 const buyBtn = this.add.image(detailX, actionBtnY, 'btn_unlock_gold').setDisplaySize(Math.min(barFullW, 260), isCompact ? 34 : 44).setInteractive({ useHandCursor: true }).setDepth(1003);
-                const buyTxt = this.add.text(detailX, actionBtnY, `РАЗБЛОКИРОВАТЬ [ 🪙 ${currentHeroCfg.price} ]`, {
-                    fontFamily: "'Cinzel', serif", fontSize: isCompact ? '12px' : '14px', fontStyle: 'bold', color: '#ffffff', stroke: '#000000', strokeThickness: 3
+                const buyTxt = this.add.text(detailX, actionBtnY, `РАЗБЛОКИРОВАТЬ (${currentHeroCfg.price} ЗОЛ.)`, {
+                    fontFamily: CONFIG.FONTS.TITLE, fontSize: isCompact ? '12px' : '14px', fontStyle: 'bold', color: '#ffffff', stroke: '#000000', strokeThickness: 3
                 }).setOrigin(0.5).setDepth(1004);
 
                 buyBtn.on('pointerdown', () => {
