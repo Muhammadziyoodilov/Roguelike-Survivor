@@ -112,10 +112,11 @@ class MenuScene extends Phaser.Scene {
         });
 
         // ПРАВАЯ ЧАСТЬ: Золото, Кристаллы и Профиль PLAYER_01
-        const rightStartX = width - (isPortrait ? 20 : 45);
+        const rightStartX = width - (isPortrait ? 20 : 30);
+        const isCompact = !isPortrait && height < 520;
 
-        if (!isPortrait) {
-            // 1. Профиль игрока PLAYER_01
+        if (!isPortrait && !isCompact) {
+            // ДЕСКТОП: 1. Профиль игрока PLAYER_01
             const profW = 210;
             const profX = rightStartX - profW / 2;
             const profBg = this.add.rectangle(profX, headerY, profW, 46, 0x0f172a, 0.95).setDepth(10);
@@ -168,7 +169,26 @@ class MenuScene extends Phaser.Scene {
             this.add.text(goldX + 46, headerY, '+', {
                 fontFamily: 'sans-serif', fontSize: '15px', fontStyle: 'bold', color: '#fbbf24'
             }).setOrigin(0.5).setDepth(11);
+        } else if (isCompact) {
+            // КОМПАКТНЫЙ ЛАНДШАФТ (Смартфоны) - Золото и Кристаллы по центру экрана (x = width / 2)
+            const midX = width / 2;
+            const goldX = midX - 62;
+            const goldBg = this.add.rectangle(goldX, headerY, 110, 30, 0x0f172a, 0.95).setDepth(10);
+            goldBg.setStrokeStyle(1.5, 0xf59e0b);
+            this.add.image(goldX - 38, headerY, 'ui_coin').setScale(0.75).setDepth(11);
+            this.goldText = this.add.text(goldX - 18, headerY, `${window.SaveManager.data.gold}`, {
+                fontFamily: "'Rajdhani', sans-serif", fontSize: '14px', fontStyle: 'bold', color: '#ffd166'
+            }).setOrigin(0, 0.5).setDepth(11);
+
+            const gemsX = midX + 62;
+            const gemsBg = this.add.rectangle(gemsX, headerY, 105, 30, 0x0f172a, 0.95).setDepth(10);
+            gemsBg.setStrokeStyle(1.5, 0xa855f7);
+            this.add.image(gemsX - 36, headerY, 'ui_gem').setScale(0.7).setDepth(11);
+            this.add.text(gemsX - 16, headerY, '2 860', {
+                fontFamily: "'Rajdhani', sans-serif", fontSize: '14px', fontStyle: 'bold', color: '#e9d5ff'
+            }).setOrigin(0, 0.5).setDepth(11);
         } else {
+            // ПОРТРЕТНЫЙ РЕЖИМ
             const goldX = rightStartX - 60;
             const goldBg = this.add.rectangle(goldX, headerY, 115, 34, 0x0f172a, 0.95).setDepth(10);
             goldBg.setStrokeStyle(1.5, 0xf59e0b);
@@ -180,16 +200,18 @@ class MenuScene extends Phaser.Scene {
     }
 
     createLandscapeLayout(width, height, lang) {
-        // === ЛЕВАЯ КОЛОНКА: Логотип, PLAY, CO-OP, Подменю и Соцсети ===
-        const leftColX = Math.min(220, width * 0.18);
-        const leftTopY = 115;
+        const isCompact = height < 520;
+        const leftColX = isCompact ? Math.min(180, width * 0.22) : Math.min(220, width * 0.18);
+        const leftTopY = isCompact ? 50 : 115;
 
         // 3D Логотип
         if (this.textures.exists('ui_logo_crest')) {
-            const logo = this.add.image(leftColX, leftTopY + 15, 'ui_logo_crest').setDisplaySize(260, 140).setDepth(10);
+            const logoW = isCompact ? 160 : 260;
+            const logoH = isCompact ? 80 : 140;
+            const logo = this.add.image(leftColX, leftTopY + (isCompact ? 5 : 15), 'ui_logo_crest').setDisplaySize(logoW, logoH).setDepth(10);
             this.tweens.add({
                 targets: logo,
-                y: logo.y - 4,
+                y: logo.y - 3,
                 duration: 2200,
                 yoyo: true,
                 repeat: -1,
@@ -197,9 +219,11 @@ class MenuScene extends Phaser.Scene {
             });
         }
 
-        // КНОПКА #1: PLAY (ОДИНОЧНЫЙ РЕЖИМ) - Фиолетовый глянцевый градиент
-        const playBtnY = leftTopY + 125;
-        const playBtn = this.add.image(leftColX, playBtnY, 'btn_play_bg').setInteractive({ useHandCursor: true }).setDepth(10);
+        // КНОПКА #1: PLAY (ОДИНОЧНЫЙ РЕЖИМ)
+        const playBtnY = leftTopY + (isCompact ? 68 : 125);
+        const playBtnW = isCompact ? 175 : 220;
+        const playBtnH = isCompact ? 44 : 56;
+        const playBtn = this.add.image(leftColX, playBtnY, 'btn_play_bg').setDisplaySize(playBtnW, playBtnH).setInteractive({ useHandCursor: true }).setDepth(10);
 
         this.tweens.add({
             targets: playBtn,
@@ -211,26 +235,26 @@ class MenuScene extends Phaser.Scene {
             ease: 'Sine.easeInOut'
         });
 
-        this.add.image(leftColX - 95, playBtnY, 'ui_swords').setScale(0.9).setDepth(11);
-        this.add.text(leftColX - 65, playBtnY - 11, 'PLAY', {
-            fontFamily: "'Cinzel', serif", fontSize: '22px', fontStyle: 'bold', color: '#ffffff', letterSpacing: 2
+        this.add.image(leftColX - (isCompact ? 68 : 95), playBtnY, 'ui_swords').setScale(isCompact ? 0.7 : 0.9).setDepth(11);
+        this.add.text(leftColX - (isCompact ? 45 : 65), playBtnY - (isCompact ? 8 : 11), 'PLAY', {
+            fontFamily: "'Cinzel', serif", fontSize: isCompact ? '16px' : '22px', fontStyle: 'bold', color: '#ffffff', letterSpacing: 2
         }).setDepth(11);
-        this.add.text(leftColX - 65, playBtnY + 12, 'ОДИНОЧНЫЙ РЕЖИМ', {
-            fontFamily: "'Rajdhani', sans-serif", fontSize: '12px', fontStyle: 'bold', color: '#e9d5ff', letterSpacing: 1
+        this.add.text(leftColX - (isCompact ? 45 : 65), playBtnY + (isCompact ? 9 : 12), 'ОДИНОЧНЫЙ РЕЖИМ', {
+            fontFamily: "'Rajdhani', sans-serif", fontSize: isCompact ? '9px' : '12px', fontStyle: 'bold', color: '#e9d5ff', letterSpacing: 1
         }).setDepth(11);
 
         playBtn.on('pointerdown', () => this.openHeroSelectModal());
 
-        // КНОПКА #2: CO-OP (РЕЖИМ НА ДВОИХ) - Циановый глянцевый градиент
-        const coopBtnY = playBtnY + 70;
-        const coopBtn = this.add.image(leftColX, coopBtnY, 'btn_coop_bg').setInteractive({ useHandCursor: true }).setDepth(10);
+        // КНОПКА #2: CO-OP (РЕЖИМ НА ДВОИХ)
+        const coopBtnY = playBtnY + (isCompact ? 48 : 70);
+        const coopBtn = this.add.image(leftColX, coopBtnY, 'btn_coop_bg').setDisplaySize(playBtnW, isCompact ? 40 : 52).setInteractive({ useHandCursor: true }).setDepth(10);
 
-        this.add.image(leftColX - 95, coopBtnY, 'ui_coop').setScale(0.9).setDepth(11);
-        this.add.text(leftColX - 65, coopBtnY - 10, 'CO-OP', {
-            fontFamily: "'Cinzel', serif", fontSize: '20px', fontStyle: 'bold', color: '#ffffff', letterSpacing: 2
+        this.add.image(leftColX - (isCompact ? 68 : 95), coopBtnY, 'ui_coop').setScale(isCompact ? 0.7 : 0.9).setDepth(11);
+        this.add.text(leftColX - (isCompact ? 45 : 65), coopBtnY - (isCompact ? 7 : 10), 'CO-OP', {
+            fontFamily: "'Cinzel', serif", fontSize: isCompact ? '15px' : '20px', fontStyle: 'bold', color: '#ffffff', letterSpacing: 2
         }).setDepth(11);
-        this.add.text(leftColX - 65, coopBtnY + 11, 'РЕЖИМ НА ДВОИХ', {
-            fontFamily: "'Rajdhani', sans-serif", fontSize: '12px', fontStyle: 'bold', color: '#bae6fd', letterSpacing: 1
+        this.add.text(leftColX - (isCompact ? 45 : 65), coopBtnY + (isCompact ? 8 : 11), 'РЕЖИМ НА ДВОИХ', {
+            fontFamily: "'Rajdhani', sans-serif", fontSize: isCompact ? '9px' : '12px', fontStyle: 'bold', color: '#bae6fd', letterSpacing: 1
         }).setDepth(11);
 
         coopBtn.on('pointerdown', () => this.openCoopModal());
@@ -244,203 +268,200 @@ class MenuScene extends Phaser.Scene {
             { iconKey: 'ui_scroll', title: 'ЗАДАНИЯ', badge: '3', color: 0x0284c7, action: () => this.openAchievementsModal() }
         ];
 
+        const subSpacing = isCompact ? 24 : 38;
+        const subStartY = coopBtnY + (isCompact ? 32 : 50);
+
         menuItems.forEach((item, idx) => {
-            const itemY = coopBtnY + 50 + (idx * 38);
-            const btn = this.add.image(leftColX, itemY, 'btn_glass_sub').setInteractive({ useHandCursor: true }).setDepth(10);
+            const itemY = subStartY + (idx * subSpacing);
+            const btn = this.add.image(leftColX, itemY, 'btn_glass_sub').setDisplaySize(playBtnW, isCompact ? 22 : 32).setInteractive({ useHandCursor: true }).setDepth(10);
             btn.on('pointerover', () => btn.setTint(0xc4b5fd));
             btn.on('pointerout', () => btn.clearTint());
             btn.on('pointerdown', item.action);
 
-            this.add.image(leftColX - 105, itemY, item.iconKey).setScale(0.75).setDepth(11);
-            this.add.text(leftColX - 85, itemY, item.title, {
-                fontFamily: "'Rajdhani', sans-serif", fontSize: '13px', fontStyle: 'bold', color: '#cbd5e1', letterSpacing: 1
+            this.add.image(leftColX - (isCompact ? 72 : 105), itemY, item.iconKey).setScale(isCompact ? 0.6 : 0.75).setDepth(11);
+            this.add.text(leftColX - (isCompact ? 56 : 85), itemY, item.title, {
+                fontFamily: "'Rajdhani', sans-serif", fontSize: isCompact ? '10px' : '13px', fontStyle: 'bold', color: '#cbd5e1', letterSpacing: 1
             }).setOrigin(0, 0.5).setDepth(11);
 
             if (item.badge) {
-                this.add.circle(leftColX + 110, itemY, 9, item.color).setDepth(11);
-                this.add.text(leftColX + 110, itemY, item.badge, {
-                    fontFamily: 'sans-serif', fontSize: '10px', fontStyle: 'bold', color: '#ffffff'
+                this.add.circle(leftColX + (isCompact ? 75 : 110), itemY, isCompact ? 7 : 9, item.color).setDepth(11);
+                this.add.text(leftColX + (isCompact ? 75 : 110), itemY, item.badge, {
+                    fontFamily: 'sans-serif', fontSize: isCompact ? '8px' : '10px', fontStyle: 'bold', color: '#ffffff'
                 }).setOrigin(0.5).setDepth(12);
             }
         });
 
-        // Соцсети внизу слева
-        const socY = height - 52;
-        const socW = 32;
-        const socSpacing = 38;
-        const socStartX = leftColX - 70;
+        // Соцсети внизу слева (показываем только если хватает высоты экрана)
+        if (height >= 480) {
+            const socY = height - 52;
+            const socW = 32;
+            const socSpacing = 38;
+            const socStartX = leftColX - 70;
 
-        const socials = [
-            { icon: 'ui_discord', url: 'https://discord.com' },
-            { icon: 'ui_vk', url: 'https://vk.com' },
-            { icon: 'ui_youtube', url: 'https://youtube.com' }
-        ];
+            const socials = [
+                { icon: 'ui_discord', url: 'https://discord.com' },
+                { icon: 'ui_vk', url: 'https://vk.com' },
+                { icon: 'ui_youtube', url: 'https://youtube.com' }
+            ];
 
-        socials.forEach((soc, idx) => {
-            const sx = socStartX + (idx * socSpacing);
-            const sBtn = this.add.image(sx, socY, soc.icon).setDisplaySize(socW, socW).setInteractive({ useHandCursor: true }).setDepth(10);
-            sBtn.on('pointerdown', () => window.open(soc.url, '_blank'));
-        });
+            socials.forEach((soc, idx) => {
+                const sx = socStartX + (idx * socSpacing);
+                const sBtn = this.add.image(sx, socY, soc.icon).setDisplaySize(socW, socW).setInteractive({ useHandCursor: true }).setDepth(10);
+                sBtn.on('pointerdown', () => window.open(soc.url, '_blank'));
+            });
 
-        this.add.text(leftColX - 70, socY + 24, 'ПРИСОЕДИНЯЙСЯ К НАМ!', {
-            fontFamily: "'Rajdhani', sans-serif", fontSize: '10px', fontStyle: 'bold', color: '#64748b'
-        }).setOrigin(0, 0.5).setDepth(10);
+            this.add.text(leftColX - 70, socY + 24, 'ПРИСОЕДИНЯЙСЯ К НАМ!', {
+                fontFamily: "'Rajdhani', sans-serif", fontSize: '10px', fontStyle: 'bold', color: '#64748b'
+            }).setOrigin(0, 0.5).setDepth(10);
+        }
 
-        // === ПРАВАЯ КОЛОНКА: Виджеты в точности по референсу ===
-        const rightColX = Math.max(width - 200, width * 0.82);
-        this.createRightWidgets(rightColX, leftTopY, lang);
+        // === ПРАВАЯ КОЛОНКА: Виджеты ===
+        const rightColX = isCompact ? Math.max(width - 130, width * 0.84) : Math.max(width - 200, width * 0.82);
+        this.createRightWidgets(rightColX, leftTopY, lang, isCompact, height);
     }
 
-    createRightWidgets(rightColX, topY, lang) {
-        const questBoxW = 275;
+    createRightWidgets(rightColX, topY, lang, isCompact, height) {
+        const questBoxW = isCompact ? 220 : 275;
 
         // 1. ВИДЖЕТ ЕЖЕДНЕВНЫХ ЗАДАНИЙ
-        const questBoxH = 195;
-        const questBoxY = topY + 75;
+        const questBoxH = isCompact ? 140 : 195;
+        const questBoxY = topY + (isCompact ? 40 : 75);
 
         const qBox = this.add.rectangle(rightColX, questBoxY, questBoxW, questBoxH, 0x0f172a, 0.95).setDepth(10);
         qBox.setStrokeStyle(1.5, 0x334155);
 
-        this.add.text(rightColX - questBoxW / 2 + 15, questBoxY - questBoxH / 2 + 16, 'ЕЖЕДНЕВНЫЕ ЗАДАНИЯ', {
-            fontFamily: "'Rajdhani', sans-serif", fontSize: '13px', fontStyle: 'bold', color: '#ffffff', letterSpacing: 1
+        this.add.text(rightColX - questBoxW / 2 + 12, questBoxY - questBoxH / 2 + (isCompact ? 12 : 16), 'ЕЖЕДНЕВНЫЕ ЗАДАНИЯ', {
+            fontFamily: "'Rajdhani', sans-serif", fontSize: isCompact ? '11px' : '13px', fontStyle: 'bold', color: '#ffffff', letterSpacing: 1
         }).setOrigin(0, 0.5).setDepth(11);
 
-        this.add.image(rightColX + questBoxW / 2 - 62, questBoxY - questBoxH / 2 + 16, 'ui_hourglass').setScale(0.65).setDepth(11);
-        this.add.text(rightColX + questBoxW / 2 - 15, questBoxY - questBoxH / 2 + 16, '18:45:12', {
-            fontFamily: "'Rajdhani', sans-serif", fontSize: '11px', fontStyle: 'bold', color: '#94a3b8'
+        this.add.image(rightColX + questBoxW / 2 - 50, questBoxY - questBoxH / 2 + (isCompact ? 12 : 16), 'ui_hourglass').setScale(isCompact ? 0.5 : 0.65).setDepth(11);
+        this.add.text(rightColX + questBoxW / 2 - 12, questBoxY - questBoxH / 2 + (isCompact ? 12 : 16), '18:45:12', {
+            fontFamily: "'Rajdhani', sans-serif", fontSize: isCompact ? '9px' : '11px', fontStyle: 'bold', color: '#94a3b8'
         }).setOrigin(1, 0.5).setDepth(11);
 
-        const questsData = [
+        const questsData = isCompact ? [
+            { badgeKey: 'ui_badge_skull', title: 'Убейте 2000 врагов', cur: 1250, max: 2000, reward: '200' },
+            { badgeKey: 'ui_badge_chest', title: 'Откройте 3 сундука', cur: 1, max: 3, reward: '100' }
+        ] : [
             { badgeKey: 'ui_badge_skull', title: 'Убейте 2000 врагов', cur: 1250, max: 2000, reward: '200' },
             { badgeKey: 'ui_badge_chest', title: 'Откройте 3 сундука', cur: 1, max: 3, reward: '100' },
             { badgeKey: 'ui_badge_xp', title: 'Выживите в 2 матчах', cur: 1, max: 2, reward: '150' }
         ];
 
+        const rowStep = isCompact ? 32 : 38;
+        const rowStartOffsetY = isCompact ? 36 : 46;
+
         questsData.forEach((q, idx) => {
-            const rowY = questBoxY - questBoxH / 2 + 46 + (idx * 38);
-            const rowBg = this.add.rectangle(rightColX, rowY, questBoxW - 16, 32, 0x1e293b, 0.85).setDepth(11);
+            const rowY = questBoxY - questBoxH / 2 + rowStartOffsetY + (idx * rowStep);
+            const rowBg = this.add.rectangle(rightColX, rowY, questBoxW - 14, isCompact ? 26 : 32, 0x1e293b, 0.85).setDepth(11);
             rowBg.setStrokeStyle(1, 0x334155);
 
-            this.add.image(rightColX - questBoxW / 2 + 24, rowY, q.badgeKey).setDisplaySize(24, 24).setDepth(12);
+            this.add.image(rightColX - questBoxW / 2 + 18, rowY, q.badgeKey).setDisplaySize(isCompact ? 18 : 24, isCompact ? 18 : 24).setDepth(12);
 
-            this.add.text(rightColX - questBoxW / 2 + 42, rowY - 6, q.title, {
-                fontFamily: "'Rajdhani', sans-serif", fontSize: '11px', fontStyle: 'bold', color: '#ffffff'
+            this.add.text(rightColX - questBoxW / 2 + 34, rowY - (isCompact ? 5 : 6), q.title, {
+                fontFamily: "'Rajdhani', sans-serif", fontSize: isCompact ? '9px' : '11px', fontStyle: 'bold', color: '#ffffff'
             }).setOrigin(0, 0.5).setDepth(12);
 
-            const barW = 105;
+            const barW = isCompact ? 75 : 105;
             const pct = Math.min(1, q.cur / q.max);
-            this.add.rectangle(rightColX - questBoxW / 2 + 42 + barW / 2, rowY + 7, barW, 3, 0x0f172a).setDepth(12);
-            this.add.rectangle(rightColX - questBoxW / 2 + 42, rowY + 7, barW * pct, 3, 0x38bdf8).setOrigin(0, 0.5).setDepth(13);
+            this.add.rectangle(rightColX - questBoxW / 2 + 34 + barW / 2, rowY + (isCompact ? 5 : 7), barW, 3, 0x0f172a).setDepth(12);
+            this.add.rectangle(rightColX - questBoxW / 2 + 34, rowY + (isCompact ? 5 : 7), barW * pct, 3, 0x38bdf8).setOrigin(0, 0.5).setDepth(13);
 
-            this.add.text(rightColX + questBoxW / 2 - 32, rowY, q.reward, {
-                fontFamily: "'Rajdhani', sans-serif", fontSize: '12px', fontStyle: 'bold', color: '#ffd166'
+            this.add.text(rightColX + questBoxW / 2 - 28, rowY, q.reward, {
+                fontFamily: "'Rajdhani', sans-serif", fontSize: isCompact ? '10px' : '12px', fontStyle: 'bold', color: '#ffd166'
             }).setOrigin(1, 0.5).setDepth(12);
-            this.add.image(rightColX + questBoxW / 2 - 20, rowY, 'ui_coin').setScale(0.65).setDepth(12);
+            this.add.image(rightColX + questBoxW / 2 - 16, rowY, 'ui_coin').setScale(isCompact ? 0.5 : 0.65).setDepth(12);
         });
 
         // Кнопка ВСЕ ЗАДАНИЯ
-        const allQBtn = this.add.rectangle(rightColX, questBoxY + questBoxH / 2 - 18, questBoxW - 24, 24, 0x1e1b4b, 0.95).setInteractive({ useHandCursor: true }).setDepth(11);
+        const allQBtnH = isCompact ? 20 : 24;
+        const allQBtn = this.add.rectangle(rightColX, questBoxY + questBoxH / 2 - (isCompact ? 14 : 18), questBoxW - 20, allQBtnH, 0x1e1b4b, 0.95).setInteractive({ useHandCursor: true }).setDepth(11);
         allQBtn.setStrokeStyle(1, 0x6366f1);
-        this.add.text(rightColX, questBoxY + questBoxH / 2 - 18, 'ВСЕ ЗАДАНИЯ', {
-            fontFamily: "'Rajdhani', sans-serif", fontSize: '11px', fontStyle: 'bold', color: '#a5b4fc', letterSpacing: 1
+        this.add.text(rightColX, questBoxY + questBoxH / 2 - (isCompact ? 14 : 18), 'ВСЕ ЗАДАНИЯ', {
+            fontFamily: "'Rajdhani', sans-serif", fontSize: isCompact ? '9px' : '11px', fontStyle: 'bold', color: '#a5b4fc', letterSpacing: 1
         }).setOrigin(0.5).setDepth(12);
         allQBtn.on('pointerdown', () => this.openAchievementsModal());
 
         // 2. ВИДЖЕТ СЕЗОНА (БОЕВОЙ ПРОПУСК)
-        const seasonY = questBoxY + questBoxH / 2 + 55;
-        const sBox = this.add.rectangle(rightColX, seasonY, questBoxW, 76, 0x0f172a, 0.95).setDepth(10);
+        const seasonY = questBoxY + questBoxH / 2 + (isCompact ? 36 : 55);
+        const sBoxH = isCompact ? 50 : 76;
+        const sBox = this.add.rectangle(rightColX, seasonY, questBoxW, sBoxH, 0x0f172a, 0.95).setDepth(10);
         sBox.setStrokeStyle(1.5, 0x6366f1);
 
-        this.add.text(rightColX - questBoxW / 2 + 15, seasonY - 24, 'СЕЗОН 1: ТЬМА НАСТУПАЕТ', {
-            fontFamily: "'Rajdhani', sans-serif", fontSize: '12px', fontStyle: 'bold', color: '#ffffff'
+        this.add.text(rightColX - questBoxW / 2 + 12, seasonY - (isCompact ? 14 : 24), 'СЕЗОН 1: ТЬМА НАСТУПАЕТ', {
+            fontFamily: "'Rajdhani', sans-serif", fontSize: isCompact ? '9px' : '12px', fontStyle: 'bold', color: '#ffffff'
         }).setOrigin(0, 0.5).setDepth(11);
 
-        this.add.text(rightColX + questBoxW / 2 - 15, seasonY - 24, '24 Д 18 Ч', {
-            fontFamily: "'Rajdhani', sans-serif", fontSize: '10px', fontStyle: 'bold', color: '#94a3b8'
+        this.add.text(rightColX + questBoxW / 2 - 12, seasonY - (isCompact ? 14 : 24), '24 Д', {
+            fontFamily: "'Rajdhani', sans-serif", fontSize: isCompact ? '9px' : '10px', fontStyle: 'bold', color: '#94a3b8'
         }).setOrigin(1, 0.5).setDepth(11);
 
-        // Шестиугольный значок ранга 15
-        this.add.image(rightColX - questBoxW / 2 + 30, seasonY + 8, 'ui_badge_rank15').setDisplaySize(28, 28).setDepth(12);
-        this.add.text(rightColX - questBoxW / 2 + 30, seasonY + 8, '15', {
-            fontFamily: 'sans-serif', fontSize: '9px', fontStyle: 'bold', color: '#ffffff'
-        }).setOrigin(0.5).setDepth(13);
+        const bpW = isCompact ? 80 : 100;
+        this.add.rectangle(rightColX - 10, seasonY + (isCompact ? 8 : 8), bpW, 6, 0x1e1b4b).setDepth(11);
+        this.add.rectangle(rightColX - 10 - bpW / 2, seasonY + (isCompact ? 8 : 8), bpW * 0.65, 6, 0xa855f7).setOrigin(0, 0.5).setDepth(12);
 
-        const bpW = 100;
-        this.add.rectangle(rightColX - 15, seasonY + 8, bpW, 8, 0x1e1b4b).setDepth(11);
-        this.add.rectangle(rightColX - 15 - bpW / 2, seasonY + 8, bpW * 0.65, 8, 0xa855f7).setOrigin(0, 0.5).setDepth(12);
-        this.add.text(rightColX - 15, seasonY + 8, '650 / 1000', {
-            fontFamily: 'sans-serif', fontSize: '8px', fontStyle: 'bold', color: '#ffffff'
-        }).setOrigin(0.5).setDepth(13);
-
-        this.add.text(rightColX + 46, seasonY + 8, '16', {
-            fontFamily: "'Rajdhani', sans-serif", fontSize: '11px', fontStyle: 'bold', color: '#cbd5e1'
-        }).setOrigin(0.5).setDepth(12);
-
-        const bpBtn = this.add.rectangle(rightColX + questBoxW / 2 - 38, seasonY + 8, 56, 24, 0x7c3aed).setInteractive({ useHandCursor: true }).setDepth(11);
-        this.add.text(rightColX + questBoxW / 2 - 38, seasonY + 8, 'БОНУС', {
-            fontFamily: "'Rajdhani', sans-serif", fontSize: '10px', fontStyle: 'bold', color: '#ffffff'
+        const bpBtn = this.add.rectangle(rightColX + questBoxW / 2 - 28, seasonY + 8, isCompact ? 44 : 56, isCompact ? 18 : 24, 0x7c3aed).setInteractive({ useHandCursor: true }).setDepth(11);
+        this.add.text(rightColX + questBoxW / 2 - 28, seasonY + 8, 'БОНУС', {
+            fontFamily: "'Rajdhani', sans-serif", fontSize: isCompact ? '8px' : '10px', fontStyle: 'bold', color: '#ffffff'
         }).setOrigin(0.5).setDepth(12);
         bpBtn.on('pointerdown', () => this.openAchievementsModal());
 
-        // 3. ВИДЖЕТ НОВОСТЕЙ (РЕЖИМ НА ДВОИХ)
-        const newsY = seasonY + 88;
-        const newsBox = this.add.rectangle(rightColX, newsY, questBoxW, 84, 0x0f172a, 0.95).setDepth(10);
-        newsBox.setStrokeStyle(1.5, 0x334155);
+        // 3. ВИДЖЕТ НОВОСТЕЙ (показываем только на экранах высотой >= 520px)
+        if (height >= 520) {
+            const newsY = seasonY + 88;
+            const newsBox = this.add.rectangle(rightColX, newsY, questBoxW, 84, 0x0f172a, 0.95).setDepth(10);
+            newsBox.setStrokeStyle(1.5, 0x334155);
 
-        this.add.text(rightColX - questBoxW / 2 + 15, newsY - 26, 'НОВОСТИ', {
-            fontFamily: "'Rajdhani', sans-serif", fontSize: '11px', fontStyle: 'bold', color: '#94a3b8'
-        }).setOrigin(0, 0.5).setDepth(11);
+            this.add.text(rightColX - questBoxW / 2 + 15, newsY - 26, 'НОВОСТИ', {
+                fontFamily: "'Rajdhani', sans-serif", fontSize: '11px', fontStyle: 'bold', color: '#94a3b8'
+            }).setOrigin(0, 0.5).setDepth(11);
 
-        this.add.text(rightColX - questBoxW / 2 + 15, newsY - 6, 'РЕЖИМ\nНА ДВОИХ', {
-            fontFamily: "'Cinzel', serif", fontSize: '14px', fontStyle: 'bold', color: '#38bdf8', lineSpacing: 2
-        }).setOrigin(0, 0.5).setDepth(11);
+            this.add.text(rightColX - questBoxW / 2 + 15, newsY - 6, 'РЕЖИМ\nНА ДВОИХ', {
+                fontFamily: "'Cinzel', serif", fontSize: '14px', fontStyle: 'bold', color: '#38bdf8', lineSpacing: 2
+            }).setOrigin(0, 0.5).setDepth(11);
 
-        this.add.text(rightColX - questBoxW / 2 + 15, newsY + 20, 'УЖЕ ДОСТУПЕН!', {
-            fontFamily: "'Rajdhani', sans-serif", fontSize: '10px', fontStyle: 'bold', color: '#94a3b8'
-        }).setOrigin(0, 0.5).setDepth(11);
+            this.add.text(rightColX - questBoxW / 2 + 15, newsY + 20, 'УЖЕ ДОСТУПЕН!', {
+                fontFamily: "'Rajdhani', sans-serif", fontSize: '10px', fontStyle: 'bold', color: '#94a3b8'
+            }).setOrigin(0, 0.5).setDepth(11);
 
-        // Иконка героев в банере
-        this.add.image(rightColX + questBoxW / 2 - 40, newsY, 'ui_coop').setDisplaySize(44, 44).setDepth(11);
-
-        // Точки пагинации
-        for (let i = 0; i < 4; i++) {
-            this.add.circle(rightColX - 24 + (i * 14), newsY + 36, i === 1 ? 4 : 2.5, i === 1 ? 0xa855f7 : 0x475569).setDepth(11);
+            this.add.image(rightColX + questBoxW / 2 - 40, newsY, 'ui_coop').setDisplaySize(44, 44).setDepth(11);
         }
     }
 
     createBottomTabBar(width, height, isPortrait, lang) {
-        const barY = height - (isPortrait ? 35 : 45);
+        const isCompact = !isPortrait && height < 520;
+        const barY = height - (isCompact ? 25 : (isPortrait ? 35 : 45));
         const tabs = [
-            { iconKey: 'ui_chest_gold', title: 'БЕСПЛАТНЫЙ\nСУНДУК', badge: '1', action: () => this.claimFreeChest() },
+            { iconKey: 'ui_chest_gold', title: isCompact ? 'СУНДУК' : 'БЕСПЛАТНЫЙ\nСУНДУК', badge: '1', action: () => this.claimFreeChest() },
             { iconKey: 'ui_3d_gem_card', title: 'УСИЛЕНИЯ', badge: '', action: () => this.openTalentsModal() },
             { iconKey: 'ui_3d_book_card', title: 'КОЛЛЕКЦИЯ', badge: '', action: () => this.openEvolutionModal() },
-            { iconKey: 'ui_3d_shield_card', title: 'ТАБЛИЦЫ\nЛИДЕРОВ', badge: '', action: () => this.openLeaderboardModal() }
+            { iconKey: 'ui_3d_shield_card', title: isCompact ? 'ЛИДЕРЫ' : 'ТАБЛИЦЫ\nЛИДЕРОВ', badge: '', action: () => this.openLeaderboardModal() }
         ];
 
-        const tabSpacing = isPortrait ? Math.min(85, (width - 40) / 4) : 125;
+        const tabSpacing = isPortrait ? Math.min(85, (width - 40) / 4) : (isCompact ? 100 : 125);
         const totalW = tabSpacing * (tabs.length - 1);
         const startX = width / 2 - totalW / 2;
 
         tabs.forEach((tab, idx) => {
             const tx = startX + (idx * tabSpacing);
-            const btnW = isPortrait ? 75 : 105;
-            const btnH = isPortrait ? 44 : 52;
+            const btnW = isPortrait ? 75 : (isCompact ? 90 : 105);
+            const btnH = isPortrait ? 44 : (isCompact ? 36 : 52);
 
             const tabBg = this.add.image(tx, barY, 'card_tab_glass').setDisplaySize(btnW, btnH).setInteractive({ useHandCursor: true }).setDepth(10);
             tabBg.on('pointerover', () => tabBg.setTint(0xc4b5fd));
             tabBg.on('pointerout', () => tabBg.clearTint());
             tabBg.on('pointerdown', tab.action);
 
-            this.add.image(tx, barY - (isPortrait ? 6 : 10), tab.iconKey).setDisplaySize(28, 28).setDepth(11);
+            this.add.image(tx, barY - (isCompact ? 6 : (isPortrait ? 6 : 10)), tab.iconKey).setDisplaySize(isCompact ? 20 : 28, isCompact ? 20 : 28).setDepth(11);
 
-            this.add.text(tx, barY + (isPortrait ? 12 : 14), tab.title, {
-                fontFamily: "'Rajdhani', sans-serif", fontSize: isPortrait ? '9px' : '10px', fontStyle: 'bold', color: '#94a3b8', align: 'center'
+            this.add.text(tx, barY + (isCompact ? 8 : (isPortrait ? 12 : 14)), tab.title, {
+                fontFamily: "'Rajdhani', sans-serif", fontSize: isCompact ? '8px' : (isPortrait ? '9px' : '10px'), fontStyle: 'bold', color: '#94a3b8', align: 'center'
             }).setOrigin(0.5).setDepth(11);
 
             if (tab.badge) {
-                this.add.circle(tx + btnW / 2 - 8, barY - btnH / 2 + 8, 7, 0xef4444).setDepth(12);
+                this.add.circle(tx + btnW / 2 - 8, barY - btnH / 2 + 8, isCompact ? 5 : 7, 0xef4444).setDepth(12);
                 this.add.text(tx + btnW / 2 - 8, barY - btnH / 2 + 8, tab.badge, {
-                    fontFamily: 'sans-serif', fontSize: '9px', fontStyle: 'bold', color: '#fff'
+                    fontFamily: 'sans-serif', fontSize: isCompact ? '7px' : '9px', fontStyle: 'bold', color: '#fff'
                 }).setOrigin(0.5).setDepth(13);
             }
         });
@@ -549,6 +570,7 @@ class MenuScene extends Phaser.Scene {
         this.currentModal = modalGroup;
         const lang = window.SaveManager.data.lang || 'ru';
         const isPortrait = height > width;
+        const isCompact = !isPortrait && height < 520;
 
         // Синхронизируем индекс с сохраненным героем
         const savedHero = window.SaveManager.data.selectedHero || 'knight';
@@ -559,24 +581,24 @@ class MenuScene extends Phaser.Scene {
         backdrop.on('pointerdown', () => this.closeCurrentModal());
         modalGroup.add(backdrop);
 
-        const modalW = isPortrait ? Math.min(width - 20, 420) : Math.min(width - 40, 940);
-        const modalH = isPortrait ? Math.min(height - 20, 640) : Math.min(height - 20, 540);
+        const modalW = isPortrait ? Math.min(width - 16, 400) : (isCompact ? Math.min(width - 16, 820) : Math.min(width - 40, 940));
+        const modalH = isPortrait ? Math.min(height - 16, 640) : (isCompact ? Math.min(height - 16, 370) : Math.min(height - 20, 540));
 
         // Главный фрейм окна с золотой каймой и свечением
         const modalBg = this.add.rectangle(width / 2, height / 2, modalW, modalH, 0x0b1120, 0.96).setInteractive().setDepth(1001);
         modalBg.setStrokeStyle(2, 0xd97706);
         modalGroup.add(modalBg);
 
-        const headerLine = this.add.rectangle(width / 2, height / 2 - modalH / 2 + 50, modalW - 60, 1, 0x334155).setDepth(1002);
+        const headerLine = this.add.rectangle(width / 2, height / 2 - modalH / 2 + (isCompact ? 36 : 50), modalW - 40, 1, 0x334155).setDepth(1002);
         modalGroup.add(headerLine);
 
-        const title = this.add.text(width / 2, height / 2 - modalH / 2 + 28, 'ВЫБЕРИТЕ ГЕРОЯ ДЛЯ БОЯ', {
-            fontFamily: "'Cinzel', serif", fontSize: isPortrait ? '17px' : '21px', fontStyle: 'bold', color: '#ffd166', letterSpacing: 2
+        const title = this.add.text(width / 2, height / 2 - modalH / 2 + (isCompact ? 18 : 28), 'ВЫБЕРИТЕ ГЕРОЯ ДЛЯ БОЯ', {
+            fontFamily: "'Cinzel', serif", fontSize: isCompact ? '14px' : (isPortrait ? '16px' : '21px'), fontStyle: 'bold', color: '#ffd166', letterSpacing: 1.5
         }).setOrigin(0.5).setDepth(1002);
         modalGroup.add(title);
 
         // Круглая кнопка закрытия
-        const xBtn = this.add.image(width / 2 + modalW / 2 - 28, height / 2 - modalH / 2 + 28, 'btn_close_circle').setInteractive({ useHandCursor: true }).setDepth(1003);
+        const xBtn = this.add.image(width / 2 + modalW / 2 - (isCompact ? 20 : 28), height / 2 - modalH / 2 + (isCompact ? 18 : 28), 'btn_close_circle').setDisplaySize(isCompact ? 24 : 32, isCompact ? 24 : 32).setInteractive({ useHandCursor: true }).setDepth(1003);
         xBtn.on('pointerdown', () => this.closeCurrentModal());
         modalGroup.add(xBtn);
 
@@ -588,18 +610,19 @@ class MenuScene extends Phaser.Scene {
             const currentHeroId = this.heroesList[this.currentHeroIdx];
             const currentHeroCfg = CONFIG.HEROES[currentHeroId];
 
-            // 1. ЛЕНТА ГЕРОЕВ (Слева)
+            // 1. ЛЕНТА ГЕРОЕВ (Слева или сверху)
             const heroCount = this.heroesList.length;
-            const heroCardW = isPortrait ? 66 : 140;
-            const heroCardH = isPortrait ? 74 : 76;
-            const startX = isPortrait ? width / 2 - ((heroCount - 1) * 38) : width / 2 - modalW / 2 + 95;
-            const startY = isPortrait ? height / 2 - modalH / 2 + 95 : height / 2 - 160;
+            const heroCardW = isPortrait ? Math.min(64, (modalW - 40) / heroCount) : (isCompact ? 115 : 140);
+            const heroCardH = isPortrait ? 68 : (isCompact ? 46 : 76);
+            const stepX = (modalW - 30) / heroCount;
+            const startX = isPortrait ? (width / 2 - (modalW - 30) / 2 + stepX / 2) : (width / 2 - modalW / 2 + (isCompact ? 68 : 95));
+            const startY = isPortrait ? (height / 2 - modalH / 2 + 75) : (height / 2 - (isCompact ? 110 : 160));
 
             this.heroesList.forEach((hId, idx) => {
                 const isSelected = idx === this.currentHeroIdx;
                 const isUnlocked = window.SaveManager.isHeroUnlocked(hId);
-                const hx = isPortrait ? startX + (idx * 76) : startX;
-                const hy = isPortrait ? startY : startY + (idx * (heroCardH + 12));
+                const hx = isPortrait ? startX + (idx * stepX) : startX;
+                const hy = isPortrait ? startY : startY + (idx * (heroCardH + (isCompact ? 6 : 12)));
 
                 const onSelect = () => {
                     this.currentHeroIdx = idx;
@@ -618,26 +641,27 @@ class MenuScene extends Phaser.Scene {
                 cardGroup.add(hCard);
 
                 // Спрайт героя
-                const spr = this.add.sprite(isPortrait ? hx : hx - 40, isPortrait ? hy - 10 : hy, `hero_${hId}`).setDisplaySize(isPortrait ? 38 : 46, isPortrait ? 38 : 46).setInteractive({ useHandCursor: true }).setDepth(1003);
+                const spr = this.add.sprite(isPortrait ? hx : hx - (isCompact ? 32 : 40), isPortrait ? hy - 10 : hy, `hero_${hId}`)
+                    .setDisplaySize(isPortrait ? 34 : (isCompact ? 34 : 46), isPortrait ? 34 : (isCompact ? 34 : 46)).setInteractive({ useHandCursor: true }).setDepth(1003);
                 spr.on('pointerdown', onSelect);
                 cardGroup.add(spr);
 
                 // Имя героя
                 if (!isPortrait) {
-                    const nameT = this.add.text(hx - 10, hy - 12, CONFIG.HEROES[hId].name[lang], {
-                        fontFamily: "'Cinzel', serif", fontSize: '13px', fontStyle: 'bold', color: isSelected ? '#ffd166' : (isUnlocked ? '#f1f5f9' : '#64748b')
+                    const nameT = this.add.text(hx - (isCompact ? 10 : 10), hy - (isCompact ? 8 : 12), CONFIG.HEROES[hId].name[lang], {
+                        fontFamily: "'Cinzel', serif", fontSize: isCompact ? '11px' : '13px', fontStyle: 'bold', color: isSelected ? '#ffd166' : (isUnlocked ? '#f1f5f9' : '#64748b')
                     }).setInteractive({ useHandCursor: true }).setDepth(1003);
                     nameT.on('pointerdown', onSelect);
                     cardGroup.add(nameT);
 
-                    const classT = this.add.text(hx - 10, hy + 4, isUnlocked ? 'ДОСТУПЕН' : `${CONFIG.HEROES[hId].price} ЗОЛ.`, {
-                        fontFamily: "'Rajdhani', sans-serif", fontSize: '11px', fontStyle: 'bold', color: isUnlocked ? '#34d399' : '#f59e0b'
+                    const classT = this.add.text(hx - (isCompact ? 10 : 10), hy + (isCompact ? 6 : 4), isUnlocked ? 'ДОСТУПЕН' : `${CONFIG.HEROES[hId].price} ЗОЛ.`, {
+                        fontFamily: "'Rajdhani', sans-serif", fontSize: isCompact ? '9px' : '11px', fontStyle: 'bold', color: isUnlocked ? '#34d399' : '#f59e0b'
                     }).setInteractive({ useHandCursor: true }).setDepth(1003);
                     classT.on('pointerdown', onSelect);
                     cardGroup.add(classT);
                 } else {
-                    const nameT = this.add.text(hx, hy + 22, CONFIG.HEROES[hId].name[lang], {
-                        fontFamily: "'Rajdhani', sans-serif", fontSize: '10px', fontStyle: 'bold', color: isSelected ? '#ffd166' : (isUnlocked ? '#e2e8f0' : '#64748b')
+                    const nameT = this.add.text(hx, hy + 20, CONFIG.HEROES[hId].name[lang], {
+                        fontFamily: "'Rajdhani', sans-serif", fontSize: '9px', fontStyle: 'bold', color: isSelected ? '#ffd166' : (isUnlocked ? '#e2e8f0' : '#64748b')
                     }).setOrigin(0.5).setInteractive({ useHandCursor: true }).setDepth(1003);
                     nameT.on('pointerdown', onSelect);
                     cardGroup.add(nameT);
@@ -648,65 +672,72 @@ class MenuScene extends Phaser.Scene {
                 }
             });
 
-            // 2. ДЕТАЛЬНАЯ ВИТРИНА ГЕРОЯ (Справа)
-            const detailX = isPortrait ? width / 2 : width / 2 + 100;
-            const detailY = isPortrait ? height / 2 + 80 : height / 2 + 15;
-            const detailW = isPortrait ? modalW - 36 : 560;
-            const detailH = isPortrait ? 360 : 400;
+            // 2. ДЕТАЛЬНАЯ ВИТРИНА ГЕРОЯ (Справа или снизу)
+            const detailX = isPortrait ? width / 2 : width / 2 + (isCompact ? 68 : 100);
+            const detailY = isPortrait ? (height / 2 + modalH / 2 - (modalH - 130) / 2 - 10) : (height / 2 + (isCompact ? 14 : 15));
+            const detailW = isPortrait ? (modalW - 24) : (isCompact ? (modalW - 150) : 560);
+            const detailH = isPortrait ? (modalH - 135) : (isCompact ? (modalH - 50) : 400);
 
             const dPanel = this.add.rectangle(detailX, detailY, detailW, detailH, 0x0f172a, 0.95).setDepth(1002);
             dPanel.setStrokeStyle(1.5, 0x1e293b);
             cardGroup.add(dPanel);
 
-            // Пьедестал и светящийся герой слева в витрине
-            const stageX = isPortrait ? detailX - 100 : detailX - 170;
-            const stageY = isPortrait ? detailY - 90 : detailY - 40;
+            // Пьедестал и герой
+            const stageX = isPortrait ? detailX - detailW / 2 + 55 : (isCompact ? detailX - detailW / 2 + 55 : detailX - 170);
+            const stageY = isPortrait ? detailY - detailH / 2 + 65 : (isCompact ? detailY - 30 : detailY - 40);
 
-            const pedestal = this.add.image(stageX, stageY + 55, 'hero_pedestal_glow').setScale(0.95).setDepth(1003);
+            const pedestal = this.add.image(stageX, stageY + (isCompact ? 35 : 55), 'hero_pedestal_glow').setScale(isCompact ? 0.7 : (isPortrait ? 0.8 : 0.95)).setDepth(1003);
             cardGroup.add(pedestal);
 
-            const bigSprite = this.add.sprite(stageX, stageY, `hero_${currentHeroId}`).setDisplaySize(100, 100).setDepth(1004);
+            const spriteSize = isCompact ? 64 : (isPortrait ? 76 : 100);
+            const bigSprite = this.add.sprite(stageX, stageY, `hero_${currentHeroId}`).setDisplaySize(spriteSize, spriteSize).setDepth(1004);
             cardGroup.add(bigSprite);
 
-            // Плавное парение героя над пьедесталом
             this.tweens.add({
                 targets: bigSprite,
-                y: stageY - 6,
+                y: stageY - 4,
                 duration: 1000,
                 yoyo: true,
                 repeat: -1,
                 ease: 'Sine.easeInOut'
             });
 
-            // Заголовок и описание справа в витрине
-            const infoX = isPortrait ? detailX - 20 : detailX - 70;
-            const heroName = this.add.text(infoX, detailY - 170, currentHeroCfg.name[lang].toUpperCase(), {
-                fontFamily: "'Cinzel', serif", fontSize: '22px', fontStyle: 'bold', color: '#ffd166', letterSpacing: 1
+            // Заголовок и описание
+            const infoX = isPortrait ? detailX - detailW / 2 + 115 : (isCompact ? detailX - detailW / 2 + 120 : detailX - 70);
+            const infoTopY = detailY - detailH / 2 + (isCompact ? 12 : 20);
+
+            const heroName = this.add.text(infoX, infoTopY, currentHeroCfg.name[lang].toUpperCase(), {
+                fontFamily: "'Cinzel', serif", fontSize: isCompact ? '16px' : (isPortrait ? '18px' : '22px'), fontStyle: 'bold', color: '#ffd166', letterSpacing: 1
             }).setDepth(1003);
             cardGroup.add(heroName);
 
-            const heroDesc = this.add.text(infoX, detailY - 142, currentHeroCfg.desc[lang], {
-                fontFamily: "'Rajdhani', sans-serif", fontSize: '12px', color: '#94a3b8', wordWrap: { width: 330 }
+            const descWrapW = isPortrait ? (detailW - 130) : (isCompact ? (detailW - 135) : 330);
+            const heroDesc = this.add.text(infoX, infoTopY + (isCompact ? 20 : 26), currentHeroCfg.desc[lang], {
+                fontFamily: "'Rajdhani', sans-serif", fontSize: isCompact ? '10px' : '11px', color: '#94a3b8', wordWrap: { width: descWrapW }
             }).setDepth(1003);
             cardGroup.add(heroDesc);
 
             // Стартовое оружие (Бейдж)
             const wepCfg = CONFIG.WEAPONS[currentHeroCfg.weapon];
+            const wepBoxW = isPortrait ? (detailW - 24) : (isCompact ? (detailW - 135) : 330);
+            const wepBoxY = isPortrait ? (detailY - detailH / 2 + 130) : (infoTopY + (isCompact ? 56 : 72));
+            const wepBoxCenterX = isPortrait ? detailX : (infoX + wepBoxW / 2);
+
             if (wepCfg) {
-                const wepBox = this.add.rectangle(infoX + 160, detailY - 95, 330, 36, 0x1e293b, 0.9).setDepth(1003);
+                const wepBox = this.add.rectangle(wepBoxCenterX, wepBoxY, wepBoxW, isCompact ? 28 : 34, 0x1e293b, 0.9).setDepth(1003);
                 wepBox.setStrokeStyle(1, 0x334155);
                 cardGroup.add(wepBox);
 
-                const wepIcon = this.add.image(infoX + 16, detailY - 95, wepCfg.icon).setScale(0.55).setDepth(1004);
+                const wepIcon = this.add.image(wepBoxCenterX - wepBoxW / 2 + 16, wepBoxY, wepCfg.icon).setScale(isCompact ? 0.45 : 0.55).setDepth(1004);
                 cardGroup.add(wepIcon);
 
-                const wepLabel = this.add.text(infoX + 40, detailY - 104, `ОРУЖИЕ: ${wepCfg.name[lang].toUpperCase()}`, {
-                    fontFamily: "'Cinzel', serif", fontSize: '11px', fontStyle: 'bold', color: '#38bdf8'
+                const wepLabel = this.add.text(wepBoxCenterX - wepBoxW / 2 + 36, wepBoxY - (isCompact ? 6 : 8), `ОРУЖИЕ: ${wepCfg.name[lang].toUpperCase()}`, {
+                    fontFamily: "'Cinzel', serif", fontSize: isCompact ? '9px' : '11px', fontStyle: 'bold', color: '#38bdf8'
                 }).setDepth(1004);
                 cardGroup.add(wepLabel);
 
-                const wepDesc = this.add.text(infoX + 40, detailY - 90, wepCfg.desc[lang], {
-                    fontFamily: "'Rajdhani', sans-serif", fontSize: '10px', color: '#cbd5e1', wordWrap: { width: 280 }
+                const wepDesc = this.add.text(wepBoxCenterX - wepBoxW / 2 + 36, wepBoxY + (isCompact ? 4 : 5), wepCfg.desc[lang], {
+                    fontFamily: "'Rajdhani', sans-serif", fontSize: isCompact ? '8px' : '10px', color: '#cbd5e1', wordWrap: { width: wepBoxW - 45 }
                 }).setDepth(1004);
                 cardGroup.add(wepDesc);
             }
@@ -714,76 +745,75 @@ class MenuScene extends Phaser.Scene {
             // Визуальные шкалы характеристик (Stat Progress Bars)
             const bStats = currentHeroCfg.baseStats;
             const statsData = [
-                { icon: 'stat_icon_hp', label: 'ЗДОРОВЬЕ', val: `${bStats.hp}`, ratio: Math.min(1.0, bStats.hp / 160), color: 0xef4444 },
+                { icon: 'stat_icon_hp', label: 'HP', val: `${bStats.hp}`, ratio: Math.min(1.0, bStats.hp / 160), color: 0xef4444 },
                 { icon: 'stat_icon_spd', label: 'СКОРОСТЬ', val: `${bStats.speed}`, ratio: Math.min(1.0, bStats.speed / 240), color: 0xfacc15 },
                 { icon: 'stat_icon_dmg', label: 'УРОН', val: `${bStats.damageMulti}x`, ratio: Math.min(1.0, bStats.damageMulti / 1.5), color: 0xf97316 },
-                { icon: 'stat_icon_crit', label: 'КРИТ. УДАР', val: `${Math.round(bStats.critChance * 100)}%`, ratio: Math.min(1.0, bStats.critChance / 0.25), color: 0xc084fc }
+                { icon: 'stat_icon_crit', label: 'КРИТ', val: `${Math.round(bStats.critChance * 100)}%`, ratio: Math.min(1.0, bStats.critChance / 0.25), color: 0xc084fc }
             ];
 
-            const barStartX = infoX;
-            const barStartY = detailY - 60;
-            const barW = 240;
+            const barStartX = isPortrait ? (detailX - detailW / 2 + 14) : infoX;
+            const barStartY = isPortrait ? (detailY - detailH / 2 + 160) : (wepBoxY + (isCompact ? 22 : 30));
+            const barW = isPortrait ? (detailW - 130) : (isCompact ? (detailW - 250) : 240);
+            const barSpacing = isCompact ? 18 : (isPortrait ? 20 : 24);
 
             statsData.forEach((st, sIdx) => {
-                const sy = barStartY + (sIdx * 24);
+                const sy = barStartY + (sIdx * barSpacing);
 
-                // Иконка параметра
-                const stIcon = this.add.image(barStartX + 8, sy + 8, st.icon).setScale(0.85).setDepth(1004);
+                const stIcon = this.add.image(barStartX + 6, sy + 6, st.icon).setScale(isCompact ? 0.7 : 0.85).setDepth(1004);
                 cardGroup.add(stIcon);
 
-                // Название параметра
-                const stLabel = this.add.text(barStartX + 24, sy, st.label, {
-                    fontFamily: "'Rajdhani', sans-serif", fontSize: '11px', fontStyle: 'bold', color: '#94a3b8'
+                const stLabel = this.add.text(barStartX + 18, sy, st.label, {
+                    fontFamily: "'Rajdhani', sans-serif", fontSize: isCompact ? '9px' : '11px', fontStyle: 'bold', color: '#94a3b8'
                 }).setDepth(1004);
                 cardGroup.add(stLabel);
 
-                // Значение цифрой
-                const stVal = this.add.text(barStartX + barW + 80, sy, st.val, {
-                    fontFamily: "'Rajdhani', sans-serif", fontSize: '12px', fontStyle: 'bold', color: '#ffffff'
-                }).setOrigin(1, 0).setDepth(1004);
-                cardGroup.add(stVal);
-
-                // Фоновый трек шкалы
-                const track = this.add.rectangle(barStartX + 100 + (barW - 100) / 2, sy + 6, barW - 100, 6, 0x1e293b).setDepth(1003);
+                const trackX = barStartX + 75;
+                const trackW = Math.max(30, barW);
+                const track = this.add.rectangle(trackX + trackW / 2, sy + 5, trackW, isCompact ? 4 : 6, 0x1e293b).setDepth(1003);
                 track.setStrokeStyle(1, 0x334155);
                 cardGroup.add(track);
 
-                // Заполненная полоска
-                const fillW = Math.max(4, (barW - 100) * st.ratio);
-                const fill = this.add.rectangle(barStartX + 100, sy + 6, fillW, 6, st.color).setOrigin(0, 0.5).setDepth(1004);
+                const fillW = Math.max(3, trackW * st.ratio);
+                const fill = this.add.rectangle(trackX, sy + 5, fillW, isCompact ? 4 : 6, st.color).setOrigin(0, 0.5).setDepth(1004);
                 cardGroup.add(fill);
+
+                const stVal = this.add.text(trackX + trackW + 8, sy, st.val, {
+                    fontFamily: "'Rajdhani', sans-serif", fontSize: isCompact ? '10px' : '11px', fontStyle: 'bold', color: '#ffffff'
+                }).setOrigin(0, 0).setDepth(1004);
+                cardGroup.add(stVal);
             });
 
             // Индикатор выбранной карты
             const currentMapId = window.SaveManager.data.selectedMap || 'dark_castle';
             const currentMapCfg = (CONFIG.MAPS && CONFIG.MAPS[currentMapId]) ? CONFIG.MAPS[currentMapId] : CONFIG.MAPS.dark_castle;
             const isUnlocked = window.SaveManager.isHeroUnlocked(currentHeroId);
-            const actionBtnY = detailY + detailH / 2 - 32;
-            const mapBarY = actionBtnY - 38;
+            const actionBtnY = detailY + detailH / 2 - (isCompact ? 22 : 28);
+            const mapBarY = actionBtnY - (isCompact ? 28 : 34);
+            const barFullW = Math.min(detailW - 24, 360);
 
-            const mapBar = this.add.rectangle(detailX, mapBarY, Math.min(detailW - 40, 360), 28, 0x1e293b, 0.95).setInteractive({ useHandCursor: true }).setDepth(1003);
+            const mapBar = this.add.rectangle(detailX, mapBarY, barFullW, isCompact ? 22 : 26, 0x1e293b, 0.95).setInteractive({ useHandCursor: true }).setDepth(1003);
             mapBar.setStrokeStyle(1, 0x0ea5e9);
             cardGroup.add(mapBar);
 
-            const mapIcon = this.add.image(detailX - Math.min(detailW - 40, 360) / 2 + 16, mapBarY, 'ui_trophy').setScale(0.6).setDepth(1004);
+            const mapIcon = this.add.image(detailX - barFullW / 2 + 14, mapBarY, 'ui_trophy').setScale(isCompact ? 0.5 : 0.6).setDepth(1004);
             cardGroup.add(mapIcon);
 
-            const mapNameText = this.add.text(detailX - Math.min(detailW - 40, 360) / 2 + 30, mapBarY, `АРЕНА: ${currentMapCfg.name[lang].toUpperCase()}`, {
-                fontFamily: "'Cinzel', serif", fontSize: '11px', fontStyle: 'bold', color: '#38bdf8'
+            const mapNameText = this.add.text(detailX - barFullW / 2 + 26, mapBarY, `АРЕНА: ${currentMapCfg.name[lang].toUpperCase()}`, {
+                fontFamily: "'Cinzel', serif", fontSize: isCompact ? '9px' : '11px', fontStyle: 'bold', color: '#38bdf8'
             }).setOrigin(0, 0.5).setDepth(1004);
             cardGroup.add(mapNameText);
 
-            const changeMapText = this.add.text(detailX + Math.min(detailW - 40, 360) / 2 - 10, mapBarY, 'СМЕНИТЬ ›', {
-                fontFamily: "'Rajdhani', sans-serif", fontSize: '11px', fontStyle: 'bold', color: '#ffd166'
+            const changeMapText = this.add.text(detailX + barFullW / 2 - 8, mapBarY, 'СМЕНИТЬ ›', {
+                fontFamily: "'Rajdhani', sans-serif", fontSize: isCompact ? '9px' : '11px', fontStyle: 'bold', color: '#ffd166'
             }).setOrigin(1, 0.5).setDepth(1004);
             cardGroup.add(changeMapText);
 
             mapBar.on('pointerdown', () => this.openMapSelectModal());
 
             if (isUnlocked) {
-                const battleBtn = this.add.image(detailX, actionBtnY, 'btn_battle_gold_epic').setInteractive({ useHandCursor: true }).setDepth(1003);
+                const battleBtn = this.add.image(detailX, actionBtnY, 'btn_battle_gold_epic').setDisplaySize(Math.min(barFullW, 260), isCompact ? 34 : 44).setInteractive({ useHandCursor: true }).setDepth(1003);
                 const battleTxt = this.add.text(detailX, actionBtnY, 'В БОЙ!', {
-                    fontFamily: "'Cinzel', serif", fontSize: '20px', fontStyle: 'bold', color: '#ffffff', stroke: '#000000', strokeThickness: 4, letterSpacing: 3
+                    fontFamily: "'Cinzel', serif", fontSize: isCompact ? '16px' : '20px', fontStyle: 'bold', color: '#ffffff', stroke: '#000000', strokeThickness: 3, letterSpacing: 2
                 }).setOrigin(0.5).setDepth(1004);
 
                 battleBtn.on('pointerdown', () => {
@@ -793,23 +823,12 @@ class MenuScene extends Phaser.Scene {
                     this.startBattleTransition('GameScene', { heroId: currentHeroId, hero: currentHeroId, mapId: window.SaveManager.data.selectedMap || 'dark_castle' });
                 });
 
-                // Мягкая пульсация кнопки В БОЙ
-                this.tweens.add({
-                    targets: [battleBtn, battleTxt],
-                    scaleX: 1.03,
-                    scaleY: 1.03,
-                    duration: 600,
-                    yoyo: true,
-                    repeat: -1,
-                    ease: 'Sine.easeInOut'
-                });
-
                 cardGroup.add(battleBtn);
                 cardGroup.add(battleTxt);
             } else {
-                const buyBtn = this.add.image(detailX, actionBtnY, 'btn_unlock_gold').setInteractive({ useHandCursor: true }).setDepth(1003);
-                const buyTxt = this.add.text(detailX, actionBtnY, `РАЗБЛОКИРОВАТЬ [ 🪙 ${currentHeroCfg.price} ЗОЛ. ]`, {
-                    fontFamily: "'Cinzel', serif", fontSize: '15px', fontStyle: 'bold', color: '#ffffff', stroke: '#000000', strokeThickness: 3
+                const buyBtn = this.add.image(detailX, actionBtnY, 'btn_unlock_gold').setDisplaySize(Math.min(barFullW, 260), isCompact ? 34 : 44).setInteractive({ useHandCursor: true }).setDepth(1003);
+                const buyTxt = this.add.text(detailX, actionBtnY, `РАЗБЛОКИРОВАТЬ [ 🪙 ${currentHeroCfg.price} ]`, {
+                    fontFamily: "'Cinzel', serif", fontSize: isCompact ? '12px' : '14px', fontStyle: 'bold', color: '#ffffff', stroke: '#000000', strokeThickness: 3
                 }).setOrigin(0.5).setDepth(1004);
 
                 buyBtn.on('pointerdown', () => {
@@ -833,6 +852,7 @@ class MenuScene extends Phaser.Scene {
     }
 
     // --- МОДАЛЬНОЕ ОКНО ТАЛАНТОВ (ТАЛАНТЫ И УСИЛЕНИЯ) ---
+    // --- МОДАЛЬНОЕ ОКНО ТАЛАНТОВ И УСИЛЕНИЙ ---
     openTalentsModal() {
         this.closeCurrentModal();
         const { width, height } = this.scale;
@@ -840,43 +860,45 @@ class MenuScene extends Phaser.Scene {
         this.currentModal = modalGroup;
         const lang = window.SaveManager.data.lang || 'ru';
         const isPortrait = height > width;
+        const isCompact = !isPortrait && height < 520;
 
         const backdrop = this.add.rectangle(width / 2, height / 2, width, height, 0x030712, 0.94).setInteractive().setDepth(1000);
         backdrop.on('pointerdown', () => this.closeCurrentModal());
         modalGroup.add(backdrop);
 
-        const modalW = isPortrait ? Math.min(width - 20, 420) : Math.min(width - 40, 840);
-        const modalH = isPortrait ? Math.min(height - 20, 620) : Math.min(height - 20, 500);
+        const modalW = isPortrait ? Math.min(width - 16, 400) : (isCompact ? Math.min(width - 16, 820) : Math.min(width - 40, 860));
+        const modalH = isPortrait ? Math.min(height - 16, 640) : (isCompact ? Math.min(height - 16, 370) : Math.min(height - 20, 520));
 
         const modalBg = this.add.rectangle(width / 2, height / 2, modalW, modalH, 0x0b1120, 0.96).setInteractive().setDepth(1001);
         modalBg.setStrokeStyle(2, 0xa855f7);
         modalGroup.add(modalBg);
 
-        const headerLine = this.add.rectangle(width / 2, height / 2 - modalH / 2 + 50, modalW - 60, 1, 0x334155).setDepth(1002);
+        const headerLine = this.add.rectangle(width / 2, height / 2 - modalH / 2 + (isCompact ? 36 : 50), modalW - 40, 1, 0x334155).setDepth(1002);
         modalGroup.add(headerLine);
 
-        const title = this.add.text(width / 2, height / 2 - modalH / 2 + 28, 'ДЕРЕВО ТАЛАНТОВ И УСИЛЕНИЙ', {
-            fontFamily: "'Cinzel', serif", fontSize: isPortrait ? '16px' : '21px', fontStyle: 'bold', color: '#c084fc', letterSpacing: 2
+        const title = this.add.text(width / 2, height / 2 - modalH / 2 + (isCompact ? 18 : 28), 'ДЕРЕВО ТАЛАНТОВ И УСИЛЕНИЙ', {
+            fontFamily: "'Cinzel', serif", fontSize: isCompact ? '13px' : (isPortrait ? '15px' : '20px'), fontStyle: 'bold', color: '#c084fc', letterSpacing: 1.5
         }).setOrigin(0.5).setDepth(1002);
         modalGroup.add(title);
 
-        const xBtn = this.add.image(width / 2 + modalW / 2 - 28, height / 2 - modalH / 2 + 28, 'btn_close_circle').setInteractive({ useHandCursor: true }).setDepth(1003);
+        const xBtn = this.add.image(width / 2 + modalW / 2 - (isCompact ? 20 : 28), height / 2 - modalH / 2 + (isCompact ? 18 : 28), 'btn_close_circle').setDisplaySize(isCompact ? 24 : 32, isCompact ? 24 : 32).setInteractive({ useHandCursor: true }).setDepth(1003);
         xBtn.on('pointerdown', () => this.closeCurrentModal());
         modalGroup.add(xBtn);
 
         const talents = Object.entries(CONFIG.TALENTS);
         const totalRows = isPortrait ? talents.length : Math.ceil(talents.length / 2);
-        const availableHeight = modalH - 90;
-        const rowSpacing = Math.min(isPortrait ? 64 : 80, availableHeight / totalRows);
-        const itemH = isPortrait ? 56 : 68;
+        const availableHeight = modalH - (isCompact ? 55 : 85);
+        const rowSpacing = Math.min(isCompact ? 48 : (isPortrait ? 60 : 76), availableHeight / totalRows);
+        const itemH = isCompact ? 42 : (isPortrait ? 52 : 64);
 
         talents.forEach(([id, talent], idx) => {
             const col = isPortrait ? 0 : idx % 2;
             const row = isPortrait ? idx : Math.floor(idx / 2);
             
-            const tx = isPortrait ? width / 2 : width / 2 - 195 + (col * 390);
-            const ty = height / 2 - modalH / 2 + 95 + (row * rowSpacing);
-            const itemW = isPortrait ? modalW - 36 : 365;
+            const colSpacing = isCompact ? (modalW / 2 - 10) : 400;
+            const tx = isPortrait ? width / 2 : (width / 2 - colSpacing / 2 + (col * colSpacing));
+            const ty = height / 2 - modalH / 2 + (isCompact ? 56 : 85) + (row * rowSpacing);
+            const itemW = isPortrait ? (modalW - 24) : (modalW / 2 - (isCompact ? 18 : 26));
 
             // Тёмная стеклянная карточка таланта
             const itemBg = this.add.rectangle(tx, ty, itemW, itemH, 0x0f172a, 0.95).setDepth(1002);
@@ -884,26 +906,28 @@ class MenuScene extends Phaser.Scene {
             modalGroup.add(itemBg);
 
             // Иконка таланта
-            const iconBg = this.add.circle(tx - itemW / 2 + 30, ty, 20, 0x1e293b).setDepth(1003);
+            const iconRadius = isCompact ? 15 : 18;
+            const iconBg = this.add.circle(tx - itemW / 2 + (isCompact ? 20 : 26), ty, iconRadius, 0x1e293b).setDepth(1003);
             iconBg.setStrokeStyle(1.5, 0x7e22ce);
             modalGroup.add(iconBg);
 
-            const icon = this.add.image(tx - itemW / 2 + 30, ty, talent.icon).setScale(isPortrait ? 0.65 : 0.75).setDepth(1004);
+            const icon = this.add.image(tx - itemW / 2 + (isCompact ? 20 : 26), ty, talent.icon).setScale(isCompact ? 0.55 : 0.7).setDepth(1004);
             modalGroup.add(icon);
 
             const curLvl = window.SaveManager.getTalentLevel(id);
             const cost = window.SaveManager.getTalentCost(id);
 
             // Название и уровень
-            const name = this.add.text(tx - itemW / 2 + 58, ty - 18, talent.name[lang], {
-                fontFamily: "'Cinzel', serif", fontSize: '13px', fontStyle: 'bold', color: '#f8fafc'
+            const textLeftX = tx - itemW / 2 + (isCompact ? 44 : 54);
+            const name = this.add.text(textLeftX, ty - (isCompact ? 13 : 16), talent.name[lang], {
+                fontFamily: "'Cinzel', serif", fontSize: isCompact ? '11px' : '13px', fontStyle: 'bold', color: '#f8fafc'
             }).setDepth(1003);
             modalGroup.add(name);
 
             // Описание
             const descText = talent.desc ? talent.desc[lang] : `+${talent.step} за уровень`;
-            const desc = this.add.text(tx - itemW / 2 + 58, ty - 2, descText, {
-                fontFamily: "'Rajdhani', sans-serif", fontSize: '11px', color: '#94a3b8'
+            const desc = this.add.text(textLeftX, ty - (isCompact ? 2 : 2), descText, {
+                fontFamily: "'Rajdhani', sans-serif", fontSize: isCompact ? '9px' : '11px', color: '#94a3b8'
             }).setDepth(1003);
             modalGroup.add(desc);
 
@@ -913,28 +937,30 @@ class MenuScene extends Phaser.Scene {
             for (let p = 0; p < pipCount; p++) {
                 pipsStr += (p < curLvl) ? '◆ ' : '◇ ';
             }
-            const pipsText = this.add.text(tx - itemW / 2 + 58, ty + 14, `${pipsStr} (${curLvl}/${talent.max})`, {
-                fontFamily: "'Rajdhani', monospace", fontSize: '11px', fontStyle: 'bold', color: curLvl >= talent.max ? '#ffd166' : '#38bdf8'
+            const pipsText = this.add.text(textLeftX, ty + (isCompact ? 9 : 12), `${pipsStr} (${curLvl}/${talent.max})`, {
+                fontFamily: "'Rajdhani', monospace", fontSize: isCompact ? '9px' : '11px', fontStyle: 'bold', color: curLvl >= talent.max ? '#ffd166' : '#38bdf8'
             }).setDepth(1003);
             modalGroup.add(pipsText);
 
             if (curLvl >= talent.max) {
-                const maxBadge = this.add.rectangle(tx + itemW / 2 - 46, ty, 72, 28, 0x1e1b4b).setDepth(1003);
+                const maxBadgeW = isCompact ? 54 : 68;
+                const maxBadge = this.add.rectangle(tx + itemW / 2 - maxBadgeW / 2 - 8, ty, maxBadgeW, isCompact ? 22 : 28, 0x1e1b4b).setDepth(1003);
                 maxBadge.setStrokeStyle(1.5, 0xffd166);
                 modalGroup.add(maxBadge);
 
-                const maxText = this.add.text(tx + itemW / 2 - 46, ty, 'МАКС', {
-                    fontFamily: "'Cinzel', serif", fontSize: '12px', fontStyle: 'bold', color: '#ffd166'
+                const maxText = this.add.text(tx + itemW / 2 - maxBadgeW / 2 - 8, ty, 'МАКС', {
+                    fontFamily: "'Cinzel', serif", fontSize: isCompact ? '10px' : '12px', fontStyle: 'bold', color: '#ffd166'
                 }).setOrigin(0.5).setDepth(1004);
                 modalGroup.add(maxText);
             } else {
-                // Золотая плашка цены с иконкой монетки
-                const upBtn = this.add.rectangle(tx + itemW / 2 - 46, ty, 76, 30, 0xd97706).setInteractive({ useHandCursor: true }).setDepth(1003);
+                const btnW = isCompact ? 62 : 74;
+                const btnH = isCompact ? 24 : 30;
+                const upBtn = this.add.rectangle(tx + itemW / 2 - btnW / 2 - 8, ty, btnW, btnH, 0xd97706).setInteractive({ useHandCursor: true }).setDepth(1003);
                 upBtn.setStrokeStyle(1.5, 0xfef08a);
                 
-                const coinIcon = this.add.image(tx + itemW / 2 - 68, ty, 'ui_coin').setScale(0.7).setDepth(1004);
-                const costText = this.add.text(tx + itemW / 2 - 38, ty, `${cost}`, {
-                    fontFamily: "'Rajdhani', sans-serif", fontSize: '13px', fontStyle: 'bold', color: '#ffffff'
+                const coinIcon = this.add.image(tx + itemW / 2 - btnW + 12, ty, 'ui_coin').setScale(isCompact ? 0.55 : 0.7).setDepth(1004);
+                const costText = this.add.text(tx + itemW / 2 - btnW / 2 + 6, ty, `${cost}`, {
+                    fontFamily: "'Rajdhani', sans-serif", fontSize: isCompact ? '11px' : '13px', fontStyle: 'bold', color: '#ffffff'
                 }).setOrigin(0.5).setDepth(1004);
 
                 upBtn.on('pointerdown', () => {
@@ -962,6 +988,7 @@ class MenuScene extends Phaser.Scene {
         this.currentModal = modalGroup;
         const lang = window.SaveManager.data.lang || 'ru';
         const isPortrait = height > width;
+        const isCompact = !isPortrait && height < 520;
 
         const backdrop = this.add.rectangle(width / 2, height / 2, width, height, 0x030712, 0.94).setInteractive().setDepth(1000);
         backdrop.on('pointerdown', () => this.closeCurrentModal());
@@ -971,22 +998,22 @@ class MenuScene extends Phaser.Scene {
         let p1Idx = 0;
         let p2Idx = Math.min(1, availableHeroes.length - 1);
 
-        const modalW = isPortrait ? Math.min(width - 20, 420) : Math.min(width - 40, 840);
-        const modalH = isPortrait ? Math.min(height - 20, 620) : Math.min(height - 20, 520);
+        const modalW = isPortrait ? Math.min(width - 16, 400) : (isCompact ? Math.min(width - 16, 820) : Math.min(width - 40, 840));
+        const modalH = isPortrait ? Math.min(height - 16, 640) : (isCompact ? Math.min(height - 16, 370) : Math.min(height - 20, 520));
 
         const modalBg = this.add.rectangle(width / 2, height / 2, modalW, modalH, 0x0b1120, 0.96).setInteractive().setDepth(1001);
         modalBg.setStrokeStyle(2, 0x0284c7);
         modalGroup.add(modalBg);
 
-        const headerLine = this.add.rectangle(width / 2, height / 2 - modalH / 2 + 50, modalW - 60, 1, 0x334155).setDepth(1002);
+        const headerLine = this.add.rectangle(width / 2, height / 2 - modalH / 2 + (isCompact ? 36 : 50), modalW - 40, 1, 0x334155).setDepth(1002);
         modalGroup.add(headerLine);
 
-        const title = this.add.text(width / 2, height / 2 - modalH / 2 + 28, 'ВЫБОР ГЕРОЕВ ДЛЯ РЕЖИМА НА ДВОИХ', {
-            fontFamily: "'Cinzel', serif", fontSize: isPortrait ? '15px' : '20px', fontStyle: 'bold', color: '#38bdf8', letterSpacing: 2
+        const title = this.add.text(width / 2, height / 2 - modalH / 2 + (isCompact ? 18 : 28), 'ВЫБОР ГЕРОЕВ ДЛЯ РЕЖИМА НА ДВОИХ', {
+            fontFamily: "'Cinzel', serif", fontSize: isCompact ? '12px' : (isPortrait ? '14px' : '19px'), fontStyle: 'bold', color: '#38bdf8', letterSpacing: 1.5
         }).setOrigin(0.5).setDepth(1002);
         modalGroup.add(title);
 
-        const xBtn = this.add.image(width / 2 + modalW / 2 - 28, height / 2 - modalH / 2 + 28, 'btn_close_circle').setInteractive({ useHandCursor: true }).setDepth(1003);
+        const xBtn = this.add.image(width / 2 + modalW / 2 - (isCompact ? 20 : 28), height / 2 - modalH / 2 + (isCompact ? 18 : 28), 'btn_close_circle').setDisplaySize(isCompact ? 24 : 32, isCompact ? 24 : 32).setInteractive({ useHandCursor: true }).setDepth(1003);
         xBtn.on('pointerdown', () => this.closeCurrentModal());
         modalGroup.add(xBtn);
 
@@ -999,39 +1026,40 @@ class MenuScene extends Phaser.Scene {
             const c1 = CONFIG.HEROES[h1];
             const c2 = CONFIG.HEROES[h2];
 
-            const panelW = isPortrait ? modalW - 36 : 370;
-            const panelH = isPortrait ? 180 : 330;
+            const panelW = isPortrait ? (modalW - 24) : (modalW / 2 - (isCompact ? 16 : 24));
+            const panelH = isPortrait ? Math.min(180, (modalH - 165) / 2) : (isCompact ? modalH - 100 : 330);
 
-            // ИГРОК 1 (Слева, Голубая тема)
-            const p1X = isPortrait ? width / 2 : width / 2 - 200;
-            const p1Y = isPortrait ? height / 2 - 90 : height / 2 + 10;
+            // ИГРОК 1 (Слева или сверху)
+            const p1X = isPortrait ? width / 2 : width / 2 - panelW / 2 - (isCompact ? 6 : 12);
+            const p1Y = isPortrait ? (height / 2 - modalH / 2 + 52 + panelH / 2) : (height / 2 + (isCompact ? 4 : 10));
 
             const p1Card = this.add.rectangle(p1X, p1Y, panelW, panelH, 0x0f172a, 0.95).setDepth(1002);
             p1Card.setStrokeStyle(1.5, 0x0284c7);
             this.coopPicksGroup.add(p1Card);
 
-            const p1Header = this.add.text(p1X, p1Y - panelH / 2 + 20, 'ИГРОК 1 (WASD)', {
-                fontFamily: "'Cinzel', serif", fontSize: '15px', fontStyle: 'bold', color: '#38bdf8', letterSpacing: 1
+            const p1Header = this.add.text(p1X, p1Y - panelH / 2 + (isCompact ? 14 : 18), 'ИГРОК 1 (WASD)', {
+                fontFamily: "'Cinzel', serif", fontSize: isCompact ? '12px' : '15px', fontStyle: 'bold', color: '#38bdf8', letterSpacing: 1
             }).setOrigin(0.5).setDepth(1003);
             this.coopPicksGroup.add(p1Header);
 
-            const p1Pedestal = this.add.image(p1X, p1Y + 45, 'hero_pedestal_glow').setScale(0.85).setDepth(1003);
+            const p1Pedestal = this.add.image(p1X, p1Y + (isCompact ? 28 : 40), 'hero_pedestal_glow').setScale(isCompact ? 0.65 : 0.85).setDepth(1003);
             this.coopPicksGroup.add(p1Pedestal);
 
-            const p1Sprite = this.add.sprite(p1X, p1Y - 10, `hero_${h1}`).setDisplaySize(90, 90).setDepth(1004);
+            const sprSize = isCompact ? 60 : (isPortrait ? 65 : 85);
+            const p1Sprite = this.add.sprite(p1X, p1Y - (isCompact ? 6 : 10), `hero_${h1}`).setDisplaySize(sprSize, sprSize).setDepth(1004);
             this.coopPicksGroup.add(p1Sprite);
 
-            const p1Name = this.add.text(p1X, p1Y + 80, c1.name[lang].toUpperCase(), {
-                fontFamily: "'Cinzel', serif", fontSize: '16px', fontStyle: 'bold', color: '#ffffff'
+            const p1Name = this.add.text(p1X, p1Y + panelH / 2 - (isCompact ? 28 : 34), c1.name[lang].toUpperCase(), {
+                fontFamily: "'Cinzel', serif", fontSize: isCompact ? '13px' : '15px', fontStyle: 'bold', color: '#ffffff'
             }).setOrigin(0.5).setDepth(1003);
             this.coopPicksGroup.add(p1Name);
 
-            const p1Wep = this.add.text(p1X, p1Y + 102, `Оружие: ${CONFIG.WEAPONS[c1.weapon].name[lang]}`, {
-                fontFamily: "'Rajdhani', sans-serif", fontSize: '12px', color: '#94a3b8'
+            const p1Wep = this.add.text(p1X, p1Y + panelH / 2 - (isCompact ? 12 : 16), `Оружие: ${CONFIG.WEAPONS[c1.weapon].name[lang]}`, {
+                fontFamily: "'Rajdhani', sans-serif", fontSize: isCompact ? '10px' : '11px', color: '#94a3b8'
             }).setOrigin(0.5).setDepth(1003);
             this.coopPicksGroup.add(p1Wep);
 
-            const p1Left = this.add.text(p1X - panelW / 2 + 22, p1Y, '◀', { fontSize: '24px', color: '#38bdf8' }).setOrigin(0.5).setInteractive({ useHandCursor: true }).setDepth(1004);
+            const p1Left = this.add.text(p1X - panelW / 2 + 18, p1Y, '◀', { fontSize: isCompact ? '18px' : '22px', color: '#38bdf8' }).setOrigin(0.5).setInteractive({ useHandCursor: true }).setDepth(1004);
             p1Left.on('pointerdown', () => {
                 p1Idx = (p1Idx - 1 + availableHeroes.length) % availableHeroes.length;
                 window.Sound.playShoot();
@@ -1039,7 +1067,7 @@ class MenuScene extends Phaser.Scene {
             });
             this.coopPicksGroup.add(p1Left);
 
-            const p1Right = this.add.text(p1X + panelW / 2 - 22, p1Y, '▶', { fontSize: '24px', color: '#38bdf8' }).setOrigin(0.5).setInteractive({ useHandCursor: true }).setDepth(1004);
+            const p1Right = this.add.text(p1X + panelW / 2 - 18, p1Y, '▶', { fontSize: isCompact ? '18px' : '22px', color: '#38bdf8' }).setOrigin(0.5).setInteractive({ useHandCursor: true }).setDepth(1004);
             p1Right.on('pointerdown', () => {
                 p1Idx = (p1Idx + 1) % availableHeroes.length;
                 window.Sound.playShoot();
@@ -1047,36 +1075,36 @@ class MenuScene extends Phaser.Scene {
             });
             this.coopPicksGroup.add(p1Right);
 
-            // ИГРОК 2 (Справа, Фиолетовая тема)
-            const p2X = isPortrait ? width / 2 : width / 2 + 200;
-            const p2Y = isPortrait ? height / 2 + 100 : height / 2 + 10;
+            // ИГРОК 2 (Справа или снизу)
+            const p2X = isPortrait ? width / 2 : width / 2 + panelW / 2 + (isCompact ? 6 : 12);
+            const p2Y = isPortrait ? (p1Y + panelH + 10) : (height / 2 + (isCompact ? 4 : 10));
 
             const p2Card = this.add.rectangle(p2X, p2Y, panelW, panelH, 0x0f172a, 0.95).setDepth(1002);
             p2Card.setStrokeStyle(1.5, 0xa855f7);
             this.coopPicksGroup.add(p2Card);
 
-            const p2Header = this.add.text(p2X, p2Y - panelH / 2 + 20, 'ИГРОК 2 (СТРЕЛКИ)', {
-                fontFamily: "'Cinzel', serif", fontSize: '15px', fontStyle: 'bold', color: '#c084fc', letterSpacing: 1
+            const p2Header = this.add.text(p2X, p2Y - panelH / 2 + (isCompact ? 14 : 18), 'ИГРОК 2 (СТРЕЛКИ)', {
+                fontFamily: "'Cinzel', serif", fontSize: isCompact ? '12px' : '15px', fontStyle: 'bold', color: '#c084fc', letterSpacing: 1
             }).setOrigin(0.5).setDepth(1003);
             this.coopPicksGroup.add(p2Header);
 
-            const p2Pedestal = this.add.image(p2X, p2Y + 45, 'hero_pedestal_glow').setScale(0.85).setDepth(1003);
+            const p2Pedestal = this.add.image(p2X, p2Y + (isCompact ? 28 : 40), 'hero_pedestal_glow').setScale(isCompact ? 0.65 : 0.85).setDepth(1003);
             this.coopPicksGroup.add(p2Pedestal);
 
-            const p2Sprite = this.add.sprite(p2X, p2Y - 10, `hero_${h2}`).setDisplaySize(90, 90).setDepth(1004);
+            const p2Sprite = this.add.sprite(p2X, p2Y - (isCompact ? 6 : 10), `hero_${h2}`).setDisplaySize(sprSize, sprSize).setDepth(1004);
             this.coopPicksGroup.add(p2Sprite);
 
-            const p2Name = this.add.text(p2X, p2Y + 80, c2.name[lang].toUpperCase(), {
-                fontFamily: "'Cinzel', serif", fontSize: '16px', fontStyle: 'bold', color: '#ffffff'
+            const p2Name = this.add.text(p2X, p2Y + panelH / 2 - (isCompact ? 28 : 34), c2.name[lang].toUpperCase(), {
+                fontFamily: "'Cinzel', serif", fontSize: isCompact ? '13px' : '15px', fontStyle: 'bold', color: '#ffffff'
             }).setOrigin(0.5).setDepth(1003);
             this.coopPicksGroup.add(p2Name);
 
-            const p2Wep = this.add.text(p2X, p2Y + 102, `Оружие: ${CONFIG.WEAPONS[c2.weapon].name[lang]}`, {
-                fontFamily: "'Rajdhani', sans-serif", fontSize: '12px', color: '#94a3b8'
+            const p2Wep = this.add.text(p2X, p2Y + panelH / 2 - (isCompact ? 12 : 16), `Оружие: ${CONFIG.WEAPONS[c2.weapon].name[lang]}`, {
+                fontFamily: "'Rajdhani', sans-serif", fontSize: isCompact ? '10px' : '11px', color: '#94a3b8'
             }).setOrigin(0.5).setDepth(1003);
             this.coopPicksGroup.add(p2Wep);
 
-            const p2Left = this.add.text(p2X - panelW / 2 + 22, p2Y, '◀', { fontSize: '24px', color: '#a855f7' }).setOrigin(0.5).setInteractive({ useHandCursor: true }).setDepth(1004);
+            const p2Left = this.add.text(p2X - panelW / 2 + 18, p2Y, '◀', { fontSize: isCompact ? '18px' : '22px', color: '#a855f7' }).setOrigin(0.5).setInteractive({ useHandCursor: true }).setDepth(1004);
             p2Left.on('pointerdown', () => {
                 p2Idx = (p2Idx - 1 + availableHeroes.length) % availableHeroes.length;
                 window.Sound.playShoot();
@@ -1084,7 +1112,7 @@ class MenuScene extends Phaser.Scene {
             });
             this.coopPicksGroup.add(p2Left);
 
-            const p2Right = this.add.text(p2X + panelW / 2 - 22, p2Y, '▶', { fontSize: '24px', color: '#a855f7' }).setOrigin(0.5).setInteractive({ useHandCursor: true }).setDepth(1004);
+            const p2Right = this.add.text(p2X + panelW / 2 - 18, p2Y, '▶', { fontSize: isCompact ? '18px' : '22px', color: '#a855f7' }).setOrigin(0.5).setInteractive({ useHandCursor: true }).setDepth(1004);
             p2Right.on('pointerdown', () => {
                 p2Idx = (p2Idx + 1) % availableHeroes.length;
                 window.Sound.playShoot();
@@ -1096,10 +1124,10 @@ class MenuScene extends Phaser.Scene {
         renderCoopPicks();
 
         // Кнопка СТАРТ CO-OP
-        const startBtnY = height / 2 + modalH / 2 - 36;
-        const startBtn = this.add.image(width / 2, startBtnY, 'btn_coop_bg').setInteractive({ useHandCursor: true }).setDepth(1003);
+        const startBtnY = height / 2 + modalH / 2 - (isCompact ? 22 : 30);
+        const startBtn = this.add.image(width / 2, startBtnY, 'btn_coop_bg').setDisplaySize(isCompact ? 200 : 250, isCompact ? 32 : 44).setInteractive({ useHandCursor: true }).setDepth(1003);
         const startTxt = this.add.text(width / 2, startBtnY, 'НАЧАТЬ СОВМЕСТНЫЙ БОЙ', {
-            fontFamily: "'Cinzel', serif", fontSize: '16px', fontStyle: 'bold', color: '#ffffff', letterSpacing: 2
+            fontFamily: "'Cinzel', serif", fontSize: isCompact ? '12px' : '15px', fontStyle: 'bold', color: '#ffffff', letterSpacing: 1.5
         }).setOrigin(0.5).setDepth(1004);
 
         startBtn.on('pointerdown', () => {
@@ -1124,59 +1152,61 @@ class MenuScene extends Phaser.Scene {
         const quests = QuestManager.QUESTS;
         const userQuests = window.SaveManager.data.quests || {};
         const isPortrait = height > width;
+        const isCompact = !isPortrait && height < 520;
 
         const backdrop = this.add.rectangle(width / 2, height / 2, width, height, 0x030712, 0.94).setInteractive().setDepth(1000);
         backdrop.on('pointerdown', () => this.closeCurrentModal());
         modalGroup.add(backdrop);
 
-        const modalW = isPortrait ? Math.min(width - 20, 420) : Math.min(width - 40, 840);
-        const modalH = isPortrait ? Math.min(height - 20, 580) : Math.min(height - 20, 500);
+        const modalW = isPortrait ? Math.min(width - 16, 400) : (isCompact ? Math.min(width - 16, 820) : Math.min(width - 40, 840));
+        const modalH = isPortrait ? Math.min(height - 16, 620) : (isCompact ? Math.min(height - 16, 370) : Math.min(height - 20, 500));
 
         const modalBg = this.add.rectangle(width / 2, height / 2, modalW, modalH, 0x0b1120, 0.96).setInteractive().setDepth(1001);
         modalBg.setStrokeStyle(2, 0xd97706);
         modalGroup.add(modalBg);
 
-        const headerLine = this.add.rectangle(width / 2, height / 2 - modalH / 2 + 50, modalW - 60, 1, 0x334155).setDepth(1002);
+        const headerLine = this.add.rectangle(width / 2, height / 2 - modalH / 2 + (isCompact ? 36 : 50), modalW - 40, 1, 0x334155).setDepth(1002);
         modalGroup.add(headerLine);
 
-        const title = this.add.text(width / 2, height / 2 - modalH / 2 + 28, 'ДОСТИЖЕНИЯ И НАГРАДЫ', {
-            fontFamily: "'Cinzel', serif", fontSize: isPortrait ? '17px' : '21px', fontStyle: 'bold', color: '#ffd166', letterSpacing: 2
+        const title = this.add.text(width / 2, height / 2 - modalH / 2 + (isCompact ? 18 : 28), 'ДОСТИЖЕНИЯ И НАГРАДЫ', {
+            fontFamily: "'Cinzel', serif", fontSize: isCompact ? '14px' : (isPortrait ? '16px' : '21px'), fontStyle: 'bold', color: '#ffd166', letterSpacing: 1.5
         }).setOrigin(0.5).setDepth(1002);
         modalGroup.add(title);
 
-        const xBtn = this.add.image(width / 2 + modalW / 2 - 28, height / 2 - modalH / 2 + 28, 'btn_close_circle').setInteractive({ useHandCursor: true }).setDepth(1003);
+        const xBtn = this.add.image(width / 2 + modalW / 2 - (isCompact ? 20 : 28), height / 2 - modalH / 2 + (isCompact ? 18 : 28), 'btn_close_circle').setDisplaySize(isCompact ? 24 : 32, isCompact ? 24 : 32).setInteractive({ useHandCursor: true }).setDepth(1003);
         xBtn.on('pointerdown', () => this.closeCurrentModal());
         modalGroup.add(xBtn);
 
         const questList = Object.values(quests);
-        const availableH = modalH - 75;
-        const rowSpacing = Math.min(isPortrait ? 52 : 48, availableH / questList.length);
-        const rowH = rowSpacing - 6;
+        const availableH = modalH - (isCompact ? 55 : 80);
+        const rowSpacing = Math.min(isCompact ? 40 : (isPortrait ? 52 : 48), availableH / questList.length);
+        const rowH = rowSpacing - (isCompact ? 4 : 6);
 
-        let startY = height / 2 - modalH / 2 + 65;
+        let startY = height / 2 - modalH / 2 + (isCompact ? 50 : 68);
 
         questList.forEach((q) => {
             const isDone = !!userQuests[q.id];
 
-            const rowBg = this.add.rectangle(width / 2, startY + rowH / 2, modalW - 40, rowH, isDone ? 0x064e3b : 0x0f172a, 0.95).setDepth(1002);
+            const rowBg = this.add.rectangle(width / 2, startY + rowH / 2, modalW - (isCompact ? 24 : 40), rowH, isDone ? 0x064e3b : 0x0f172a, 0.95).setDepth(1002);
             rowBg.setStrokeStyle(1, isDone ? 0x10b981 : 0x1e293b);
             modalGroup.add(rowBg);
 
-            const iconImg = this.add.image(width / 2 - modalW / 2 + 36, startY + rowH / 2, q.iconKey || 'ui_trophy').setScale(isPortrait ? 0.75 : 0.85).setDepth(1003);
+            const iconImg = this.add.image(width / 2 - modalW / 2 + (isCompact ? 24 : 36), startY + rowH / 2, q.iconKey || 'ui_trophy').setScale(isCompact ? 0.6 : (isPortrait ? 0.75 : 0.85)).setDepth(1003);
             modalGroup.add(iconImg);
 
-            const nameText = this.add.text(width / 2 - modalW / 2 + 60, startY + (isPortrait ? 4 : 6), q.name[lang], {
-                fontFamily: "'Cinzel', serif", fontSize: isPortrait ? '12px' : '14px', fontStyle: 'bold', color: isDone ? '#34d399' : '#f8fafc'
+            const textLeftX = width / 2 - modalW / 2 + (isCompact ? 44 : 60);
+            const nameText = this.add.text(textLeftX, startY + (isCompact ? 2 : 4), q.name[lang], {
+                fontFamily: "'Cinzel', serif", fontSize: isCompact ? '11px' : (isPortrait ? '12px' : '14px'), fontStyle: 'bold', color: isDone ? '#34d399' : '#f8fafc'
             }).setDepth(1003);
             modalGroup.add(nameText);
 
-            const descText = this.add.text(width / 2 - modalW / 2 + 60, startY + (isPortrait ? 20 : 22), q.desc[lang], {
-                fontFamily: "'Rajdhani', sans-serif", fontSize: isPortrait ? '10px' : '11px', color: '#94a3b8'
+            const descText = this.add.text(textLeftX, startY + (isCompact ? 16 : 20), q.desc[lang], {
+                fontFamily: "'Rajdhani', sans-serif", fontSize: isCompact ? '9px' : (isPortrait ? '10px' : '11px'), color: '#94a3b8'
             }).setDepth(1003);
             modalGroup.add(descText);
 
-            const statusText = this.add.text(width / 2 + modalW / 2 - 30, startY + rowH / 2, isDone ? 'ВЫПОЛНЕНО ✓' : `+${q.reward} ЗОЛ.`, {
-                fontFamily: "'Rajdhani', sans-serif", fontSize: isPortrait ? '12px' : '14px', fontStyle: 'bold', color: isDone ? '#34d399' : '#ffd166'
+            const statusText = this.add.text(width / 2 + modalW / 2 - (isCompact ? 20 : 30), startY + rowH / 2, isDone ? 'ВЫПОЛНЕНО ✓' : `+${q.reward} ЗОЛ.`, {
+                fontFamily: "'Rajdhani', sans-serif", fontSize: isCompact ? '10px' : (isPortrait ? '12px' : '14px'), fontStyle: 'bold', color: isDone ? '#34d399' : '#ffd166'
             }).setOrigin(1, 0.5).setDepth(1003);
             modalGroup.add(statusText);
 
@@ -1192,27 +1222,28 @@ class MenuScene extends Phaser.Scene {
         this.currentModal = modalGroup;
         const lang = window.SaveManager.data.lang || 'ru';
         const isPortrait = height > width;
+        const isCompact = !isPortrait && height < 520;
 
         const backdrop = this.add.rectangle(width / 2, height / 2, width, height, 0x030712, 0.94).setInteractive().setDepth(1000);
         backdrop.on('pointerdown', () => this.closeCurrentModal());
         modalGroup.add(backdrop);
 
-        const modalW = isPortrait ? Math.min(width - 20, 420) : Math.min(width - 40, 940);
-        const modalH = isPortrait ? Math.min(height - 20, 600) : Math.min(height - 20, 540);
+        const modalW = isPortrait ? Math.min(width - 16, 400) : (isCompact ? Math.min(width - 16, 820) : Math.min(width - 40, 940));
+        const modalH = isPortrait ? Math.min(height - 16, 640) : (isCompact ? Math.min(height - 16, 370) : Math.min(height - 20, 540));
 
         const modalBg = this.add.rectangle(width / 2, height / 2, modalW, modalH, 0x0b1120, 0.96).setInteractive().setDepth(1001);
         modalBg.setStrokeStyle(2, 0x0284c7);
         modalGroup.add(modalBg);
 
-        const headerLine = this.add.rectangle(width / 2, height / 2 - modalH / 2 + 50, modalW - 60, 1, 0x334155).setDepth(1002);
+        const headerLine = this.add.rectangle(width / 2, height / 2 - modalH / 2 + (isCompact ? 36 : 50), modalW - 40, 1, 0x334155).setDepth(1002);
         modalGroup.add(headerLine);
 
-        const title = this.add.text(width / 2, height / 2 - modalH / 2 + 28, 'РЕЦЕПТЫ ЭВОЛЮЦИИ СУПЕР-ОРУЖИЯ', {
-            fontFamily: "'Cinzel', serif", fontSize: isPortrait ? '15px' : '20px', fontStyle: 'bold', color: '#38bdf8', letterSpacing: 2
+        const title = this.add.text(width / 2, height / 2 - modalH / 2 + (isCompact ? 18 : 28), 'РЕЦЕПТЫ ЭВОЛЮЦИИ СУПЕР-ОРУЖИЯ', {
+            fontFamily: "'Cinzel', serif", fontSize: isCompact ? '12px' : (isPortrait ? '13px' : '20px'), fontStyle: 'bold', color: '#38bdf8', letterSpacing: 1.2
         }).setOrigin(0.5).setDepth(1002);
         modalGroup.add(title);
 
-        const xBtn = this.add.image(width / 2 + modalW / 2 - 28, height / 2 - modalH / 2 + 28, 'btn_close_circle').setInteractive({ useHandCursor: true }).setDepth(1003);
+        const xBtn = this.add.image(width / 2 + modalW / 2 - (isCompact ? 20 : 28), height / 2 - modalH / 2 + (isCompact ? 18 : 28), 'btn_close_circle').setDisplaySize(isCompact ? 24 : 32, isCompact ? 24 : 32).setInteractive({ useHandCursor: true }).setDepth(1003);
         xBtn.on('pointerdown', () => this.closeCurrentModal());
         modalGroup.add(xBtn);
 
@@ -1222,10 +1253,10 @@ class MenuScene extends Phaser.Scene {
             sup: w.evolution
         }));
 
-        let startY = height / 2 - modalH / 2 + 68;
-        const availableH = modalH - 85;
-        const rowSpacing = Math.min(isPortrait ? 76 : 72, availableH / evolutions.length);
-        const rowH = rowSpacing - 6;
+        let startY = height / 2 - modalH / 2 + (isCompact ? 48 : 68);
+        const availableH = modalH - (isCompact ? 56 : 85);
+        const rowSpacing = Math.min(isCompact ? 48 : (isPortrait ? 82 : 72), availableH / evolutions.length);
+        const rowH = rowSpacing - (isCompact ? 4 : 6);
 
         evolutions.forEach((evo) => {
             const w = CONFIG.WEAPONS[evo.wep];
@@ -1233,68 +1264,100 @@ class MenuScene extends Phaser.Scene {
             const s = CONFIG.SUPER_WEAPONS[evo.sup];
             if (!w || !p || !s) return;
 
-            const rowBg = this.add.rectangle(width / 2, startY + rowH / 2, modalW - 40, rowH, 0x0f172a, 0.95).setDepth(1002);
+            const rowBg = this.add.rectangle(width / 2, startY + rowH / 2, modalW - (isCompact ? 20 : 40), rowH, 0x0f172a, 0.95).setDepth(1002);
             rowBg.setStrokeStyle(1.5, 0x1e293b);
             modalGroup.add(rowBg);
 
             const rowMidY = startY + rowH / 2;
 
             if (isPortrait) {
-                const textStr = `${w.name[lang]} (Lv.5) + ${p.name[lang]}\n-> ${s.name[lang].toUpperCase()}`;
-                const rowText = this.add.text(width / 2, rowMidY, textStr, {
-                    fontFamily: "'Rajdhani', sans-serif", fontSize: '13px', fontStyle: 'bold', color: '#00f5d4', align: 'center'
-                }).setOrigin(0.5).setDepth(1003);
-                modalGroup.add(rowText);
-            } else {
-                // 1. Блок базового оружия
-                const wepIcon = this.add.image(width / 2 - 345, rowMidY, w.icon).setScale(0.65).setDepth(1003);
+                // Красивые иконки + название в Portrait
+                const wepIcon = this.add.image(width / 2 - modalW / 2 + 35, rowMidY, w.icon).setScale(0.5).setDepth(1003);
                 modalGroup.add(wepIcon);
-                const wepText = this.add.text(width / 2 - 315, rowMidY - 8, w.name[lang], {
-                    fontFamily: "'Cinzel', serif", fontSize: '13px', fontStyle: 'bold', color: '#ffffff'
+
+                const plus = this.add.text(width / 2 - modalW / 2 + 65, rowMidY, '+', {
+                    fontFamily: 'sans-serif', fontSize: '14px', fontStyle: 'bold', color: '#94a3b8'
+                }).setOrigin(0.5).setDepth(1003);
+                modalGroup.add(plus);
+
+                const pasIcon = this.add.image(width / 2 - modalW / 2 + 95, rowMidY, p.icon).setScale(0.5).setDepth(1003);
+                modalGroup.add(pasIcon);
+
+                const arrow = this.add.text(width / 2 - modalW / 2 + 125, rowMidY, '➔', {
+                    fontSize: '14px', color: '#ffd166'
+                }).setOrigin(0.5).setDepth(1003);
+                modalGroup.add(arrow);
+
+                const supIcon = this.add.image(width / 2 - modalW / 2 + 155, rowMidY, s.icon).setScale(0.55).setTint(0xffd166).setDepth(1003);
+                modalGroup.add(supIcon);
+
+                const supText = this.add.text(width / 2 - modalW / 2 + 180, rowMidY - 7, s.name[lang].toUpperCase(), {
+                    fontFamily: "'Cinzel', serif", fontSize: '11px', fontStyle: 'bold', color: '#ffd166'
                 }).setDepth(1003);
-                const wepLvl = this.add.text(width / 2 - 315, rowMidY + 8, 'Макс. Ур. 5', {
-                    fontFamily: "'Rajdhani', sans-serif", fontSize: '11px', color: '#f59e0b'
+                modalGroup.add(supText);
+
+                const compText = this.add.text(width / 2 - modalW / 2 + 180, rowMidY + 7, `${w.name[lang]} + ${p.name[lang]}`, {
+                    fontFamily: "'Rajdhani', sans-serif", fontSize: '9px', color: '#94a3b8'
+                }).setDepth(1003);
+                modalGroup.add(compText);
+            } else {
+                // 1. Базовое оружие
+                const wepLeftX = isCompact ? (width / 2 - modalW / 2 + 25) : (width / 2 - 345);
+                const wepIcon = this.add.image(wepLeftX, rowMidY, w.icon).setScale(isCompact ? 0.48 : 0.65).setDepth(1003);
+                modalGroup.add(wepIcon);
+                
+                const wepText = this.add.text(wepLeftX + (isCompact ? 18 : 30), rowMidY - (isCompact ? 6 : 8), w.name[lang], {
+                    fontFamily: "'Cinzel', serif", fontSize: isCompact ? '10px' : '13px', fontStyle: 'bold', color: '#ffffff'
+                }).setDepth(1003);
+                const wepLvl = this.add.text(wepLeftX + (isCompact ? 18 : 30), rowMidY + (isCompact ? 5 : 8), 'Макс. Ур. 5', {
+                    fontFamily: "'Rajdhani', sans-serif", fontSize: isCompact ? '8px' : '11px', color: '#f59e0b'
                 }).setDepth(1003);
                 modalGroup.add(wepText);
                 modalGroup.add(wepLvl);
 
                 // Плюс
-                const plus = this.add.text(width / 2 - 175, rowMidY, '+', {
-                    fontFamily: 'sans-serif', fontSize: '20px', fontStyle: 'bold', color: '#94a3b8'
+                const plusX = isCompact ? (wepLeftX + 115) : (width / 2 - 175);
+                const plus = this.add.text(plusX, rowMidY, '+', {
+                    fontFamily: 'sans-serif', fontSize: isCompact ? '14px' : '20px', fontStyle: 'bold', color: '#94a3b8'
                 }).setOrigin(0.5).setDepth(1003);
                 modalGroup.add(plus);
 
-                // 2. Блок пассивки
-                const pasIcon = this.add.image(width / 2 - 135, rowMidY, p.icon).setScale(0.65).setDepth(1003);
+                // 2. Пассивка
+                const pasLeftX = isCompact ? (plusX + 25) : (width / 2 - 135);
+                const pasIcon = this.add.image(pasLeftX, rowMidY, p.icon).setScale(isCompact ? 0.48 : 0.65).setDepth(1003);
                 modalGroup.add(pasIcon);
-                const pasText = this.add.text(width / 2 - 105, rowMidY - 8, p.name[lang], {
-                    fontFamily: "'Cinzel', serif", fontSize: '13px', fontStyle: 'bold', color: '#ffffff'
+                
+                const pasText = this.add.text(pasLeftX + (isCompact ? 18 : 30), rowMidY - (isCompact ? 6 : 8), p.name[lang], {
+                    fontFamily: "'Cinzel', serif", fontSize: isCompact ? '10px' : '13px', fontStyle: 'bold', color: '#ffffff'
                 }).setDepth(1003);
-                const pasLvl = this.add.text(width / 2 - 105, rowMidY + 8, 'Любой уровень', {
-                    fontFamily: "'Rajdhani', sans-serif", fontSize: '11px', color: '#38bdf8'
+                const pasLvl = this.add.text(pasLeftX + (isCompact ? 18 : 30), rowMidY + (isCompact ? 5 : 8), 'Любой уровень', {
+                    fontFamily: "'Rajdhani', sans-serif", fontSize: isCompact ? '8px' : '11px', color: '#38bdf8'
                 }).setDepth(1003);
                 modalGroup.add(pasText);
                 modalGroup.add(pasLvl);
 
                 // Стрелка крафта
-                const arrow = this.add.text(width / 2 + 55, rowMidY, '➔', {
-                    fontSize: '20px', fontStyle: 'bold', color: '#ffd166'
+                const arrowX = isCompact ? (pasLeftX + 115) : (width / 2 + 55);
+                const arrow = this.add.text(arrowX, rowMidY, '➔', {
+                    fontSize: isCompact ? '14px' : '20px', fontStyle: 'bold', color: '#ffd166'
                 }).setOrigin(0.5).setDepth(1003);
                 modalGroup.add(arrow);
 
                 // 3. Блок супер-оружия (Эволюция)
-                const supBg = this.add.rectangle(width / 2 + 255, rowMidY, 260, 52, 0x1e1b4b).setDepth(1002);
+                const supBoxW = isCompact ? (modalW - (arrowX + 20) - 20) : 260;
+                const supCenterX = isCompact ? (arrowX + 15 + supBoxW / 2) : (width / 2 + 255);
+                const supBg = this.add.rectangle(supCenterX, rowMidY, supBoxW, isCompact ? (rowH - 6) : 52, 0x1e1b4b).setDepth(1002);
                 supBg.setStrokeStyle(1.5, 0xffd166);
                 modalGroup.add(supBg);
 
-                const supIcon = this.add.image(width / 2 + 150, rowMidY, s.icon).setScale(0.7).setTint(0xffd166).setDepth(1003);
+                const supIcon = this.add.image(supCenterX - supBoxW / 2 + (isCompact ? 16 : 24), rowMidY, s.icon).setScale(isCompact ? 0.5 : 0.7).setTint(0xffd166).setDepth(1003);
                 modalGroup.add(supIcon);
 
-                const supText = this.add.text(width / 2 + 180, rowMidY - 9, s.name[lang].toUpperCase(), {
-                    fontFamily: "'Cinzel', serif", fontSize: '12px', fontStyle: 'bold', color: '#ffd166'
+                const supText = this.add.text(supCenterX - supBoxW / 2 + (isCompact ? 34 : 54), rowMidY - (isCompact ? 6 : 9), s.name[lang].toUpperCase(), {
+                    fontFamily: "'Cinzel', serif", fontSize: isCompact ? '9px' : '12px', fontStyle: 'bold', color: '#ffd166'
                 }).setDepth(1003);
-                const supDesc = this.add.text(width / 2 + 180, rowMidY + 7, s.desc ? s.desc[lang] : 'Супер-Оружие', {
-                    fontFamily: "'Rajdhani', sans-serif", fontSize: '10px', color: '#e2e8f0', wordWrap: { width: 180 }
+                const supDesc = this.add.text(supCenterX - supBoxW / 2 + (isCompact ? 34 : 54), rowMidY + (isCompact ? 4 : 7), s.desc ? s.desc[lang] : 'Супер-Оружие', {
+                    fontFamily: "'Rajdhani', sans-serif", fontSize: isCompact ? '8px' : '10px', color: '#e2e8f0', wordWrap: { width: supBoxW - (isCompact ? 40 : 65) }
                 }).setDepth(1003);
                 modalGroup.add(supText);
                 modalGroup.add(supDesc);
@@ -1311,34 +1374,35 @@ class MenuScene extends Phaser.Scene {
         const modalGroup = this.add.group();
         this.currentModal = modalGroup;
         const isPortrait = height > width;
+        const isCompact = !isPortrait && height < 520;
 
         const backdrop = this.add.rectangle(width / 2, height / 2, width, height, 0x030712, 0.94).setInteractive().setDepth(1000);
         backdrop.on('pointerdown', () => this.closeCurrentModal());
         modalGroup.add(backdrop);
 
-        const modalW = isPortrait ? Math.min(width - 20, 380) : 480;
-        const modalH = isPortrait ? 340 : 320;
+        const modalW = isPortrait ? Math.min(width - 16, 380) : (isCompact ? Math.min(width - 16, 440) : 480);
+        const modalH = isPortrait ? Math.min(height - 16, 340) : (isCompact ? Math.min(height - 16, 280) : 320);
 
         const modalBg = this.add.rectangle(width / 2, height / 2, modalW, modalH, 0x0b1120, 0.96).setInteractive().setDepth(1001);
         modalBg.setStrokeStyle(2, 0x6366f1);
         modalGroup.add(modalBg);
 
-        const headerLine = this.add.rectangle(width / 2, height / 2 - modalH / 2 + 50, modalW - 60, 1, 0x334155).setDepth(1002);
+        const headerLine = this.add.rectangle(width / 2, height / 2 - modalH / 2 + (isCompact ? 36 : 50), modalW - 40, 1, 0x334155).setDepth(1002);
         modalGroup.add(headerLine);
 
-        const title = this.add.text(width / 2, height / 2 - modalH / 2 + 28, 'НАСТРОЙКИ', {
-            fontFamily: "'Cinzel', serif", fontSize: '20px', fontStyle: 'bold', color: '#c084fc', letterSpacing: 2
+        const title = this.add.text(width / 2, height / 2 - modalH / 2 + (isCompact ? 18 : 28), 'НАСТРОЙКИ', {
+            fontFamily: "'Cinzel', serif", fontSize: isCompact ? '15px' : '20px', fontStyle: 'bold', color: '#c084fc', letterSpacing: 2
         }).setOrigin(0.5).setDepth(1002);
         modalGroup.add(title);
 
-        const xBtn = this.add.image(width / 2 + modalW / 2 - 28, height / 2 - modalH / 2 + 28, 'btn_close_circle').setInteractive({ useHandCursor: true }).setDepth(1003);
+        const xBtn = this.add.image(width / 2 + modalW / 2 - (isCompact ? 20 : 28), height / 2 - modalH / 2 + (isCompact ? 18 : 28), 'btn_close_circle').setDisplaySize(isCompact ? 24 : 32, isCompact ? 24 : 32).setInteractive({ useHandCursor: true }).setDepth(1003);
         xBtn.on('pointerdown', () => this.closeCurrentModal());
         modalGroup.add(xBtn);
 
-        const soundBtn = this.add.rectangle(width / 2, height / 2 + 10, 260, 48, 0x0f172a, 0.95).setInteractive({ useHandCursor: true }).setDepth(1002);
+        const soundBtn = this.add.rectangle(width / 2, height / 2 + (isCompact ? 10 : 12), isCompact ? 220 : 260, isCompact ? 40 : 48, 0x0f172a, 0.95).setInteractive({ useHandCursor: true }).setDepth(1002);
         soundBtn.setStrokeStyle(1.5, 0x38bdf8);
-        const soundTxt = this.add.text(width / 2, height / 2 + 10, window.Sound.isMuted ? 'ЗВУК: ВЫКЛ' : 'ЗВУК: ВКЛ', {
-            fontFamily: "'Cinzel', serif", fontSize: '16px', fontStyle: 'bold', color: '#ffffff', letterSpacing: 1
+        const soundTxt = this.add.text(width / 2, height / 2 + (isCompact ? 10 : 12), window.Sound.isMuted ? 'ЗВУК: ВЫКЛ' : 'ЗВУК: ВКЛ', {
+            fontFamily: "'Cinzel', serif", fontSize: isCompact ? '14px' : '16px', fontStyle: 'bold', color: '#ffffff', letterSpacing: 1
         }).setOrigin(0.5).setDepth(1003);
 
         soundBtn.on('pointerdown', () => {
@@ -1358,27 +1422,28 @@ class MenuScene extends Phaser.Scene {
         const modalGroup = this.add.group();
         this.currentModal = modalGroup;
         const isPortrait = height > width;
+        const isCompact = !isPortrait && height < 520;
 
         const backdrop = this.add.rectangle(width / 2, height / 2, width, height, 0x030712, 0.94).setInteractive().setDepth(1000);
         backdrop.on('pointerdown', () => this.closeCurrentModal());
         modalGroup.add(backdrop);
 
-        const modalW = isPortrait ? Math.min(width - 20, 420) : 620;
-        const modalH = 440;
+        const modalW = isPortrait ? Math.min(width - 16, 420) : (isCompact ? Math.min(width - 16, 620) : 620);
+        const modalH = isPortrait ? Math.min(height - 16, 520) : (isCompact ? Math.min(height - 16, 370) : 440);
 
         const modalBg = this.add.rectangle(width / 2, height / 2, modalW, modalH, 0x0b1120, 0.96).setInteractive().setDepth(1001);
         modalBg.setStrokeStyle(2, 0xf59e0b);
         modalGroup.add(modalBg);
 
-        const headerLine = this.add.rectangle(width / 2, height / 2 - modalH / 2 + 50, modalW - 60, 1, 0x334155).setDepth(1002);
+        const headerLine = this.add.rectangle(width / 2, height / 2 - modalH / 2 + (isCompact ? 36 : 50), modalW - 40, 1, 0x334155).setDepth(1002);
         modalGroup.add(headerLine);
 
-        const title = this.add.text(width / 2, height / 2 - modalH / 2 + 28, 'ТАБЛИЦА ЛИДЕРОВ АРЕНЫ', {
-            fontFamily: "'Cinzel', serif", fontSize: '18px', fontStyle: 'bold', color: '#ffd166', letterSpacing: 2
+        const title = this.add.text(width / 2, height / 2 - modalH / 2 + (isCompact ? 18 : 28), 'ТАБЛИЦА ЛИДЕРОВ АРЕНЫ', {
+            fontFamily: "'Cinzel', serif", fontSize: isCompact ? '13px' : '18px', fontStyle: 'bold', color: '#ffd166', letterSpacing: 1.5
         }).setOrigin(0.5).setDepth(1002);
         modalGroup.add(title);
 
-        const xBtn = this.add.image(width / 2 + modalW / 2 - 28, height / 2 - modalH / 2 + 28, 'btn_close_circle').setInteractive({ useHandCursor: true }).setDepth(1003);
+        const xBtn = this.add.image(width / 2 + modalW / 2 - (isCompact ? 20 : 28), height / 2 - modalH / 2 + (isCompact ? 18 : 28), 'btn_close_circle').setDisplaySize(isCompact ? 24 : 32, isCompact ? 24 : 32).setInteractive({ useHandCursor: true }).setDepth(1003);
         xBtn.on('pointerdown', () => this.closeCurrentModal());
         modalGroup.add(xBtn);
 
@@ -1422,27 +1487,28 @@ class MenuScene extends Phaser.Scene {
         this.currentModal = modalGroup;
         const lang = window.SaveManager.data.lang || 'ru';
         const isPortrait = height > width;
+        const isCompact = !isPortrait && height < 520;
 
         const backdrop = this.add.rectangle(width / 2, height / 2, width, height, 0x030712, 0.94).setInteractive().setDepth(1000);
         backdrop.on('pointerdown', () => this.closeCurrentModal());
         modalGroup.add(backdrop);
 
-        const modalW = isPortrait ? Math.min(width - 20, 420) : Math.min(width - 40, 960);
-        const modalH = isPortrait ? Math.min(height - 20, 680) : Math.min(height - 20, 560);
+        const modalW = isPortrait ? Math.min(width - 16, 400) : (isCompact ? Math.min(width - 16, 820) : Math.min(width - 40, 960));
+        const modalH = isPortrait ? Math.min(height - 16, 680) : (isCompact ? Math.min(height - 16, 370) : Math.min(height - 20, 560));
 
         const modalBg = this.add.rectangle(width / 2, height / 2, modalW, modalH, 0x0b1120, 0.96).setInteractive().setDepth(1001);
         modalBg.setStrokeStyle(2, 0x0ea5e9);
         modalGroup.add(modalBg);
 
-        const title = this.add.text(width / 2, height / 2 - modalH / 2 + 28, 'ВЫБОР КАРТЫ (АРЕНЫ)', {
-            fontFamily: "'Cinzel', serif", fontSize: isPortrait ? '17px' : '22px', fontStyle: 'bold', color: '#38bdf8', letterSpacing: 2
+        const title = this.add.text(width / 2, height / 2 - modalH / 2 + (isCompact ? 18 : 28), 'ВЫБОР КАРТЫ (АРЕНЫ)', {
+            fontFamily: "'Cinzel', serif", fontSize: isCompact ? '14px' : (isPortrait ? '16px' : '22px'), fontStyle: 'bold', color: '#38bdf8', letterSpacing: 1.5
         }).setOrigin(0.5).setDepth(1002);
         modalGroup.add(title);
 
-        const headerLine = this.add.rectangle(width / 2, height / 2 - modalH / 2 + 52, modalW - 60, 1, 0x334155).setDepth(1002);
+        const headerLine = this.add.rectangle(width / 2, height / 2 - modalH / 2 + (isCompact ? 36 : 52), modalW - 40, 1, 0x334155).setDepth(1002);
         modalGroup.add(headerLine);
 
-        const xBtn = this.add.image(width / 2 + modalW / 2 - 28, height / 2 - modalH / 2 + 28, 'btn_close_circle').setInteractive({ useHandCursor: true }).setDepth(1003);
+        const xBtn = this.add.image(width / 2 + modalW / 2 - (isCompact ? 20 : 28), height / 2 - modalH / 2 + (isCompact ? 18 : 28), 'btn_close_circle').setDisplaySize(isCompact ? 24 : 32, isCompact ? 24 : 32).setInteractive({ useHandCursor: true }).setDepth(1003);
         xBtn.on('pointerdown', () => this.closeCurrentModal());
         modalGroup.add(xBtn);
 
@@ -1454,8 +1520,8 @@ class MenuScene extends Phaser.Scene {
             cardGroup.clear(true, true);
             const currentSelectedMap = window.SaveManager.data.selectedMap || 'dark_castle';
 
-            const cardW = isPortrait ? modalW - 36 : 210;
-            const cardH = isPortrait ? 130 : 420;
+            const cardW = isPortrait ? (modalW - 24) : ((modalW - 40) / 4 - (isCompact ? 6 : 12));
+            const cardH = isPortrait ? Math.min(130, (modalH - 90) / 4 - 8) : (isCompact ? modalH - 55 : 420);
 
             mapList.forEach((mId, idx) => {
                 const mapCfg = CONFIG.MAPS[mId];
@@ -1470,12 +1536,14 @@ class MenuScene extends Phaser.Scene {
 
                 let cx, cy;
                 if (isPortrait) {
+                    const stepY = (modalH - 80) / 4;
                     cx = width / 2;
-                    cy = height / 2 - modalH / 2 + 130 + (idx * 142);
+                    cy = height / 2 - modalH / 2 + 55 + (stepY * idx) + (cardH / 2);
                 } else {
-                    const startX = width / 2 - (1.5 * 230);
-                    cx = startX + (idx * 230);
-                    cy = height / 2 + 25;
+                    const totalCardsW = (cardW + (isCompact ? 8 : 16)) * 4 - (isCompact ? 8 : 16);
+                    const startX = width / 2 - totalCardsW / 2 + cardW / 2;
+                    cx = startX + (idx * (cardW + (isCompact ? 8 : 16)));
+                    cy = height / 2 + (isCompact ? 16 : 25);
                 }
 
                 // Фоновая панель карточки
@@ -1495,38 +1563,44 @@ class MenuScene extends Phaser.Scene {
 
                 if (!isPortrait) {
                     // Горизонтальный вид карточки
-                    // 1. Превью арт карты
-                    const preview = this.add.image(cx, cy - 120, mapCfg.icon).setDisplaySize(180, 105).setDepth(1003);
+                    const previewH = isCompact ? 68 : 105;
+                    const previewW = cardW - 20;
+                    const preview = this.add.image(cx, cy - cardH / 2 + (isCompact ? 42 : 65), mapCfg.icon).setDisplaySize(previewW, previewH).setDepth(1003);
                     cardGroup.add(preview);
                     if (!isUnlocked) preview.setTint(0x334155);
 
-                    // 2. Название карты
-                    const mTitle = this.add.text(cx, cy - 48, mapCfg.name[lang], {
-                        fontFamily: "'Cinzel', serif", fontSize: '15px', fontStyle: 'bold', color: isSelected ? '#38bdf8' : (isUnlocked ? '#ffffff' : '#64748b')
+                    // Название карты
+                    const mTitle = this.add.text(cx, cy - cardH / 2 + (isCompact ? 88 : 130), mapCfg.name[lang], {
+                        fontFamily: "'Cinzel', serif", fontSize: isCompact ? '12px' : '15px', fontStyle: 'bold', color: isSelected ? '#38bdf8' : (isUnlocked ? '#ffffff' : '#64748b')
                     }).setOrigin(0.5).setDepth(1003);
                     cardGroup.add(mTitle);
 
-                    // 3. Описание
-                    const mDesc = this.add.text(cx, cy - 10, mapCfg.desc[lang], {
-                        fontFamily: "'Rajdhani', sans-serif", fontSize: '11px', color: '#94a3b8', align: 'center', lineSpacing: 3, wordWrap: { width: 190 }
+                    // Описание
+                    const descY = cy - cardH / 2 + (isCompact ? 116 : 170);
+                    const mDesc = this.add.text(cx, descY, mapCfg.desc[lang], {
+                        fontFamily: "'Rajdhani', sans-serif", fontSize: isCompact ? '9px' : '11px', color: '#94a3b8', align: 'center', lineSpacing: 2, wordWrap: { width: cardW - 14 }
                     }).setOrigin(0.5).setDepth(1003);
                     cardGroup.add(mDesc);
 
-                    // 4. Рекорд
-                    const recText = this.add.text(cx, cy + 50, recordStr, {
-                        fontFamily: "'Rajdhani', sans-serif", fontSize: '12px', fontStyle: 'bold', color: recordSec > 0 ? '#ffd166' : '#64748b'
+                    // Рекорд
+                    const recY = cy + cardH / 2 - (isCompact ? 40 : 55);
+                    const recText = this.add.text(cx, recY, recordStr, {
+                        fontFamily: "'Rajdhani', sans-serif", fontSize: isCompact ? '10px' : '12px', fontStyle: 'bold', color: recordSec > 0 ? '#ffd166' : '#64748b'
                     }).setOrigin(0.5).setDepth(1003);
                     cardGroup.add(recText);
 
-                    // 5. Кнопка действия
-                    const btnY = cy + 155;
+                    // Кнопка действия
+                    const btnY = cy + cardH / 2 - (isCompact ? 18 : 25);
+                    const btnW = cardW - (isCompact ? 16 : 24);
+                    const btnH = isCompact ? 24 : 34;
+
                     if (isUnlocked) {
-                        const selBtn = this.add.rectangle(cx, btnY, 170, 36, isSelected ? 0x0284c7 : 0x1e293b).setInteractive({ useHandCursor: true }).setDepth(1003);
+                        const selBtn = this.add.rectangle(cx, btnY, btnW, btnH, isSelected ? 0x0284c7 : 0x1e293b).setInteractive({ useHandCursor: true }).setDepth(1003);
                         selBtn.setStrokeStyle(1.5, isSelected ? 0x38bdf8 : 0x475569);
                         cardGroup.add(selBtn);
 
                         const selText = this.add.text(cx, btnY, isSelected ? 'ВЫБРАНО' : 'ВЫБРАТЬ', {
-                            fontFamily: "'Cinzel', serif", fontSize: '13px', fontStyle: 'bold', color: '#ffffff'
+                            fontFamily: "'Cinzel', serif", fontSize: isCompact ? '10px' : '13px', fontStyle: 'bold', color: '#ffffff'
                         }).setOrigin(0.5).setDepth(1004);
                         cardGroup.add(selText);
 
@@ -1537,46 +1611,46 @@ class MenuScene extends Phaser.Scene {
                             renderMapCards();
                         });
                     } else {
-                        const lockBox = this.add.rectangle(cx, btnY, 170, 42, 0x111827).setDepth(1003);
+                        const lockBox = this.add.rectangle(cx, btnY, btnW, btnH, 0x111827).setDepth(1003);
                         lockBox.setStrokeStyle(1, 0x374151);
                         cardGroup.add(lockBox);
 
-                        const lockText = this.add.text(cx, btnY, '[ ЗАКРЫТО ]\nВЫЖИВИТЕ 5 МИН', {
-                            fontFamily: "'Rajdhani', sans-serif", fontSize: '11px', fontStyle: 'bold', color: '#ef4444', align: 'center', lineSpacing: 2
+                        const lockText = this.add.text(cx, btnY, isCompact ? '[ ВЫЖИВИТЕ 5 МИН ]' : '[ ЗАКРЫТО ]\nВЫЖИВИТЕ 5 МИН', {
+                            fontFamily: "'Rajdhani', sans-serif", fontSize: isCompact ? '9px' : '11px', fontStyle: 'bold', color: '#ef4444', align: 'center', lineSpacing: 1
                         }).setOrigin(0.5).setDepth(1004);
                         cardGroup.add(lockText);
                     }
                 } else {
-                    // Вертикальный компактный вид
-                    const preview = this.add.image(cx - cardW / 2 + 55, cy, mapCfg.icon).setDisplaySize(80, 55).setDepth(1003);
+                    // Вертикальный компактный вид в Portrait
+                    const preview = this.add.image(cx - cardW / 2 + 50, cy, mapCfg.icon).setDisplaySize(72, 48).setDepth(1003);
                     cardGroup.add(preview);
                     if (!isUnlocked) preview.setTint(0x334155);
 
-                    const titleX = cx - cardW / 2 + 105;
-                    const mTitle = this.add.text(titleX, cy - 35, mapCfg.name[lang], {
-                        fontFamily: "'Cinzel', serif", fontSize: '14px', fontStyle: 'bold', color: isSelected ? '#38bdf8' : (isUnlocked ? '#ffffff' : '#64748b')
+                    const titleX = cx - cardW / 2 + 96;
+                    const mTitle = this.add.text(titleX, cy - 30, mapCfg.name[lang], {
+                        fontFamily: "'Cinzel', serif", fontSize: '13px', fontStyle: 'bold', color: isSelected ? '#38bdf8' : (isUnlocked ? '#ffffff' : '#64748b')
                     }).setDepth(1003);
                     cardGroup.add(mTitle);
 
-                    const mDesc = this.add.text(titleX, cy - 12, mapCfg.desc[lang], {
-                        fontFamily: "'Rajdhani', sans-serif", fontSize: '10px', color: '#94a3b8', lineSpacing: 2, wordWrap: { width: 160 }
+                    const mDesc = this.add.text(titleX, cy - 10, mapCfg.desc[lang], {
+                        fontFamily: "'Rajdhani', sans-serif", fontSize: '9px', color: '#94a3b8', lineSpacing: 1, wordWrap: { width: cardW - 180 }
                     }).setDepth(1003);
                     cardGroup.add(mDesc);
 
-                    const recText = this.add.text(titleX, cy + 32, recordStr, {
-                        fontFamily: "'Rajdhani', sans-serif", fontSize: '11px', fontStyle: 'bold', color: recordSec > 0 ? '#ffd166' : '#64748b'
+                    const recText = this.add.text(titleX, cy + 24, recordStr, {
+                        fontFamily: "'Rajdhani', sans-serif", fontSize: '10px', fontStyle: 'bold', color: recordSec > 0 ? '#ffd166' : '#64748b'
                     }).setDepth(1003);
                     cardGroup.add(recText);
 
-                    // Кнопка справа
-                    const btnX = cx + cardW / 2 - 45;
+                    // Кнопка / статус справа
+                    const btnX = cx + cardW / 2 - 42;
                     if (isUnlocked) {
-                        const selBtn = this.add.rectangle(btnX, cy, 70, 32, isSelected ? 0x0284c7 : 0x1e293b).setInteractive({ useHandCursor: true }).setDepth(1003);
+                        const selBtn = this.add.rectangle(btnX, cy, 68, 28, isSelected ? 0x0284c7 : 0x1e293b).setInteractive({ useHandCursor: true }).setDepth(1003);
                         selBtn.setStrokeStyle(1, isSelected ? 0x38bdf8 : 0x475569);
                         cardGroup.add(selBtn);
 
                         const selText = this.add.text(btnX, cy, isSelected ? 'ВЫБРАНО' : 'ВЫБРАТЬ', {
-                            fontFamily: "'Rajdhani', sans-serif", fontSize: '10px', fontStyle: 'bold', color: '#ffffff'
+                            fontFamily: "'Rajdhani', sans-serif", fontSize: '9px', fontStyle: 'bold', color: '#ffffff'
                         }).setOrigin(0.5).setDepth(1004);
                         cardGroup.add(selText);
 
@@ -1587,8 +1661,12 @@ class MenuScene extends Phaser.Scene {
                             renderMapCards();
                         });
                     } else {
-                        const lockText = this.add.text(btnX, cy, '[ ЗАКРЫТО ]', {
-                            fontFamily: "'Rajdhani', sans-serif", fontSize: '10px', fontStyle: 'bold', color: '#ef4444'
+                        const lockBox = this.add.rectangle(btnX, cy, 68, 28, 0x111827).setDepth(1003);
+                        lockBox.setStrokeStyle(1, 0xef4444);
+                        cardGroup.add(lockBox);
+
+                        const lockText = this.add.text(btnX, cy, 'ЗАКРЫТО', {
+                            fontFamily: "'Rajdhani', sans-serif", fontSize: '9px', fontStyle: 'bold', color: '#ef4444'
                         }).setOrigin(0.5).setDepth(1004);
                         cardGroup.add(lockText);
                     }

@@ -196,7 +196,7 @@ class CoopGameScene extends Phaser.Scene {
     }
 
     createCoopHUD() {
-        const { width } = this.scale;
+        const { width, height } = this.scale;
         const lang = window.SaveManager.data.lang || 'ru';
         const h1 = CONFIG.HEROES[this.hero1Id] || CONFIG.HEROES.knight;
         const h2 = CONFIG.HEROES[this.hero2Id] || CONFIG.HEROES.archer;
@@ -213,21 +213,21 @@ class CoopGameScene extends Phaser.Scene {
         }).setScrollFactor(0).setOrigin(0.5).setDepth(101);
 
         // Игрок 1 (WASD)
-        this.p1Header = this.add.text(20, 18, `ИГРОК 1: ${h1.name[lang].toUpperCase()}`, { fontFamily: "'Rajdhani', sans-serif", fontSize: '13px', fontStyle: 'bold', color: '#38bdf8' }).setScrollFactor(0).setDepth(101);
-        this.p1LvlText = this.add.text(20, 36, 'LVL 1', { fontFamily: "'Rajdhani', sans-serif", fontSize: '16px', fontStyle: 'bold', color: '#00f5d4' }).setScrollFactor(0).setDepth(101);
+        this.p1Header = this.add.text(20, 18, `1P: ${h1.name[lang].toUpperCase()}`, { fontFamily: "'Cinzel', serif", fontSize: '12px', fontStyle: 'bold', color: '#38bdf8' }).setScrollFactor(0).setDepth(101);
+        this.p1LvlText = this.add.text(20, 34, 'LVL 1', { fontFamily: "'Rajdhani', sans-serif", fontSize: '14px', fontStyle: 'bold', color: '#00f5d4' }).setScrollFactor(0).setDepth(101);
 
         // Игрок 2 (Стрелки)
-        this.p2Header = this.add.text(width - 160, 18, `ИГРОК 2: ${h2.name[lang].toUpperCase()}`, { fontFamily: "'Rajdhani', sans-serif", fontSize: '13px', fontStyle: 'bold', color: '#a78bfa' }).setScrollFactor(0).setDepth(101);
-        this.p2LvlText = this.add.text(width - 160, 36, 'LVL 1', { fontFamily: "'Rajdhani', sans-serif", fontSize: '16px', fontStyle: 'bold', color: '#00f5d4' }).setScrollFactor(0).setDepth(101);
+        this.p2Header = this.add.text(width - 20, 18, `2P: ${h2.name[lang].toUpperCase()}`, { fontFamily: "'Cinzel', serif", fontSize: '12px', fontStyle: 'bold', color: '#a78bfa' }).setOrigin(1, 0).setScrollFactor(0).setDepth(101);
+        this.p2LvlText = this.add.text(width - 20, 34, 'LVL 1', { fontFamily: "'Rajdhani', sans-serif", fontSize: '14px', fontStyle: 'bold', color: '#00f5d4' }).setOrigin(1, 0).setScrollFactor(0).setDepth(101);
 
         // Общие киллы
-        this.killsIcon = this.add.image(width / 2 - 25, 68, 'ui_skull').setScrollFactor(0).setScale(0.85).setDepth(101);
-        this.killsText = this.add.text(width / 2 + 5, 68, '0', { fontFamily: "'Rajdhani', sans-serif", fontSize: '16px', fontStyle: 'bold', color: '#f87171' }).setScrollFactor(0).setOrigin(0, 0.5).setDepth(101);
+        this.killsIcon = this.add.image(width / 2 - 25, 68, 'ui_skull').setScrollFactor(0).setScale(0.75).setDepth(101);
+        this.killsText = this.add.text(width / 2 + 5, 68, '0', { fontFamily: "'Rajdhani', sans-serif", fontSize: '15px', fontStyle: 'bold', color: '#f87171' }).setScrollFactor(0).setOrigin(0, 0.5).setDepth(101);
 
         // Кнопка Паузы
-        this.pauseBtn = this.add.rectangle(width / 2 + 95, 35, 36, 36, 0x1e293b, 0.9).setScrollFactor(0).setInteractive({ useHandCursor: true }).setDepth(100);
-        this.pauseBtn.setStrokeStyle(2, 0x38bdf8);
-        this.pauseIcon = this.add.image(width / 2 + 95, 35, 'ui_pause').setScrollFactor(0).setScale(0.85).setDepth(101);
+        this.pauseBtn = this.add.rectangle(width / 2 + 95, 35, 34, 34, 0x1e293b, 0.9).setScrollFactor(0).setInteractive({ useHandCursor: true }).setDepth(100);
+        this.pauseBtn.setStrokeStyle(1.5, 0x38bdf8);
+        this.pauseIcon = this.add.image(width / 2 + 95, 35, 'ui_pause').setScrollFactor(0).setScale(0.8).setDepth(101);
         this.pauseBtn.on('pointerdown', () => this.openPause());
 
         // Полоса здоровья босса (скрыта по умолчанию)
@@ -253,8 +253,8 @@ class CoopGameScene extends Phaser.Scene {
         this.timerIcon.setPosition(width / 2 - 40, 35);
         this.timerText.setPosition(width / 2 + 10, 35);
 
-        this.p2Header.setPosition(width - 160, 18);
-        this.p2LvlText.setPosition(width - 160, 36);
+        this.p2Header.setPosition(width - 20, 18);
+        this.p2LvlText.setPosition(width - 20, 34);
 
         this.killsIcon.setPosition(width / 2 - 25, 68);
         this.killsText.setPosition(width / 2 + 5, 68);

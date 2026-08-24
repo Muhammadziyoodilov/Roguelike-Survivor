@@ -265,54 +265,55 @@ class GameScene extends Phaser.Scene {
     createHUD() {
         const { width, height } = this.scale;
         const isPortrait = height > width;
+        const isNarrow = width < 680;
 
         // 1. Полоса опыта (EXP BAR) на самом верху экрана
-        this.xpBarBg = this.add.rectangle(width / 2, 6, width, 12, 0x090d16).setScrollFactor(0).setDepth(100);
-        this.xpBarFill = this.add.rectangle(0, 6, 0, 10, 0x10b981).setScrollFactor(0).setOrigin(0, 0.5).setDepth(101);
+        this.xpBarBg = this.add.rectangle(width / 2, 5, width, 10, 0x090d16).setScrollFactor(0).setDepth(100);
+        this.xpBarFill = this.add.rectangle(0, 5, 0, 8, 0x10b981).setScrollFactor(0).setOrigin(0, 0.5).setDepth(101);
 
         // 2. Док героя и здоровья (Слева сверху)
-        this.heroDockBg = this.add.rectangle(110, 42, 200, 48, 0x0b1120, 0.95).setScrollFactor(0).setDepth(100);
+        this.heroDockBg = this.add.rectangle(110, 38, 200, 44, 0x0b1120, 0.95).setScrollFactor(0).setDepth(100);
         this.heroDockBg.setStrokeStyle(1.5, 0x334155);
 
         const heroId = this.heroId || (this.player ? this.player.heroId : 'knight');
-        this.heroPortrait = this.add.image(28, 42, `hero_${heroId}`).setDisplaySize(38, 38).setScrollFactor(0).setDepth(102);
+        this.heroPortrait = this.add.image(26, 38, `hero_${heroId}`).setDisplaySize(34, 34).setScrollFactor(0).setDepth(102);
 
-        this.lvlText = this.add.text(56, 26, 'LVL 1', {
-            fontFamily: "'Cinzel', serif", fontSize: '13px', fontStyle: 'bold', color: '#ffd166'
+        this.lvlText = this.add.text(50, 24, 'LVL 1', {
+            fontFamily: "'Cinzel', serif", fontSize: '12px', fontStyle: 'bold', color: '#ffd166'
         }).setScrollFactor(0).setDepth(102);
 
         // Полоса здоровья героя
-        this.playerHpBg = this.add.rectangle(130, 46, 140, 14, 0x1e1b4b).setScrollFactor(0).setDepth(101);
-        this.playerHpFill = this.add.rectangle(60, 46, 140, 12, 0xef4444).setScrollFactor(0).setOrigin(0, 0.5).setDepth(102);
-        this.playerHpText = this.add.text(130, 46, '120 / 120', {
-            fontFamily: "'Rajdhani', sans-serif", fontSize: '11px', fontStyle: 'bold', color: '#ffffff'
+        this.playerHpBg = this.add.rectangle(120, 42, 130, 12, 0x1e1b4b).setScrollFactor(0).setDepth(101);
+        this.playerHpFill = this.add.rectangle(55, 42, 130, 10, 0xef4444).setScrollFactor(0).setOrigin(0, 0.5).setDepth(102);
+        this.playerHpText = this.add.text(120, 42, '120 / 120', {
+            fontFamily: "'Rajdhani', sans-serif", fontSize: '10px', fontStyle: 'bold', color: '#ffffff'
         }).setScrollFactor(0).setOrigin(0.5).setDepth(103);
 
-        // 3. Готический таймер обратного отсчета по центру
-        this.timerBg = this.add.rectangle(width / 2, 42, 130, 38, 0x0b1120, 0.95).setScrollFactor(0).setDepth(100);
+        // 3. Таймер по центру
+        this.timerBg = this.add.rectangle(width / 2, 38, 130, 36, 0x0b1120, 0.95).setScrollFactor(0).setDepth(100);
         this.timerBg.setStrokeStyle(1.5, 0x38bdf8);
-        this.timerIcon = this.add.image(width / 2 - 40, 42, 'ui_clock').setScrollFactor(0).setScale(0.85).setDepth(101);
-        this.timerText = this.add.text(width / 2 + 10, 42, '10:00', {
-            fontFamily: "'Rajdhani', monospace", fontSize: '22px', fontStyle: 'bold', color: '#ffffff'
+        this.timerIcon = this.add.image(width / 2 - 40, 38, 'ui_clock').setScrollFactor(0).setScale(0.8).setDepth(101);
+        this.timerText = this.add.text(width / 2 + 10, 38, '10:00', {
+            fontFamily: "'Rajdhani', monospace", fontSize: '20px', fontStyle: 'bold', color: '#ffffff'
         }).setScrollFactor(0).setOrigin(0.5).setDepth(101);
 
-        // 4. Блок убийств и золота (Справа сверху)
-        this.statsPillBg = this.add.rectangle(width - 150, 42, 170, 38, 0x0b1120, 0.95).setScrollFactor(0).setDepth(100);
+        // 4. Блок убийств и золота
+        this.statsPillBg = this.add.rectangle(width - 150, 38, 160, 36, 0x0b1120, 0.95).setScrollFactor(0).setDepth(100);
         this.statsPillBg.setStrokeStyle(1.5, 0x334155);
 
-        this.killsIcon = this.add.image(width - 215, 42, 'ui_skull').setScrollFactor(0).setScale(0.85).setDepth(101);
-        this.killsText = this.add.text(width - 198, 42, '0', {
-            fontFamily: "'Rajdhani', sans-serif", fontSize: '16px', fontStyle: 'bold', color: '#f87171'
+        this.killsIcon = this.add.image(width - 210, 38, 'ui_skull').setScrollFactor(0).setScale(0.8).setDepth(101);
+        this.killsText = this.add.text(width - 194, 38, '0', {
+            fontFamily: "'Rajdhani', sans-serif", fontSize: '15px', fontStyle: 'bold', color: '#f87171'
         }).setScrollFactor(0).setOrigin(0, 0.5).setDepth(101);
 
-        this.goldIcon = this.add.image(width - 145, 42, 'ui_coin').setScrollFactor(0).setScale(0.85).setDepth(101);
-        this.goldText = this.add.text(width - 128, 42, '0', {
-            fontFamily: "'Rajdhani', sans-serif", fontSize: '16px', fontStyle: 'bold', color: '#ffd166'
+        this.goldIcon = this.add.image(width - 140, 38, 'ui_coin').setScrollFactor(0).setScale(0.8).setDepth(101);
+        this.goldText = this.add.text(width - 124, 38, '0', {
+            fontFamily: "'Rajdhani', sans-serif", fontSize: '15px', fontStyle: 'bold', color: '#ffd166'
         }).setScrollFactor(0).setOrigin(0, 0.5).setDepth(101);
 
         // Кнопка Паузы
-        this.pauseBtn = this.add.image(width - 35, 42, 'btn_close_circle').setScrollFactor(0).setScale(1.0).setInteractive({ useHandCursor: true }).setDepth(101);
-        this.pauseIcon = this.add.image(width - 35, 42, 'ui_pause').setScrollFactor(0).setScale(0.8).setDepth(102);
+        this.pauseBtn = this.add.image(width - 35, 38, 'btn_close_circle').setScrollFactor(0).setDisplaySize(32, 32).setInteractive({ useHandCursor: true }).setDepth(101);
+        this.pauseIcon = this.add.image(width - 35, 38, 'ui_pause').setScrollFactor(0).setDisplaySize(24, 24).setDepth(102);
         this.pauseBtn.on('pointerdown', () => this.openPause());
 
         // Виньетка критически низкого здоровья (<25% HP)
@@ -322,7 +323,6 @@ class GameScene extends Phaser.Scene {
 
         // Контейнер для иконок инвентаря
         this.inventoryGroup = this.add.group();
-        this.updateInventoryHUD();
 
         // Полоса здоровья босса (скрыта по умолчанию)
         this.bossBarBg = this.add.rectangle(width / 2, 85, 380, 16, 0x0b1120, 0.95).setScrollFactor(0).setDepth(100).setVisible(false);
@@ -338,56 +338,98 @@ class GameScene extends Phaser.Scene {
     layoutHUD(width, height) {
         if (!this.xpBarBg) return;
 
-        this.xpBarBg.setPosition(width / 2, 6).setSize(width, 12);
+        this.xpBarBg.setPosition(width / 2, 5).setSize(width, 10);
         if (this.player) {
             const xpRatio = Math.min(1.0, this.player.xp / this.player.nextLevelXp);
-            this.xpBarFill.width = width * xpRatio;
+            this.xpBarFill.setPosition(0, 5).setSize(width * xpRatio, 8);
         }
 
         const isPortrait = height > width;
+        const isNarrow = width < 680;
 
-        if (isPortrait) {
-            this.heroDockBg.setPosition(width / 2, 42);
-            this.timerBg.setPosition(width / 2, 90);
-            this.pauseBtn.setPosition(width - 25, 42);
-            this.pauseIcon.setPosition(width - 25, 42);
+        if (isPortrait || isNarrow) {
+            // === МОБИЛЬНЫЙ / ПОРТРЕТНЫЙ 2-РЯДНЫЙ HUD ===
+            const dockW = Math.min(width - 70, 190);
+            this.heroDockBg.setPosition(dockW / 2 + 10, 30).setSize(dockW, 34);
+            this.heroPortrait.setPosition(24, 30).setDisplaySize(26, 26);
+            this.lvlText.setPosition(42, 20).setFontSize('10px');
+            
+            const hpW = dockW - 52;
+            this.playerHpBg.setPosition(42 + hpW / 2, 34).setSize(hpW, 10);
+            this.playerHpFill.setPosition(42, 34);
+            this.playerHpText.setPosition(42 + hpW / 2, 34).setFontSize('9px');
+
+            this.pauseBtn.setPosition(width - 24, 30).setDisplaySize(28, 28);
+            this.pauseIcon.setPosition(width - 24, 30).setDisplaySize(20, 20);
+
+            // Второй ряд: Объединенная плашка (Таймер + Убийства + Золото)
+            const pillW = Math.min(width - 20, 280);
+            const pillY = 58;
+            this.timerBg.setPosition(width / 2, pillY).setSize(pillW, 24).setStrokeStyle(1, 0x38bdf8);
+            this.timerIcon.setPosition(width / 2 - pillW / 2 + 16, pillY).setScale(0.55);
+            this.timerText.setPosition(width / 2 - pillW / 2 + 50, pillY).setFontSize('13px');
+
+            this.statsPillBg.setVisible(false);
+            this.killsIcon.setPosition(width / 2 - 8, pillY).setScale(0.6);
+            this.killsText.setPosition(width / 2 + 8, pillY).setFontSize('12px');
+
+            this.goldIcon.setPosition(width / 2 + pillW / 2 - 50, pillY).setScale(0.6);
+            this.goldText.setPosition(width / 2 + pillW / 2 - 34, pillY).setFontSize('12px');
+
+            this.inventoryStartY = 82;
         } else {
-            this.heroDockBg.setPosition(110, 42);
-            this.timerBg.setPosition(width / 2, 42);
-            this.timerIcon.setPosition(width / 2 - 40, 42);
-            this.timerText.setPosition(width / 2 + 10, 42);
+            // === ДЕСКТОПНЫЙ / ШИРОКИЙ ГОРИЗОНТАЛЬНЫЙ HUD ===
+            this.heroDockBg.setPosition(110, 38).setSize(200, 44);
+            this.heroPortrait.setPosition(26, 38).setDisplaySize(34, 34);
+            this.lvlText.setPosition(50, 24).setFontSize('12px');
 
-            this.statsPillBg.setPosition(width - 150, 42);
-            this.killsIcon.setPosition(width - 215, 42);
-            this.killsText.setPosition(width - 198, 42);
-            this.goldIcon.setPosition(width - 145, 42);
-            this.goldText.setPosition(width - 128, 42);
+            this.playerHpBg.setPosition(120, 42).setSize(130, 12);
+            this.playerHpFill.setPosition(55, 42);
+            this.playerHpText.setPosition(120, 42).setFontSize('10px');
 
-            this.pauseBtn.setPosition(width - 35, 42);
-            this.pauseIcon.setPosition(width - 35, 42);
+            this.timerBg.setPosition(width / 2, 38).setSize(130, 36).setStrokeStyle(1.5, 0x38bdf8);
+            this.timerIcon.setPosition(width / 2 - 40, 38).setScale(0.8);
+            this.timerText.setPosition(width / 2 + 10, 38).setFontSize('20px');
+
+            this.statsPillBg.setVisible(true).setPosition(width - 150, 38).setSize(160, 36);
+            this.killsIcon.setPosition(width - 210, 38).setScale(0.8);
+            this.killsText.setPosition(width - 194, 38).setFontSize('15px');
+            this.goldIcon.setPosition(width - 140, 38).setScale(0.8);
+            this.goldText.setPosition(width - 124, 38).setFontSize('15px');
+
+            this.pauseBtn.setPosition(width - 35, 38).setDisplaySize(32, 32);
+            this.pauseIcon.setPosition(width - 35, 38).setDisplaySize(24, 24);
+
+            this.inventoryStartY = 70;
         }
 
+        this.updateInventoryHUD();
         this.lowHpVignette.setPosition(width / 2, height / 2).setSize(width, height);
-        this.bossBarBg.setPosition(width / 2, 85);
-        this.bossBarFill.setPosition(width / 2 - 185, 85);
-        this.bossNameText.setPosition(width / 2, 70);
+        this.bossBarBg.setPosition(width / 2, (isPortrait || isNarrow) ? 88 : 85);
+        this.bossBarFill.setPosition(width / 2 - 185, (isPortrait || isNarrow) ? 88 : 85);
+        this.bossNameText.setPosition(width / 2, (isPortrait || isNarrow) ? 74 : 70);
     }
 
     updateInventoryHUD() {
         this.inventoryGroup.clear(true, true);
         if (!this.player) return;
 
+        const { width, height } = this.scale;
+        const isPortrait = height > width;
+        const isNarrow = width < 680;
+
         const romanLevels = ['I', 'II', 'III', 'IV', 'V'];
-        const startX = 26;
-        const wepY = 82;
-        const pasY = 118;
-        const slotSize = 32;
+        const startX = (isNarrow || isPortrait) ? 16 : 24;
+        const wepY = this.inventoryStartY ? this.inventoryStartY : ((isNarrow || isPortrait) ? 82 : 70);
+        const pasY = wepY + ((isNarrow || isPortrait) ? 26 : 34);
+        const slotSize = (isNarrow || isPortrait) ? 22 : 30;
+        const slotSpacing = (isNarrow || isPortrait) ? 26 : 36;
         const maxSlots = 4;
 
         // 1. РЯД ОРУЖИЯ (Верхний ряд)
         const weaponEntries = Object.entries(this.player.weapons);
         for (let i = 0; i < maxSlots; i++) {
-            const sx = startX + (i * 38);
+            const sx = startX + (i * slotSpacing);
             const slotBg = this.add.rectangle(sx, wepY, slotSize, slotSize, 0x0b1120, 0.9).setScrollFactor(0).setDepth(100);
             slotBg.setStrokeStyle(1, 0x1e293b);
             this.inventoryGroup.add(slotBg);
@@ -397,9 +439,9 @@ class GameScene extends Phaser.Scene {
                 const config = CONFIG.WEAPONS[wId];
                 if (config) {
                     slotBg.setStrokeStyle(1.5, 0x0284c7);
-                    const icon = this.add.image(sx, wepY, config.icon).setScale(0.6).setScrollFactor(0).setDepth(101);
-                    const lvlBadge = this.add.text(sx + 6, wepY + 6, romanLevels[lvl - 1] || `${lvl}`, {
-                        fontFamily: "'Rajdhani', monospace", fontSize: '11px', fontStyle: 'bold', color: '#38bdf8'
+                    const icon = this.add.image(sx, wepY, config.icon).setScale((isNarrow || isPortrait) ? 0.42 : 0.58).setScrollFactor(0).setDepth(101);
+                    const lvlBadge = this.add.text(sx + ((isNarrow || isPortrait) ? 3 : 6), wepY + ((isNarrow || isPortrait) ? 3 : 6), romanLevels[lvl - 1] || `${lvl}`, {
+                        fontFamily: "'Rajdhani', monospace", fontSize: (isNarrow || isPortrait) ? '8px' : '11px', fontStyle: 'bold', color: '#38bdf8'
                     }).setScrollFactor(0).setDepth(102);
                     this.inventoryGroup.add(icon);
                     this.inventoryGroup.add(lvlBadge);
@@ -409,12 +451,12 @@ class GameScene extends Phaser.Scene {
 
         // Супер оружия (Эволюции)
         this.player.superWeapons.forEach((supId, sIdx) => {
-            const sx = startX + (sIdx * 38);
+            const sx = startX + (sIdx * slotSpacing);
             const config = CONFIG.SUPER_WEAPONS[supId];
             if (config) {
                 const evoBg = this.add.rectangle(sx, wepY, slotSize + 2, slotSize + 2, 0x1e1b4b, 0.95).setScrollFactor(0).setDepth(102);
                 evoBg.setStrokeStyle(2, 0xffd166);
-                const icon = this.add.image(sx, wepY, config.icon).setScale(0.65).setTint(0xffd166).setScrollFactor(0).setDepth(103);
+                const icon = this.add.image(sx, wepY, config.icon).setScale((isNarrow || isPortrait) ? 0.46 : 0.62).setTint(0xffd166).setScrollFactor(0).setDepth(103);
                 this.inventoryGroup.add(evoBg);
                 this.inventoryGroup.add(icon);
             }
@@ -423,7 +465,7 @@ class GameScene extends Phaser.Scene {
         // 2. РЯД ПАССИВОК (Нижний ряд)
         const passiveEntries = Object.entries(this.player.passives);
         for (let i = 0; i < maxSlots; i++) {
-            const sx = startX + (i * 38);
+            const sx = startX + (i * slotSpacing);
             const slotBg = this.add.rectangle(sx, pasY, slotSize, slotSize, 0x0b1120, 0.9).setScrollFactor(0).setDepth(100);
             slotBg.setStrokeStyle(1, 0x1e293b);
             this.inventoryGroup.add(slotBg);
@@ -433,9 +475,9 @@ class GameScene extends Phaser.Scene {
                 const config = CONFIG.PASSIVES[pId];
                 if (config) {
                     slotBg.setStrokeStyle(1.5, 0x10b981);
-                    const icon = this.add.image(sx, pasY, config.icon).setScale(0.55).setScrollFactor(0).setDepth(101);
-                    const lvlBadge = this.add.text(sx + 6, pasY + 6, romanLevels[lvl - 1] || `${lvl}`, {
-                        fontFamily: "'Rajdhani', monospace", fontSize: '11px', fontStyle: 'bold', color: '#34d399'
+                    const icon = this.add.image(sx, pasY, config.icon).setScale((isNarrow || isPortrait) ? 0.4 : 0.52).setScrollFactor(0).setDepth(101);
+                    const lvlBadge = this.add.text(sx + ((isNarrow || isPortrait) ? 3 : 6), pasY + ((isNarrow || isPortrait) ? 3 : 6), romanLevels[lvl - 1] || `${lvl}`, {
+                        fontFamily: "'Rajdhani', monospace", fontSize: (isNarrow || isPortrait) ? '8px' : '11px', fontStyle: 'bold', color: '#34d399'
                     }).setScrollFactor(0).setDepth(102);
                     this.inventoryGroup.add(icon);
                     this.inventoryGroup.add(lvlBadge);
@@ -463,7 +505,8 @@ class GameScene extends Phaser.Scene {
         // Обновление полосы здоровья героя в HUD
         if (this.playerHpFill && this.playerHpText) {
             const hpRatio = Math.max(0, Math.min(1.0, this.player.hp / this.player.stats.maxHp));
-            this.playerHpFill.width = 140 * hpRatio;
+            const totalHpW = this.playerHpBg ? this.playerHpBg.width : 130;
+            this.playerHpFill.width = totalHpW * hpRatio;
             this.playerHpText.setText(`${Math.ceil(this.player.hp)} / ${this.player.stats.maxHp}`);
         }
 
