@@ -206,23 +206,23 @@ class CoopGameScene extends Phaser.Scene {
         this.timerBg.setStrokeStyle(2, 0x38bdf8);
         this.timerIcon = this.add.image(width / 2 - 40, 35, 'ui_clock').setScrollFactor(0).setScale(0.85).setDepth(101);
         this.timerText = this.add.text(width / 2 + 10, 35, '10:00', {
-            fontFamily: "'Rajdhani', monospace",
+            fontFamily: CONFIG.FONTS.MONO,
             fontSize: '22px',
             fontStyle: 'bold',
             color: '#ffffff'
         }).setScrollFactor(0).setOrigin(0.5).setDepth(101);
 
         // Игрок 1 (WASD)
-        this.p1Header = this.add.text(20, 18, `1P: ${h1.name[lang].toUpperCase()}`, { fontFamily: "'Cinzel', serif", fontSize: '12px', fontStyle: 'bold', color: '#38bdf8' }).setScrollFactor(0).setDepth(101);
-        this.p1LvlText = this.add.text(20, 34, 'LVL 1', { fontFamily: "'Rajdhani', sans-serif", fontSize: '14px', fontStyle: 'bold', color: '#00f5d4' }).setScrollFactor(0).setDepth(101);
+        this.p1Header = this.add.text(20, 18, `1P: ${h1.name[lang].toUpperCase()}`, { fontFamily: CONFIG.FONTS.TITLE, fontSize: '12px', fontStyle: 'bold', color: '#38bdf8' }).setScrollFactor(0).setDepth(101);
+        this.p1LvlText = this.add.text(20, 34, 'LVL 1', { fontFamily: CONFIG.FONTS.MONO, fontSize: '14px', fontStyle: 'bold', color: '#00f5d4' }).setScrollFactor(0).setDepth(101);
 
         // Игрок 2 (Стрелки)
-        this.p2Header = this.add.text(width - 20, 18, `2P: ${h2.name[lang].toUpperCase()}`, { fontFamily: "'Cinzel', serif", fontSize: '12px', fontStyle: 'bold', color: '#a78bfa' }).setOrigin(1, 0).setScrollFactor(0).setDepth(101);
-        this.p2LvlText = this.add.text(width - 20, 34, 'LVL 1', { fontFamily: "'Rajdhani', sans-serif", fontSize: '14px', fontStyle: 'bold', color: '#00f5d4' }).setOrigin(1, 0).setScrollFactor(0).setDepth(101);
+        this.p2Header = this.add.text(width - 20, 18, `2P: ${h2.name[lang].toUpperCase()}`, { fontFamily: CONFIG.FONTS.TITLE, fontSize: '12px', fontStyle: 'bold', color: '#a78bfa' }).setOrigin(1, 0).setScrollFactor(0).setDepth(101);
+        this.p2LvlText = this.add.text(width - 20, 34, 'LVL 1', { fontFamily: CONFIG.FONTS.MONO, fontSize: '14px', fontStyle: 'bold', color: '#00f5d4' }).setOrigin(1, 0).setScrollFactor(0).setDepth(101);
 
         // Общие киллы
         this.killsIcon = this.add.image(width / 2 - 25, 68, 'ui_skull').setScrollFactor(0).setScale(0.75).setDepth(101);
-        this.killsText = this.add.text(width / 2 + 5, 68, '0', { fontFamily: "'Rajdhani', sans-serif", fontSize: '15px', fontStyle: 'bold', color: '#f87171' }).setScrollFactor(0).setOrigin(0, 0.5).setDepth(101);
+        this.killsText = this.add.text(width / 2 + 5, 68, '0', { fontFamily: CONFIG.FONTS.MONO, fontSize: '15px', fontStyle: 'bold', color: '#f87171' }).setScrollFactor(0).setOrigin(0, 0.5).setDepth(101);
 
         // Кнопка Паузы
         this.pauseBtn = this.add.rectangle(width / 2 + 95, 35, 34, 34, 0x1e293b, 0.9).setScrollFactor(0).setInteractive({ useHandCursor: true }).setDepth(100);
@@ -234,7 +234,7 @@ class CoopGameScene extends Phaser.Scene {
         this.bossBarBg = this.add.rectangle(width / 2, 95, 360, 16, 0x1f2937, 0.9).setScrollFactor(0).setDepth(100).setVisible(false);
         this.bossBarFill = this.add.rectangle(width / 2 - 175, 95, 350, 12, 0xef4444).setScrollFactor(0).setOrigin(0, 0.5).setDepth(101).setVisible(false);
         this.bossNameText = this.add.text(width / 2, 80, '', {
-            fontFamily: "'Cinzel', serif",
+            fontFamily: CONFIG.FONTS.TITLE,
             fontSize: '14px',
             fontStyle: 'bold',
             color: '#ffd166'
@@ -570,7 +570,7 @@ class CoopGameScene extends Phaser.Scene {
         const { width } = this.scale;
         const alertBg = this.add.rectangle(width / 2, 100, width, 50, 0xef4444, 0.7).setScrollFactor(0);
         const alertTxt = this.add.text(width / 2, 100, 'ВНИМАНИЕ: ПРИБЛИЖАЕТСЯ БОСС!', {
-            fontFamily: 'sans-serif', fontSize: '20px', fontStyle: 'bold', color: '#ffffff'
+            fontFamily: CONFIG.FONTS.TITLE, fontSize: '20px', fontStyle: 'bold', color: '#ffffff'
         }).setScrollFactor(0).setOrigin(0.5);
 
         this.tweens.add({
@@ -709,13 +709,13 @@ class CoopGameScene extends Phaser.Scene {
 
     showDamageText(x, y, amount, isCrit = false) {
         const color = isCrit ? '#ffd166' : '#ffffff';
-        const size = isCrit ? '24px' : '15px';
+        const size = isCrit ? '22px' : '15px';
         const stroke = isCrit ? '#7f1d1d' : '#000000';
         const strokeThick = isCrit ? 5 : 3;
         const textVal = isCrit ? `КРИТ ${amount}!` : `${amount}`;
 
         const txt = this.add.text(x, y, textVal, {
-            fontFamily: 'sans-serif',
+            fontFamily: CONFIG.FONTS.MONO,
             fontSize: size,
             fontStyle: 'bold',
             color: color,
@@ -736,10 +736,12 @@ class CoopGameScene extends Phaser.Scene {
 
     showFloatingText(x, y, message, color = 0x00f5d4) {
         const txt = this.add.text(x, y, message, {
-            fontFamily: 'sans-serif',
+            fontFamily: CONFIG.FONTS.TITLE,
             fontSize: '18px',
             fontStyle: 'bold',
-            color: '#' + color.toString(16).padStart(6, '0')
+            color: '#' + color.toString(16).padStart(6, '0'),
+            stroke: '#000',
+            strokeThickness: 4
         }).setOrigin(0.5);
 
         this.tweens.add({ targets: txt, y: y - 40, alpha: 0, duration: 800, onComplete: () => txt.destroy() });

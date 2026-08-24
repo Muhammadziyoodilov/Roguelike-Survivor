@@ -17,14 +17,14 @@ class BootScene extends Phaser.Scene {
         barFill.setOrigin(0, 0.5);
 
         this.add.text(width / 2, height / 2 - 50, '10 MINUTES SURVIVOR', {
-            fontFamily: "'Cinzel', serif",
+            fontFamily: CONFIG.FONTS.TITLE,
             fontSize: '32px',
             fontStyle: 'bold',
             color: '#ffffff'
         }).setOrigin(0.5);
 
         const loadingText = this.add.text(width / 2, height / 2 + 40, 'Загрузка ассетов и шрифтов...', {
-            fontFamily: "'Rajdhani', sans-serif",
+            fontFamily: CONFIG.FONTS.UI,
             fontSize: '16px',
             color: '#a0aec0'
         }).setOrigin(0.5);

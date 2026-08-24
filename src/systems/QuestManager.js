@@ -79,8 +79,8 @@ class QuestManager {
 
         const trophyIcon = scene.add.image(width / 2 - 180, height + 60, 'ui_trophy').setScrollFactor(0).setDepth(301);
         const toastText = scene.add.text(width / 2 + 10, height + 60, `ДОСТИЖЕНИЕ: ${quest.name[lang]} (+${quest.reward} ЗОЛ.)`, {
-            fontFamily: "'Rajdhani', sans-serif",
-            fontSize: '15px',
+            fontFamily: CONFIG.FONTS.TITLE,
+            fontSize: '14px',
             fontStyle: 'bold',
             color: '#ffd166',
             stroke: '#000',

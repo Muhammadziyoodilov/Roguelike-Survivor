@@ -10,6 +10,13 @@ const CONFIG = {
         WORLD_HEIGHT: 3000,
         GAME_DURATION_SEC: 600, // 10 минут (600 секунд)
     },
+
+    FONTS: {
+        TITLE: "'Russo One', sans-serif",
+        UI: "'Montserrat', sans-serif",
+        BODY: "'Inter', sans-serif",
+        MONO: "'JetBrains Mono', monospace"
+    },
     
     HEROES: {
         knight: {

@@ -279,14 +279,14 @@ class GameScene extends Phaser.Scene {
         this.heroPortrait = this.add.image(26, 38, `hero_${heroId}`).setDisplaySize(34, 34).setScrollFactor(0).setDepth(102);
 
         this.lvlText = this.add.text(50, 24, 'LVL 1', {
-            fontFamily: "'Cinzel', serif", fontSize: '12px', fontStyle: 'bold', color: '#ffd166'
+            fontFamily: CONFIG.FONTS.TITLE, fontSize: '12px', fontStyle: 'bold', color: '#ffd166'
         }).setScrollFactor(0).setDepth(102);
 
         // Полоса здоровья героя
         this.playerHpBg = this.add.rectangle(120, 42, 130, 12, 0x1e1b4b).setScrollFactor(0).setDepth(101);
         this.playerHpFill = this.add.rectangle(55, 42, 130, 10, 0xef4444).setScrollFactor(0).setOrigin(0, 0.5).setDepth(102);
         this.playerHpText = this.add.text(120, 42, '120 / 120', {
-            fontFamily: "'Rajdhani', sans-serif", fontSize: '10px', fontStyle: 'bold', color: '#ffffff'
+            fontFamily: CONFIG.FONTS.MONO, fontSize: '10px', fontStyle: 'bold', color: '#ffffff'
         }).setScrollFactor(0).setOrigin(0.5).setDepth(103);
 
         // 3. Таймер по центру
@@ -294,7 +294,7 @@ class GameScene extends Phaser.Scene {
         this.timerBg.setStrokeStyle(1.5, 0x38bdf8);
         this.timerIcon = this.add.image(width / 2 - 40, 38, 'ui_clock').setScrollFactor(0).setScale(0.8).setDepth(101);
         this.timerText = this.add.text(width / 2 + 10, 38, '10:00', {
-            fontFamily: "'Rajdhani', monospace", fontSize: '20px', fontStyle: 'bold', color: '#ffffff'
+            fontFamily: CONFIG.FONTS.MONO, fontSize: '20px', fontStyle: 'bold', color: '#ffffff'
         }).setScrollFactor(0).setOrigin(0.5).setDepth(101);
 
         // 4. Блок убийств и золота
@@ -303,12 +303,12 @@ class GameScene extends Phaser.Scene {
 
         this.killsIcon = this.add.image(width - 210, 38, 'ui_skull').setScrollFactor(0).setScale(0.8).setDepth(101);
         this.killsText = this.add.text(width - 194, 38, '0', {
-            fontFamily: "'Rajdhani', sans-serif", fontSize: '15px', fontStyle: 'bold', color: '#f87171'
+            fontFamily: CONFIG.FONTS.MONO, fontSize: '15px', fontStyle: 'bold', color: '#f87171'
         }).setScrollFactor(0).setOrigin(0, 0.5).setDepth(101);
 
         this.goldIcon = this.add.image(width - 140, 38, 'ui_coin').setScrollFactor(0).setScale(0.8).setDepth(101);
         this.goldText = this.add.text(width - 124, 38, '0', {
-            fontFamily: "'Rajdhani', sans-serif", fontSize: '15px', fontStyle: 'bold', color: '#ffd166'
+            fontFamily: CONFIG.FONTS.MONO, fontSize: '15px', fontStyle: 'bold', color: '#ffd166'
         }).setScrollFactor(0).setOrigin(0, 0.5).setDepth(101);
 
         // Кнопка Паузы
@@ -329,7 +329,7 @@ class GameScene extends Phaser.Scene {
         this.bossBarBg.setStrokeStyle(1.5, 0xef4444);
         this.bossBarFill = this.add.rectangle(width / 2 - 185, 85, 370, 12, 0xef4444).setScrollFactor(0).setOrigin(0, 0.5).setDepth(101).setVisible(false);
         this.bossNameText = this.add.text(width / 2, 70, '', {
-            fontFamily: "'Cinzel', serif", fontSize: '14px', fontStyle: 'bold', color: '#ffd166'
+            fontFamily: CONFIG.FONTS.TITLE, fontSize: '14px', fontStyle: 'bold', color: '#ffd166'
         }).setScrollFactor(0).setOrigin(0.5).setDepth(101).setVisible(false);
 
         this.layoutHUD(width, height);
@@ -441,7 +441,7 @@ class GameScene extends Phaser.Scene {
                     slotBg.setStrokeStyle(1.5, 0x0284c7);
                     const icon = this.add.image(sx, wepY, config.icon).setScale((isNarrow || isPortrait) ? 0.42 : 0.58).setScrollFactor(0).setDepth(101);
                     const lvlBadge = this.add.text(sx + ((isNarrow || isPortrait) ? 3 : 6), wepY + ((isNarrow || isPortrait) ? 3 : 6), romanLevels[lvl - 1] || `${lvl}`, {
-                        fontFamily: "'Rajdhani', monospace", fontSize: (isNarrow || isPortrait) ? '8px' : '11px', fontStyle: 'bold', color: '#38bdf8'
+                        fontFamily: CONFIG.FONTS.MONO, fontSize: (isNarrow || isPortrait) ? '8px' : '11px', fontStyle: 'bold', color: '#38bdf8'
                     }).setScrollFactor(0).setDepth(102);
                     this.inventoryGroup.add(icon);
                     this.inventoryGroup.add(lvlBadge);
@@ -477,7 +477,7 @@ class GameScene extends Phaser.Scene {
                     slotBg.setStrokeStyle(1.5, 0x10b981);
                     const icon = this.add.image(sx, pasY, config.icon).setScale((isNarrow || isPortrait) ? 0.4 : 0.52).setScrollFactor(0).setDepth(101);
                     const lvlBadge = this.add.text(sx + ((isNarrow || isPortrait) ? 3 : 6), pasY + ((isNarrow || isPortrait) ? 3 : 6), romanLevels[lvl - 1] || `${lvl}`, {
-                        fontFamily: "'Rajdhani', monospace", fontSize: (isNarrow || isPortrait) ? '8px' : '11px', fontStyle: 'bold', color: '#34d399'
+                        fontFamily: CONFIG.FONTS.MONO, fontSize: (isNarrow || isPortrait) ? '8px' : '11px', fontStyle: 'bold', color: '#34d399'
                     }).setScrollFactor(0).setDepth(102);
                     this.inventoryGroup.add(icon);
                     this.inventoryGroup.add(lvlBadge);
@@ -638,13 +638,13 @@ class GameScene extends Phaser.Scene {
 
     showDamageText(x, y, amount, isCrit = false) {
         const color = isCrit ? '#ffd166' : '#ffffff';
-        const size = isCrit ? '24px' : '15px';
+        const size = isCrit ? '22px' : '15px';
         const stroke = isCrit ? '#7f1d1d' : '#000000';
         const strokeThick = isCrit ? 5 : 3;
         const textVal = isCrit ? `КРИТ ${amount}!` : `${amount}`;
 
         const txt = this.add.text(x, y, textVal, {
-            fontFamily: 'sans-serif',
+            fontFamily: CONFIG.FONTS.MONO,
             fontSize: size,
             fontStyle: 'bold',
             color: color,
@@ -665,7 +665,7 @@ class GameScene extends Phaser.Scene {
 
     showFloatingText(x, y, message, color = 0x00f5d4) {
         const txt = this.add.text(x, y, message, {
-            fontFamily: 'sans-serif',
+            fontFamily: CONFIG.FONTS.TITLE,
             fontSize: '18px',
             fontStyle: 'bold',
             color: '#' + color.toString(16).padStart(6, '0'),
@@ -780,7 +780,7 @@ class GameScene extends Phaser.Scene {
         const { width, height } = this.scale;
         const alertBg = this.add.rectangle(width / 2, height / 2 - 100, width, 60, 0xef4444, 0.7).setScrollFactor(0);
         const alertTxt = this.add.text(width / 2, height / 2 - 100, 'ВНИМАНИЕ: ПРИБЛИЖАЕТСЯ БОСС!', {
-            fontFamily: 'sans-serif',
+            fontFamily: CONFIG.FONTS.TITLE,
             fontSize: '24px',
             fontStyle: 'bold',
             color: '#ffffff'
@@ -814,7 +814,7 @@ class GameScene extends Phaser.Scene {
         banner.setStrokeStyle(3, color);
 
         const titleText = this.add.text(width / 2, height / 2 - 95, title, {
-            fontFamily: 'sans-serif',
+            fontFamily: CONFIG.FONTS.TITLE,
             fontSize: '24px',
             fontStyle: 'bold',
             color: '#' + color.toString(16).padStart(6, '0'),
@@ -823,7 +823,7 @@ class GameScene extends Phaser.Scene {
         }).setScrollFactor(0).setOrigin(0.5);
 
         const subText = this.add.text(width / 2, height / 2 - 65, subtitle, {
-            fontFamily: 'sans-serif',
+            fontFamily: CONFIG.FONTS.UI,
             fontSize: '15px',
             fontStyle: 'bold',
             color: '#ffffff'
@@ -856,7 +856,7 @@ class GameScene extends Phaser.Scene {
         const { width, height } = this.scale;
         const alertBg = this.add.rectangle(width / 2, height / 2, width, height, 0xd90429, 0.35).setScrollFactor(0);
         const alertTxt = this.add.text(width / 2, height / 2, 'КРАСНАЯ МИНУТА: ВЫЖИВАЙ!', {
-            fontFamily: 'sans-serif',
+            fontFamily: CONFIG.FONTS.TITLE,
             fontSize: '32px',
             fontStyle: 'bold',
             color: '#ffffff',

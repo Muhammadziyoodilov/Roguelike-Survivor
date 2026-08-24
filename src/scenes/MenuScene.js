@@ -201,13 +201,13 @@ class MenuScene extends Phaser.Scene {
 
     createLandscapeLayout(width, height, lang) {
         const isCompact = height < 520;
-        const leftColX = isCompact ? Math.min(180, width * 0.22) : Math.min(220, width * 0.18);
+        const leftColX = isCompact ? Math.min(180, width * 0.22) : Math.min(260, width * 0.20);
         const leftTopY = isCompact ? 50 : 115;
 
         // 3D Логотип
         if (this.textures.exists('ui_logo_crest')) {
-            const logoW = isCompact ? 160 : 260;
-            const logoH = isCompact ? 80 : 140;
+            const logoW = isCompact ? 160 : 270;
+            const logoH = isCompact ? 80 : 135;
             const logo = this.add.image(leftColX, leftTopY + (isCompact ? 5 : 15), 'ui_logo_crest').setDisplaySize(logoW, logoH).setDepth(10);
             this.tweens.add({
                 targets: logo,
@@ -221,8 +221,8 @@ class MenuScene extends Phaser.Scene {
 
         // КНОПКА #1: PLAY (ОДИНОЧНЫЙ РЕЖИМ)
         const playBtnY = leftTopY + (isCompact ? 68 : 125);
-        const playBtnW = isCompact ? 175 : 220;
-        const playBtnH = isCompact ? 44 : 56;
+        const playBtnW = isCompact ? 180 : 270;
+        const playBtnH = isCompact ? 46 : 64;
         const playBtn = this.add.image(leftColX, playBtnY, 'btn_play_bg').setDisplaySize(playBtnW, playBtnH).setInteractive({ useHandCursor: true }).setDepth(10);
 
         this.tweens.add({
@@ -235,27 +235,27 @@ class MenuScene extends Phaser.Scene {
             ease: 'Sine.easeInOut'
         });
 
-        this.add.image(leftColX - (isCompact ? 68 : 95), playBtnY, 'ui_swords').setScale(isCompact ? 0.7 : 0.9).setDepth(11);
-        this.add.text(leftColX - (isCompact ? 45 : 65), playBtnY - (isCompact ? 8 : 11), 'PLAY', {
-            fontFamily: "'Cinzel', serif", fontSize: isCompact ? '16px' : '22px', fontStyle: 'bold', color: '#ffffff', letterSpacing: 2
-        }).setDepth(11);
-        this.add.text(leftColX - (isCompact ? 45 : 65), playBtnY + (isCompact ? 9 : 12), 'ОДИНОЧНЫЙ РЕЖИМ', {
-            fontFamily: "'Rajdhani', sans-serif", fontSize: isCompact ? '9px' : '12px', fontStyle: 'bold', color: '#e9d5ff', letterSpacing: 1
-        }).setDepth(11);
+        this.add.image(leftColX - (isCompact ? 68 : 100), playBtnY, 'ui_swords').setScale(isCompact ? 0.7 : 0.95).setDepth(11);
+        this.add.text(leftColX - (isCompact ? 45 : 68), playBtnY - (isCompact ? 9 : 12), 'PLAY', {
+            fontFamily: CONFIG.FONTS.TITLE, fontSize: isCompact ? '16px' : '22px', fontStyle: 'bold', color: '#ffffff', letterSpacing: 2
+        }).setOrigin(0, 0.5).setDepth(11);
+        this.add.text(leftColX - (isCompact ? 45 : 68), playBtnY + (isCompact ? 10 : 13), 'ОДИНОЧНЫЙ РЕЖИМ', {
+            fontFamily: CONFIG.FONTS.UI, fontSize: isCompact ? '9px' : '11px', fontStyle: '700', color: '#e9d5ff', letterSpacing: 1
+        }).setOrigin(0, 0.5).setDepth(11);
 
         playBtn.on('pointerdown', () => this.openHeroSelectModal());
 
         // КНОПКА #2: CO-OP (РЕЖИМ НА ДВОИХ)
-        const coopBtnY = playBtnY + (isCompact ? 48 : 70);
-        const coopBtn = this.add.image(leftColX, coopBtnY, 'btn_coop_bg').setDisplaySize(playBtnW, isCompact ? 40 : 52).setInteractive({ useHandCursor: true }).setDepth(10);
+        const coopBtnY = playBtnY + (isCompact ? 50 : 74);
+        const coopBtn = this.add.image(leftColX, coopBtnY, 'btn_coop_bg').setDisplaySize(playBtnW, isCompact ? 42 : 56).setInteractive({ useHandCursor: true }).setDepth(10);
 
-        this.add.image(leftColX - (isCompact ? 68 : 95), coopBtnY, 'ui_coop').setScale(isCompact ? 0.7 : 0.9).setDepth(11);
-        this.add.text(leftColX - (isCompact ? 45 : 65), coopBtnY - (isCompact ? 7 : 10), 'CO-OP', {
-            fontFamily: "'Cinzel', serif", fontSize: isCompact ? '15px' : '20px', fontStyle: 'bold', color: '#ffffff', letterSpacing: 2
-        }).setDepth(11);
-        this.add.text(leftColX - (isCompact ? 45 : 65), coopBtnY + (isCompact ? 8 : 11), 'РЕЖИМ НА ДВОИХ', {
-            fontFamily: "'Rajdhani', sans-serif", fontSize: isCompact ? '9px' : '12px', fontStyle: 'bold', color: '#bae6fd', letterSpacing: 1
-        }).setDepth(11);
+        this.add.image(leftColX - (isCompact ? 68 : 100), coopBtnY, 'ui_coop').setScale(isCompact ? 0.7 : 0.95).setDepth(11);
+        this.add.text(leftColX - (isCompact ? 45 : 68), coopBtnY - (isCompact ? 8 : 10), 'CO-OP', {
+            fontFamily: CONFIG.FONTS.TITLE, fontSize: isCompact ? '15px' : '20px', fontStyle: 'bold', color: '#ffffff', letterSpacing: 2
+        }).setOrigin(0, 0.5).setDepth(11);
+        this.add.text(leftColX - (isCompact ? 45 : 68), coopBtnY + (isCompact ? 9 : 12), 'РЕЖИМ НА ДВОИХ', {
+            fontFamily: CONFIG.FONTS.UI, fontSize: isCompact ? '9px' : '11px', fontStyle: '700', color: '#bae6fd', letterSpacing: 1
+        }).setOrigin(0, 0.5).setDepth(11);
 
         coopBtn.on('pointerdown', () => this.openCoopModal());
 
@@ -268,35 +268,39 @@ class MenuScene extends Phaser.Scene {
             { iconKey: 'ui_scroll', title: 'ЗАДАНИЯ', badge: '3', color: 0x0284c7, action: () => this.openAchievementsModal() }
         ];
 
-        const subSpacing = isCompact ? 24 : 38;
-        const subStartY = coopBtnY + (isCompact ? 32 : 50);
+        const subSpacing = isCompact ? 25 : 42;
+        const subStartY = coopBtnY + (isCompact ? 34 : 54);
 
         menuItems.forEach((item, idx) => {
             const itemY = subStartY + (idx * subSpacing);
-            const btn = this.add.image(leftColX, itemY, 'btn_glass_sub').setDisplaySize(playBtnW, isCompact ? 22 : 32).setInteractive({ useHandCursor: true }).setDepth(10);
+            const btn = this.add.image(leftColX, itemY, 'btn_glass_sub').setDisplaySize(playBtnW, isCompact ? 24 : 36).setInteractive({ useHandCursor: true }).setDepth(10);
             btn.on('pointerover', () => btn.setTint(0xc4b5fd));
             btn.on('pointerout', () => btn.clearTint());
             btn.on('pointerdown', item.action);
 
-            this.add.image(leftColX - (isCompact ? 72 : 105), itemY, item.iconKey).setScale(isCompact ? 0.6 : 0.75).setDepth(11);
-            this.add.text(leftColX - (isCompact ? 56 : 85), itemY, item.title, {
-                fontFamily: "'Rajdhani', sans-serif", fontSize: isCompact ? '10px' : '13px', fontStyle: 'bold', color: '#cbd5e1', letterSpacing: 1
+            this.add.image(leftColX - (isCompact ? 72 : 110), itemY, item.iconKey).setScale(isCompact ? 0.6 : 0.8).setDepth(11);
+            this.add.text(leftColX - (isCompact ? 54 : 85), itemY, item.title, {
+                fontFamily: CONFIG.FONTS.UI, fontSize: isCompact ? '10px' : '13px', fontStyle: '800', color: '#cbd5e1', letterSpacing: 1
             }).setOrigin(0, 0.5).setDepth(11);
 
             if (item.badge) {
-                this.add.circle(leftColX + (isCompact ? 75 : 110), itemY, isCompact ? 7 : 9, item.color).setDepth(11);
-                this.add.text(leftColX + (isCompact ? 75 : 110), itemY, item.badge, {
-                    fontFamily: 'sans-serif', fontSize: isCompact ? '8px' : '10px', fontStyle: 'bold', color: '#ffffff'
+                this.add.circle(leftColX + (isCompact ? 75 : 115), itemY, isCompact ? 7 : 9, item.color).setDepth(11);
+                this.add.text(leftColX + (isCompact ? 75 : 115), itemY, item.badge, {
+                    fontFamily: CONFIG.FONTS.MONO, fontSize: isCompact ? '8px' : '10px', fontStyle: 'bold', color: '#ffffff'
                 }).setOrigin(0.5).setDepth(12);
             }
         });
 
         // Соцсети внизу слева (показываем только если хватает высоты экрана)
-        if (height >= 480) {
-            const socY = height - 52;
-            const socW = 32;
-            const socSpacing = 38;
-            const socStartX = leftColX - 70;
+        if (height >= 580) {
+            const socY = height - 34;
+            const socW = 28;
+            const socSpacing = 34;
+            const socStartX = leftColX - 60;
+
+            this.add.text(leftColX - 60, socY - 20, 'ПРИСОЕДИНЯЙСЯ К НАМ:', {
+                fontFamily: CONFIG.FONTS.UI, fontSize: '9px', fontStyle: 'bold', color: '#64748b', letterSpacing: 0.5
+            }).setOrigin(0, 0.5).setDepth(10);
 
             const socials = [
                 { icon: 'ui_discord', url: 'https://discord.com' },
@@ -305,14 +309,10 @@ class MenuScene extends Phaser.Scene {
             ];
 
             socials.forEach((soc, idx) => {
-                const sx = socStartX + (idx * socSpacing);
+                const sx = socStartX + (idx * socSpacing) + 14;
                 const sBtn = this.add.image(sx, socY, soc.icon).setDisplaySize(socW, socW).setInteractive({ useHandCursor: true }).setDepth(10);
                 sBtn.on('pointerdown', () => window.open(soc.url, '_blank'));
             });
-
-            this.add.text(leftColX - 70, socY + 24, 'ПРИСОЕДИНЯЙСЯ К НАМ!', {
-                fontFamily: "'Rajdhani', sans-serif", fontSize: '10px', fontStyle: 'bold', color: '#64748b'
-            }).setOrigin(0, 0.5).setDepth(10);
         }
 
         // === ПРАВАЯ КОЛОНКА: Виджеты ===
@@ -321,7 +321,7 @@ class MenuScene extends Phaser.Scene {
     }
 
     createRightWidgets(rightColX, topY, lang, isCompact, height) {
-        const questBoxW = isCompact ? 220 : 275;
+        const questBoxW = isCompact ? 220 : 280;
 
         // 1. ВИДЖЕТ ЕЖЕДНЕВНЫХ ЗАДАНИЙ
         const questBoxH = isCompact ? 140 : 195;
@@ -331,12 +331,12 @@ class MenuScene extends Phaser.Scene {
         qBox.setStrokeStyle(1.5, 0x334155);
 
         this.add.text(rightColX - questBoxW / 2 + 12, questBoxY - questBoxH / 2 + (isCompact ? 12 : 16), 'ЕЖЕДНЕВНЫЕ ЗАДАНИЯ', {
-            fontFamily: "'Rajdhani', sans-serif", fontSize: isCompact ? '11px' : '13px', fontStyle: 'bold', color: '#ffffff', letterSpacing: 1
+            fontFamily: CONFIG.FONTS.UI, fontSize: isCompact ? '11px' : '13px', fontStyle: 'bold', color: '#ffffff', letterSpacing: 1
         }).setOrigin(0, 0.5).setDepth(11);
 
         this.add.image(rightColX + questBoxW / 2 - 50, questBoxY - questBoxH / 2 + (isCompact ? 12 : 16), 'ui_hourglass').setScale(isCompact ? 0.5 : 0.65).setDepth(11);
         this.add.text(rightColX + questBoxW / 2 - 12, questBoxY - questBoxH / 2 + (isCompact ? 12 : 16), '18:45:12', {
-            fontFamily: "'Rajdhani', sans-serif", fontSize: isCompact ? '9px' : '11px', fontStyle: 'bold', color: '#94a3b8'
+            fontFamily: CONFIG.FONTS.MONO, fontSize: isCompact ? '9px' : '11px', fontStyle: 'bold', color: '#94a3b8'
         }).setOrigin(1, 0.5).setDepth(11);
 
         const questsData = isCompact ? [
@@ -359,7 +359,7 @@ class MenuScene extends Phaser.Scene {
             this.add.image(rightColX - questBoxW / 2 + 18, rowY, q.badgeKey).setDisplaySize(isCompact ? 18 : 24, isCompact ? 18 : 24).setDepth(12);
 
             this.add.text(rightColX - questBoxW / 2 + 34, rowY - (isCompact ? 5 : 6), q.title, {
-                fontFamily: "'Rajdhani', sans-serif", fontSize: isCompact ? '9px' : '11px', fontStyle: 'bold', color: '#ffffff'
+                fontFamily: CONFIG.FONTS.BODY, fontSize: isCompact ? '9px' : '11px', fontStyle: 'bold', color: '#ffffff'
             }).setOrigin(0, 0.5).setDepth(12);
 
             const barW = isCompact ? 75 : 105;
@@ -368,7 +368,7 @@ class MenuScene extends Phaser.Scene {
             this.add.rectangle(rightColX - questBoxW / 2 + 34, rowY + (isCompact ? 5 : 7), barW * pct, 3, 0x38bdf8).setOrigin(0, 0.5).setDepth(13);
 
             this.add.text(rightColX + questBoxW / 2 - 28, rowY, q.reward, {
-                fontFamily: "'Rajdhani', sans-serif", fontSize: isCompact ? '10px' : '12px', fontStyle: 'bold', color: '#ffd166'
+                fontFamily: CONFIG.FONTS.MONO, fontSize: isCompact ? '10px' : '12px', fontStyle: 'bold', color: '#ffd166'
             }).setOrigin(1, 0.5).setDepth(12);
             this.add.image(rightColX + questBoxW / 2 - 16, rowY, 'ui_coin').setScale(isCompact ? 0.5 : 0.65).setDepth(12);
         });
@@ -378,7 +378,7 @@ class MenuScene extends Phaser.Scene {
         const allQBtn = this.add.rectangle(rightColX, questBoxY + questBoxH / 2 - (isCompact ? 14 : 18), questBoxW - 20, allQBtnH, 0x1e1b4b, 0.95).setInteractive({ useHandCursor: true }).setDepth(11);
         allQBtn.setStrokeStyle(1, 0x6366f1);
         this.add.text(rightColX, questBoxY + questBoxH / 2 - (isCompact ? 14 : 18), 'ВСЕ ЗАДАНИЯ', {
-            fontFamily: "'Rajdhani', sans-serif", fontSize: isCompact ? '9px' : '11px', fontStyle: 'bold', color: '#a5b4fc', letterSpacing: 1
+            fontFamily: CONFIG.FONTS.UI, fontSize: isCompact ? '9px' : '11px', fontStyle: 'bold', color: '#a5b4fc', letterSpacing: 1
         }).setOrigin(0.5).setDepth(12);
         allQBtn.on('pointerdown', () => this.openAchievementsModal());
 
@@ -389,11 +389,11 @@ class MenuScene extends Phaser.Scene {
         sBox.setStrokeStyle(1.5, 0x6366f1);
 
         this.add.text(rightColX - questBoxW / 2 + 12, seasonY - (isCompact ? 14 : 24), 'СЕЗОН 1: ТЬМА НАСТУПАЕТ', {
-            fontFamily: "'Rajdhani', sans-serif", fontSize: isCompact ? '9px' : '12px', fontStyle: 'bold', color: '#ffffff'
+            fontFamily: CONFIG.FONTS.UI, fontSize: isCompact ? '9px' : '12px', fontStyle: 'bold', color: '#ffffff'
         }).setOrigin(0, 0.5).setDepth(11);
 
         this.add.text(rightColX + questBoxW / 2 - 12, seasonY - (isCompact ? 14 : 24), '24 Д', {
-            fontFamily: "'Rajdhani', sans-serif", fontSize: isCompact ? '9px' : '10px', fontStyle: 'bold', color: '#94a3b8'
+            fontFamily: CONFIG.FONTS.MONO, fontSize: isCompact ? '9px' : '10px', fontStyle: 'bold', color: '#94a3b8'
         }).setOrigin(1, 0.5).setDepth(11);
 
         const bpW = isCompact ? 80 : 100;
@@ -402,7 +402,7 @@ class MenuScene extends Phaser.Scene {
 
         const bpBtn = this.add.rectangle(rightColX + questBoxW / 2 - 28, seasonY + 8, isCompact ? 44 : 56, isCompact ? 18 : 24, 0x7c3aed).setInteractive({ useHandCursor: true }).setDepth(11);
         this.add.text(rightColX + questBoxW / 2 - 28, seasonY + 8, 'БОНУС', {
-            fontFamily: "'Rajdhani', sans-serif", fontSize: isCompact ? '8px' : '10px', fontStyle: 'bold', color: '#ffffff'
+            fontFamily: CONFIG.FONTS.UI, fontSize: isCompact ? '8px' : '10px', fontStyle: 'bold', color: '#ffffff'
         }).setOrigin(0.5).setDepth(12);
         bpBtn.on('pointerdown', () => this.openAchievementsModal());
 
@@ -413,15 +413,15 @@ class MenuScene extends Phaser.Scene {
             newsBox.setStrokeStyle(1.5, 0x334155);
 
             this.add.text(rightColX - questBoxW / 2 + 15, newsY - 26, 'НОВОСТИ', {
-                fontFamily: "'Rajdhani', sans-serif", fontSize: '11px', fontStyle: 'bold', color: '#94a3b8'
+                fontFamily: CONFIG.FONTS.UI, fontSize: '11px', fontStyle: 'bold', color: '#94a3b8'
             }).setOrigin(0, 0.5).setDepth(11);
 
-            this.add.text(rightColX - questBoxW / 2 + 15, newsY - 6, 'РЕЖИМ\nНА ДВОИХ', {
-                fontFamily: "'Cinzel', serif", fontSize: '14px', fontStyle: 'bold', color: '#38bdf8', lineSpacing: 2
+            this.add.text(rightColX - questBoxW / 2 + 15, newsY - 6, 'РЕЖИМ НА ДВОИХ', {
+                fontFamily: CONFIG.FONTS.TITLE, fontSize: '13px', fontStyle: 'bold', color: '#38bdf8'
             }).setOrigin(0, 0.5).setDepth(11);
 
             this.add.text(rightColX - questBoxW / 2 + 15, newsY + 20, 'УЖЕ ДОСТУПЕН!', {
-                fontFamily: "'Rajdhani', sans-serif", fontSize: '10px', fontStyle: 'bold', color: '#94a3b8'
+                fontFamily: CONFIG.FONTS.UI, fontSize: '10px', fontStyle: 'bold', color: '#94a3b8'
             }).setOrigin(0, 0.5).setDepth(11);
 
             this.add.image(rightColX + questBoxW / 2 - 40, newsY, 'ui_coop').setDisplaySize(44, 44).setDepth(11);
@@ -438,13 +438,13 @@ class MenuScene extends Phaser.Scene {
             { iconKey: 'ui_3d_shield_card', title: isCompact ? 'ЛИДЕРЫ' : 'ТАБЛИЦЫ\nЛИДЕРОВ', badge: '', action: () => this.openLeaderboardModal() }
         ];
 
-        const tabSpacing = isPortrait ? Math.min(85, (width - 40) / 4) : (isCompact ? 100 : 125);
+        const tabSpacing = isPortrait ? Math.min(85, (width - 40) / 4) : (isCompact ? 100 : 135);
         const totalW = tabSpacing * (tabs.length - 1);
         const startX = width / 2 - totalW / 2;
 
         tabs.forEach((tab, idx) => {
             const tx = startX + (idx * tabSpacing);
-            const btnW = isPortrait ? 75 : (isCompact ? 90 : 105);
+            const btnW = isPortrait ? 75 : (isCompact ? 90 : 115);
             const btnH = isPortrait ? 44 : (isCompact ? 36 : 52);
 
             const tabBg = this.add.image(tx, barY, 'card_tab_glass').setDisplaySize(btnW, btnH).setInteractive({ useHandCursor: true }).setDepth(10);
@@ -455,13 +455,13 @@ class MenuScene extends Phaser.Scene {
             this.add.image(tx, barY - (isCompact ? 6 : (isPortrait ? 6 : 10)), tab.iconKey).setDisplaySize(isCompact ? 20 : 28, isCompact ? 20 : 28).setDepth(11);
 
             this.add.text(tx, barY + (isCompact ? 8 : (isPortrait ? 12 : 14)), tab.title, {
-                fontFamily: "'Rajdhani', sans-serif", fontSize: isCompact ? '8px' : (isPortrait ? '9px' : '10px'), fontStyle: 'bold', color: '#94a3b8', align: 'center'
+                fontFamily: CONFIG.FONTS.UI, fontSize: isCompact ? '8px' : (isPortrait ? '9px' : '10px'), fontStyle: 'bold', color: '#94a3b8', align: 'center'
             }).setOrigin(0.5).setDepth(11);
 
             if (tab.badge) {
                 this.add.circle(tx + btnW / 2 - 8, barY - btnH / 2 + 8, isCompact ? 5 : 7, 0xef4444).setDepth(12);
                 this.add.text(tx + btnW / 2 - 8, barY - btnH / 2 + 8, tab.badge, {
-                    fontFamily: 'sans-serif', fontSize: isCompact ? '7px' : '9px', fontStyle: 'bold', color: '#fff'
+                    fontFamily: CONFIG.FONTS.MONO, fontSize: isCompact ? '7px' : '9px', fontStyle: 'bold', color: '#fff'
                 }).setOrigin(0.5).setDepth(13);
             }
         });
@@ -475,36 +475,36 @@ class MenuScene extends Phaser.Scene {
         }
 
         const playY = height * 0.65;
-        const playBtn = this.add.image(centerX, playY, 'btn_play_bg').setDisplaySize(Math.min(width - 40, 320), 58).setInteractive({ useHandCursor: true }).setDepth(10);
+        const playBtn = this.add.image(centerX, playY, 'btn_play_bg').setDisplaySize(Math.min(width - 40, 320), 62).setInteractive({ useHandCursor: true }).setDepth(10);
 
-        this.add.image(centerX - 90, playY, 'ui_swords').setScale(0.85).setDepth(11);
-        this.add.text(centerX - 60, playY - 9, 'PLAY', {
-            fontFamily: "'Cinzel', serif", fontSize: '20px', fontStyle: 'bold', color: '#ffffff', letterSpacing: 2
-        }).setDepth(11);
-        this.add.text(centerX - 60, playY + 11, 'ОДИНОЧНЫЙ РЕЖИМ', {
-            fontFamily: "'Rajdhani', sans-serif", fontSize: '11px', fontStyle: 'bold', color: '#e9d5ff'
-        }).setDepth(11);
+        this.add.image(centerX - 95, playY, 'ui_swords').setScale(0.9).setDepth(11);
+        this.add.text(centerX - 65, playY - 11, 'PLAY', {
+            fontFamily: CONFIG.FONTS.TITLE, fontSize: '22px', fontStyle: 'bold', color: '#ffffff', letterSpacing: 2
+        }).setOrigin(0, 0.5).setDepth(11);
+        this.add.text(centerX - 65, playY + 12, 'ОДИНОЧНЫЙ РЕЖИМ', {
+            fontFamily: CONFIG.FONTS.UI, fontSize: '11px', fontStyle: '700', color: '#e9d5ff', letterSpacing: 1
+        }).setOrigin(0, 0.5).setDepth(11);
 
         playBtn.on('pointerdown', () => this.openHeroSelectModal());
 
-        const coopY = playY + 68;
-        const coopBtn = this.add.image(centerX, coopY, 'btn_coop_bg').setDisplaySize(Math.min(width - 40, 320), 52).setInteractive({ useHandCursor: true }).setDepth(10);
+        const coopY = playY + 72;
+        const coopBtn = this.add.image(centerX, coopY, 'btn_coop_bg').setDisplaySize(Math.min(width - 40, 320), 56).setInteractive({ useHandCursor: true }).setDepth(10);
 
-        this.add.image(centerX - 90, coopY, 'ui_coop').setScale(0.85).setDepth(11);
-        this.add.text(centerX - 60, coopY - 8, 'CO-OP', {
-            fontFamily: "'Cinzel', serif", fontSize: '18px', fontStyle: 'bold', color: '#ffffff', letterSpacing: 2
-        }).setDepth(11);
-        this.add.text(centerX - 60, coopY + 10, 'РЕЖИМ НА ДВОИХ', {
-            fontFamily: "'Rajdhani', sans-serif", fontSize: '11px', fontStyle: 'bold', color: '#bae6fd'
-        }).setDepth(11);
+        this.add.image(centerX - 95, coopY, 'ui_coop').setScale(0.9).setDepth(11);
+        this.add.text(centerX - 65, coopY - 9, 'CO-OP', {
+            fontFamily: CONFIG.FONTS.TITLE, fontSize: '20px', fontStyle: 'bold', color: '#ffffff', letterSpacing: 2
+        }).setOrigin(0, 0.5).setDepth(11);
+        this.add.text(centerX - 65, coopY + 11, 'РЕЖИМ НА ДВОИХ', {
+            fontFamily: CONFIG.FONTS.UI, fontSize: '11px', fontStyle: '700', color: '#bae6fd', letterSpacing: 1
+        }).setOrigin(0, 0.5).setDepth(11);
 
         coopBtn.on('pointerdown', () => this.openCoopModal());
 
-        const mapY = coopY + 56;
-        const mapBtn = this.add.image(centerX, mapY, 'btn_glass_sub').setDisplaySize(Math.min(width - 40, 320), 42).setInteractive({ useHandCursor: true }).setDepth(10);
-        this.add.image(centerX - 90, mapY, 'ui_trophy').setScale(0.75).setDepth(11);
+        const mapY = coopY + 60;
+        const mapBtn = this.add.image(centerX, mapY, 'btn_glass_sub').setDisplaySize(Math.min(width - 40, 320), 44).setInteractive({ useHandCursor: true }).setDepth(10);
+        this.add.image(centerX - 95, mapY, 'ui_trophy').setScale(0.8).setDepth(11);
         this.add.text(centerX - 65, mapY, 'ВЫБОР КАРТЫ (АРЕНЫ)', {
-            fontFamily: "'Rajdhani', sans-serif", fontSize: '12px', fontStyle: 'bold', color: '#38bdf8', letterSpacing: 1
+            fontFamily: CONFIG.FONTS.UI, fontSize: '13px', fontStyle: '800', color: '#38bdf8', letterSpacing: 1
         }).setOrigin(0, 0.5).setDepth(11);
         mapBtn.on('pointerdown', () => this.openMapSelectModal());
     }
@@ -517,7 +517,7 @@ class MenuScene extends Phaser.Scene {
 
         const { width, height } = this.scale;
         const alert = this.add.text(width / 2, height / 2 - 50, `+${goldGain} ЗОЛОТА ИЗ СУНДУКА!`, {
-            fontFamily: "'Cinzel', serif", fontSize: '22px', fontStyle: 'bold', color: '#ffd166', stroke: '#000', strokeThickness: 5
+            fontFamily: CONFIG.FONTS.TITLE, fontSize: '22px', fontStyle: 'bold', color: '#ffd166', stroke: '#000', strokeThickness: 5
         }).setOrigin(0.5).setDepth(1500);
 
         this.tweens.add({
@@ -593,7 +593,7 @@ class MenuScene extends Phaser.Scene {
         modalGroup.add(headerLine);
 
         const title = this.add.text(width / 2, height / 2 - modalH / 2 + (isCompact ? 18 : 28), 'ВЫБЕРИТЕ ГЕРОЯ ДЛЯ БОЯ', {
-            fontFamily: "'Cinzel', serif", fontSize: isCompact ? '14px' : (isPortrait ? '16px' : '21px'), fontStyle: 'bold', color: '#ffd166', letterSpacing: 1.5
+            fontFamily: CONFIG.FONTS.TITLE, fontSize: isCompact ? '14px' : (isPortrait ? '16px' : '20px'), fontStyle: 'bold', color: '#ffd166', letterSpacing: 1.5
         }).setOrigin(0.5).setDepth(1002);
         modalGroup.add(title);
 
@@ -649,19 +649,19 @@ class MenuScene extends Phaser.Scene {
                 // Имя героя
                 if (!isPortrait) {
                     const nameT = this.add.text(hx - (isCompact ? 10 : 10), hy - (isCompact ? 8 : 12), CONFIG.HEROES[hId].name[lang], {
-                        fontFamily: "'Cinzel', serif", fontSize: isCompact ? '11px' : '13px', fontStyle: 'bold', color: isSelected ? '#ffd166' : (isUnlocked ? '#f1f5f9' : '#64748b')
+                        fontFamily: CONFIG.FONTS.UI, fontSize: isCompact ? '11px' : '13px', fontStyle: 'bold', color: isSelected ? '#ffd166' : (isUnlocked ? '#f1f5f9' : '#64748b')
                     }).setInteractive({ useHandCursor: true }).setDepth(1003);
                     nameT.on('pointerdown', onSelect);
                     cardGroup.add(nameT);
 
                     const classT = this.add.text(hx - (isCompact ? 10 : 10), hy + (isCompact ? 6 : 4), isUnlocked ? 'ДОСТУПЕН' : `${CONFIG.HEROES[hId].price} ЗОЛ.`, {
-                        fontFamily: "'Rajdhani', sans-serif", fontSize: isCompact ? '9px' : '11px', fontStyle: 'bold', color: isUnlocked ? '#34d399' : '#f59e0b'
+                        fontFamily: CONFIG.FONTS.UI, fontSize: isCompact ? '9px' : '11px', fontStyle: 'bold', color: isUnlocked ? '#34d399' : '#f59e0b'
                     }).setInteractive({ useHandCursor: true }).setDepth(1003);
                     classT.on('pointerdown', onSelect);
                     cardGroup.add(classT);
                 } else {
                     const nameT = this.add.text(hx, hy + 20, CONFIG.HEROES[hId].name[lang], {
-                        fontFamily: "'Rajdhani', sans-serif", fontSize: '9px', fontStyle: 'bold', color: isSelected ? '#ffd166' : (isUnlocked ? '#e2e8f0' : '#64748b')
+                        fontFamily: CONFIG.FONTS.UI, fontSize: '9px', fontStyle: 'bold', color: isSelected ? '#ffd166' : (isUnlocked ? '#e2e8f0' : '#64748b')
                     }).setOrigin(0.5).setInteractive({ useHandCursor: true }).setDepth(1003);
                     nameT.on('pointerdown', onSelect);
                     cardGroup.add(nameT);
@@ -707,13 +707,13 @@ class MenuScene extends Phaser.Scene {
             const infoTopY = detailY - detailH / 2 + (isCompact ? 12 : 20);
 
             const heroName = this.add.text(infoX, infoTopY, currentHeroCfg.name[lang].toUpperCase(), {
-                fontFamily: "'Cinzel', serif", fontSize: isCompact ? '16px' : (isPortrait ? '18px' : '22px'), fontStyle: 'bold', color: '#ffd166', letterSpacing: 1
+                fontFamily: CONFIG.FONTS.TITLE, fontSize: isCompact ? '16px' : (isPortrait ? '18px' : '22px'), fontStyle: 'bold', color: '#ffd166', letterSpacing: 1
             }).setDepth(1003);
             cardGroup.add(heroName);
 
             const descWrapW = isPortrait ? (detailW - 130) : (isCompact ? (detailW - 135) : 330);
-            const heroDesc = this.add.text(infoX, infoTopY + (isCompact ? 20 : 26), currentHeroCfg.desc[lang], {
-                fontFamily: "'Rajdhani', sans-serif", fontSize: isCompact ? '10px' : '11px', color: '#94a3b8', wordWrap: { width: descWrapW }
+            const heroDesc = this.add.text(infoX, infoTopY + (isCompact ? 22 : 28), currentHeroCfg.desc[lang], {
+                fontFamily: CONFIG.FONTS.BODY, fontSize: isCompact ? '10px' : '11px', color: '#94a3b8', wordWrap: { width: descWrapW }
             }).setDepth(1003);
             cardGroup.add(heroDesc);
 
@@ -732,12 +732,12 @@ class MenuScene extends Phaser.Scene {
                 cardGroup.add(wepIcon);
 
                 const wepLabel = this.add.text(wepBoxCenterX - wepBoxW / 2 + 36, wepBoxY - (isCompact ? 6 : 8), `ОРУЖИЕ: ${wepCfg.name[lang].toUpperCase()}`, {
-                    fontFamily: "'Cinzel', serif", fontSize: isCompact ? '9px' : '11px', fontStyle: 'bold', color: '#38bdf8'
+                    fontFamily: CONFIG.FONTS.UI, fontSize: isCompact ? '9px' : '11px', fontStyle: 'bold', color: '#38bdf8'
                 }).setDepth(1004);
                 cardGroup.add(wepLabel);
 
                 const wepDesc = this.add.text(wepBoxCenterX - wepBoxW / 2 + 36, wepBoxY + (isCompact ? 4 : 5), wepCfg.desc[lang], {
-                    fontFamily: "'Rajdhani', sans-serif", fontSize: isCompact ? '8px' : '10px', color: '#cbd5e1', wordWrap: { width: wepBoxW - 45 }
+                    fontFamily: CONFIG.FONTS.BODY, fontSize: isCompact ? '8px' : '10px', color: '#cbd5e1', wordWrap: { width: wepBoxW - 45 }
                 }).setDepth(1004);
                 cardGroup.add(wepDesc);
             }
@@ -763,7 +763,7 @@ class MenuScene extends Phaser.Scene {
                 cardGroup.add(stIcon);
 
                 const stLabel = this.add.text(barStartX + 18, sy, st.label, {
-                    fontFamily: "'Rajdhani', sans-serif", fontSize: isCompact ? '9px' : '11px', fontStyle: 'bold', color: '#94a3b8'
+                    fontFamily: CONFIG.FONTS.UI, fontSize: isCompact ? '9px' : '11px', fontStyle: 'bold', color: '#94a3b8'
                 }).setDepth(1004);
                 cardGroup.add(stLabel);
 
@@ -778,7 +778,7 @@ class MenuScene extends Phaser.Scene {
                 cardGroup.add(fill);
 
                 const stVal = this.add.text(trackX + trackW + 8, sy, st.val, {
-                    fontFamily: "'Rajdhani', sans-serif", fontSize: isCompact ? '10px' : '11px', fontStyle: 'bold', color: '#ffffff'
+                    fontFamily: CONFIG.FONTS.MONO, fontSize: isCompact ? '10px' : '11px', fontStyle: 'bold', color: '#ffffff'
                 }).setOrigin(0, 0).setDepth(1004);
                 cardGroup.add(stVal);
             });
@@ -799,12 +799,12 @@ class MenuScene extends Phaser.Scene {
             cardGroup.add(mapIcon);
 
             const mapNameText = this.add.text(detailX - barFullW / 2 + 26, mapBarY, `АРЕНА: ${currentMapCfg.name[lang].toUpperCase()}`, {
-                fontFamily: "'Cinzel', serif", fontSize: isCompact ? '9px' : '11px', fontStyle: 'bold', color: '#38bdf8'
+                fontFamily: CONFIG.FONTS.UI, fontSize: isCompact ? '9px' : '11px', fontStyle: 'bold', color: '#38bdf8'
             }).setOrigin(0, 0.5).setDepth(1004);
             cardGroup.add(mapNameText);
 
             const changeMapText = this.add.text(detailX + barFullW / 2 - 8, mapBarY, 'СМЕНИТЬ ›', {
-                fontFamily: "'Rajdhani', sans-serif", fontSize: isCompact ? '9px' : '11px', fontStyle: 'bold', color: '#ffd166'
+                fontFamily: CONFIG.FONTS.UI, fontSize: isCompact ? '9px' : '11px', fontStyle: 'bold', color: '#ffd166'
             }).setOrigin(1, 0.5).setDepth(1004);
             cardGroup.add(changeMapText);
 
@@ -813,7 +813,7 @@ class MenuScene extends Phaser.Scene {
             if (isUnlocked) {
                 const battleBtn = this.add.image(detailX, actionBtnY, 'btn_battle_gold_epic').setDisplaySize(Math.min(barFullW, 260), isCompact ? 34 : 44).setInteractive({ useHandCursor: true }).setDepth(1003);
                 const battleTxt = this.add.text(detailX, actionBtnY, 'В БОЙ!', {
-                    fontFamily: "'Cinzel', serif", fontSize: isCompact ? '16px' : '20px', fontStyle: 'bold', color: '#ffffff', stroke: '#000000', strokeThickness: 3, letterSpacing: 2
+                    fontFamily: CONFIG.FONTS.TITLE, fontSize: isCompact ? '16px' : '20px', fontStyle: 'bold', color: '#ffffff', stroke: '#000000', strokeThickness: 3, letterSpacing: 2
                 }).setOrigin(0.5).setDepth(1004);
 
                 battleBtn.on('pointerdown', () => {
@@ -877,7 +877,7 @@ class MenuScene extends Phaser.Scene {
         modalGroup.add(headerLine);
 
         const title = this.add.text(width / 2, height / 2 - modalH / 2 + (isCompact ? 18 : 28), 'ДЕРЕВО ТАЛАНТОВ И УСИЛЕНИЙ', {
-            fontFamily: "'Cinzel', serif", fontSize: isCompact ? '13px' : (isPortrait ? '15px' : '20px'), fontStyle: 'bold', color: '#c084fc', letterSpacing: 1.5
+            fontFamily: CONFIG.FONTS.TITLE, fontSize: isCompact ? '13px' : (isPortrait ? '15px' : '20px'), fontStyle: 'bold', color: '#c084fc', letterSpacing: 1.5
         }).setOrigin(0.5).setDepth(1002);
         modalGroup.add(title);
 
@@ -920,14 +920,14 @@ class MenuScene extends Phaser.Scene {
             // Название и уровень
             const textLeftX = tx - itemW / 2 + (isCompact ? 44 : 54);
             const name = this.add.text(textLeftX, ty - (isCompact ? 13 : 16), talent.name[lang], {
-                fontFamily: "'Cinzel', serif", fontSize: isCompact ? '11px' : '13px', fontStyle: 'bold', color: '#f8fafc'
+                fontFamily: CONFIG.FONTS.TITLE, fontSize: isCompact ? '11px' : '13px', fontStyle: 'bold', color: '#f8fafc'
             }).setDepth(1003);
             modalGroup.add(name);
 
             // Описание
             const descText = talent.desc ? talent.desc[lang] : `+${talent.step} за уровень`;
             const desc = this.add.text(textLeftX, ty - (isCompact ? 2 : 2), descText, {
-                fontFamily: "'Rajdhani', sans-serif", fontSize: isCompact ? '9px' : '11px', color: '#94a3b8'
+                fontFamily: CONFIG.FONTS.BODY, fontSize: isCompact ? '9px' : '11px', color: '#94a3b8'
             }).setDepth(1003);
             modalGroup.add(desc);
 
@@ -938,7 +938,7 @@ class MenuScene extends Phaser.Scene {
                 pipsStr += (p < curLvl) ? '◆ ' : '◇ ';
             }
             const pipsText = this.add.text(textLeftX, ty + (isCompact ? 9 : 12), `${pipsStr} (${curLvl}/${talent.max})`, {
-                fontFamily: "'Rajdhani', monospace", fontSize: isCompact ? '9px' : '11px', fontStyle: 'bold', color: curLvl >= talent.max ? '#ffd166' : '#38bdf8'
+                fontFamily: CONFIG.FONTS.MONO, fontSize: isCompact ? '9px' : '11px', fontStyle: 'bold', color: curLvl >= talent.max ? '#ffd166' : '#38bdf8'
             }).setDepth(1003);
             modalGroup.add(pipsText);
 
@@ -949,7 +949,7 @@ class MenuScene extends Phaser.Scene {
                 modalGroup.add(maxBadge);
 
                 const maxText = this.add.text(tx + itemW / 2 - maxBadgeW / 2 - 8, ty, 'МАКС', {
-                    fontFamily: "'Cinzel', serif", fontSize: isCompact ? '10px' : '12px', fontStyle: 'bold', color: '#ffd166'
+                    fontFamily: CONFIG.FONTS.TITLE, fontSize: isCompact ? '10px' : '12px', fontStyle: 'bold', color: '#ffd166'
                 }).setOrigin(0.5).setDepth(1004);
                 modalGroup.add(maxText);
             } else {
@@ -960,7 +960,7 @@ class MenuScene extends Phaser.Scene {
                 
                 const coinIcon = this.add.image(tx + itemW / 2 - btnW + 12, ty, 'ui_coin').setScale(isCompact ? 0.55 : 0.7).setDepth(1004);
                 const costText = this.add.text(tx + itemW / 2 - btnW / 2 + 6, ty, `${cost}`, {
-                    fontFamily: "'Rajdhani', sans-serif", fontSize: isCompact ? '11px' : '13px', fontStyle: 'bold', color: '#ffffff'
+                    fontFamily: CONFIG.FONTS.MONO, fontSize: isCompact ? '11px' : '13px', fontStyle: 'bold', color: '#ffffff'
                 }).setOrigin(0.5).setDepth(1004);
 
                 upBtn.on('pointerdown', () => {
@@ -1009,7 +1009,7 @@ class MenuScene extends Phaser.Scene {
         modalGroup.add(headerLine);
 
         const title = this.add.text(width / 2, height / 2 - modalH / 2 + (isCompact ? 18 : 28), 'ВЫБОР ГЕРОЕВ ДЛЯ РЕЖИМА НА ДВОИХ', {
-            fontFamily: "'Cinzel', serif", fontSize: isCompact ? '12px' : (isPortrait ? '14px' : '19px'), fontStyle: 'bold', color: '#38bdf8', letterSpacing: 1.5
+            fontFamily: CONFIG.FONTS.TITLE, fontSize: isCompact ? '12px' : (isPortrait ? '14px' : '19px'), fontStyle: 'bold', color: '#38bdf8', letterSpacing: 1.5
         }).setOrigin(0.5).setDepth(1002);
         modalGroup.add(title);
 
@@ -1038,7 +1038,7 @@ class MenuScene extends Phaser.Scene {
             this.coopPicksGroup.add(p1Card);
 
             const p1Header = this.add.text(p1X, p1Y - panelH / 2 + (isCompact ? 14 : 18), 'ИГРОК 1 (WASD)', {
-                fontFamily: "'Cinzel', serif", fontSize: isCompact ? '12px' : '15px', fontStyle: 'bold', color: '#38bdf8', letterSpacing: 1
+                fontFamily: CONFIG.FONTS.TITLE, fontSize: isCompact ? '12px' : '15px', fontStyle: 'bold', color: '#38bdf8', letterSpacing: 1
             }).setOrigin(0.5).setDepth(1003);
             this.coopPicksGroup.add(p1Header);
 
@@ -1050,12 +1050,12 @@ class MenuScene extends Phaser.Scene {
             this.coopPicksGroup.add(p1Sprite);
 
             const p1Name = this.add.text(p1X, p1Y + panelH / 2 - (isCompact ? 28 : 34), c1.name[lang].toUpperCase(), {
-                fontFamily: "'Cinzel', serif", fontSize: isCompact ? '13px' : '15px', fontStyle: 'bold', color: '#ffffff'
+                fontFamily: CONFIG.FONTS.TITLE, fontSize: isCompact ? '13px' : '15px', fontStyle: 'bold', color: '#ffffff'
             }).setOrigin(0.5).setDepth(1003);
             this.coopPicksGroup.add(p1Name);
 
             const p1Wep = this.add.text(p1X, p1Y + panelH / 2 - (isCompact ? 12 : 16), `Оружие: ${CONFIG.WEAPONS[c1.weapon].name[lang]}`, {
-                fontFamily: "'Rajdhani', sans-serif", fontSize: isCompact ? '10px' : '11px', color: '#94a3b8'
+                fontFamily: CONFIG.FONTS.BODY, fontSize: isCompact ? '10px' : '11px', color: '#94a3b8'
             }).setOrigin(0.5).setDepth(1003);
             this.coopPicksGroup.add(p1Wep);
 
@@ -1084,7 +1084,7 @@ class MenuScene extends Phaser.Scene {
             this.coopPicksGroup.add(p2Card);
 
             const p2Header = this.add.text(p2X, p2Y - panelH / 2 + (isCompact ? 14 : 18), 'ИГРОК 2 (СТРЕЛКИ)', {
-                fontFamily: "'Cinzel', serif", fontSize: isCompact ? '12px' : '15px', fontStyle: 'bold', color: '#c084fc', letterSpacing: 1
+                fontFamily: CONFIG.FONTS.TITLE, fontSize: isCompact ? '12px' : '15px', fontStyle: 'bold', color: '#c084fc', letterSpacing: 1
             }).setOrigin(0.5).setDepth(1003);
             this.coopPicksGroup.add(p2Header);
 
@@ -1095,12 +1095,12 @@ class MenuScene extends Phaser.Scene {
             this.coopPicksGroup.add(p2Sprite);
 
             const p2Name = this.add.text(p2X, p2Y + panelH / 2 - (isCompact ? 28 : 34), c2.name[lang].toUpperCase(), {
-                fontFamily: "'Cinzel', serif", fontSize: isCompact ? '13px' : '15px', fontStyle: 'bold', color: '#ffffff'
+                fontFamily: CONFIG.FONTS.TITLE, fontSize: isCompact ? '13px' : '15px', fontStyle: 'bold', color: '#ffffff'
             }).setOrigin(0.5).setDepth(1003);
             this.coopPicksGroup.add(p2Name);
 
             const p2Wep = this.add.text(p2X, p2Y + panelH / 2 - (isCompact ? 12 : 16), `Оружие: ${CONFIG.WEAPONS[c2.weapon].name[lang]}`, {
-                fontFamily: "'Rajdhani', sans-serif", fontSize: isCompact ? '10px' : '11px', color: '#94a3b8'
+                fontFamily: CONFIG.FONTS.BODY, fontSize: isCompact ? '10px' : '11px', color: '#94a3b8'
             }).setOrigin(0.5).setDepth(1003);
             this.coopPicksGroup.add(p2Wep);
 
@@ -1127,7 +1127,7 @@ class MenuScene extends Phaser.Scene {
         const startBtnY = height / 2 + modalH / 2 - (isCompact ? 22 : 30);
         const startBtn = this.add.image(width / 2, startBtnY, 'btn_coop_bg').setDisplaySize(isCompact ? 200 : 250, isCompact ? 32 : 44).setInteractive({ useHandCursor: true }).setDepth(1003);
         const startTxt = this.add.text(width / 2, startBtnY, 'НАЧАТЬ СОВМЕСТНЫЙ БОЙ', {
-            fontFamily: "'Cinzel', serif", fontSize: isCompact ? '12px' : '15px', fontStyle: 'bold', color: '#ffffff', letterSpacing: 1.5
+            fontFamily: CONFIG.FONTS.TITLE, fontSize: isCompact ? '12px' : '15px', fontStyle: 'bold', color: '#ffffff', letterSpacing: 1.5
         }).setOrigin(0.5).setDepth(1004);
 
         startBtn.on('pointerdown', () => {
@@ -1169,7 +1169,7 @@ class MenuScene extends Phaser.Scene {
         modalGroup.add(headerLine);
 
         const title = this.add.text(width / 2, height / 2 - modalH / 2 + (isCompact ? 18 : 28), 'ДОСТИЖЕНИЯ И НАГРАДЫ', {
-            fontFamily: "'Cinzel', serif", fontSize: isCompact ? '14px' : (isPortrait ? '16px' : '21px'), fontStyle: 'bold', color: '#ffd166', letterSpacing: 1.5
+            fontFamily: CONFIG.FONTS.TITLE, fontSize: isCompact ? '14px' : (isPortrait ? '16px' : '21px'), fontStyle: 'bold', color: '#ffd166', letterSpacing: 1.5
         }).setOrigin(0.5).setDepth(1002);
         modalGroup.add(title);
 
@@ -1196,17 +1196,17 @@ class MenuScene extends Phaser.Scene {
 
             const textLeftX = width / 2 - modalW / 2 + (isCompact ? 44 : 60);
             const nameText = this.add.text(textLeftX, startY + (isCompact ? 2 : 4), q.name[lang], {
-                fontFamily: "'Cinzel', serif", fontSize: isCompact ? '11px' : (isPortrait ? '12px' : '14px'), fontStyle: 'bold', color: isDone ? '#34d399' : '#f8fafc'
+                fontFamily: CONFIG.FONTS.UI, fontSize: isCompact ? '11px' : (isPortrait ? '12px' : '14px'), fontStyle: 'bold', color: isDone ? '#34d399' : '#f8fafc'
             }).setDepth(1003);
             modalGroup.add(nameText);
 
             const descText = this.add.text(textLeftX, startY + (isCompact ? 16 : 20), q.desc[lang], {
-                fontFamily: "'Rajdhani', sans-serif", fontSize: isCompact ? '9px' : (isPortrait ? '10px' : '11px'), color: '#94a3b8'
+                fontFamily: CONFIG.FONTS.BODY, fontSize: isCompact ? '9px' : (isPortrait ? '10px' : '11px'), color: '#94a3b8'
             }).setDepth(1003);
             modalGroup.add(descText);
 
             const statusText = this.add.text(width / 2 + modalW / 2 - (isCompact ? 20 : 30), startY + rowH / 2, isDone ? 'ВЫПОЛНЕНО ✓' : `+${q.reward} ЗОЛ.`, {
-                fontFamily: "'Rajdhani', sans-serif", fontSize: isCompact ? '10px' : (isPortrait ? '12px' : '14px'), fontStyle: 'bold', color: isDone ? '#34d399' : '#ffd166'
+                fontFamily: CONFIG.FONTS.MONO, fontSize: isCompact ? '10px' : (isPortrait ? '12px' : '14px'), fontStyle: 'bold', color: isDone ? '#34d399' : '#ffd166'
             }).setOrigin(1, 0.5).setDepth(1003);
             modalGroup.add(statusText);
 
@@ -1239,7 +1239,7 @@ class MenuScene extends Phaser.Scene {
         modalGroup.add(headerLine);
 
         const title = this.add.text(width / 2, height / 2 - modalH / 2 + (isCompact ? 18 : 28), 'РЕЦЕПТЫ ЭВОЛЮЦИИ СУПЕР-ОРУЖИЯ', {
-            fontFamily: "'Cinzel', serif", fontSize: isCompact ? '12px' : (isPortrait ? '13px' : '20px'), fontStyle: 'bold', color: '#38bdf8', letterSpacing: 1.2
+            fontFamily: CONFIG.FONTS.TITLE, fontSize: isCompact ? '12px' : (isPortrait ? '13px' : '20px'), fontStyle: 'bold', color: '#38bdf8', letterSpacing: 1.2
         }).setOrigin(0.5).setDepth(1002);
         modalGroup.add(title);
 
@@ -1292,12 +1292,12 @@ class MenuScene extends Phaser.Scene {
                 modalGroup.add(supIcon);
 
                 const supText = this.add.text(width / 2 - modalW / 2 + 180, rowMidY - 7, s.name[lang].toUpperCase(), {
-                    fontFamily: "'Cinzel', serif", fontSize: '11px', fontStyle: 'bold', color: '#ffd166'
+                    fontFamily: CONFIG.FONTS.TITLE, fontSize: '11px', fontStyle: 'bold', color: '#ffd166'
                 }).setDepth(1003);
                 modalGroup.add(supText);
 
                 const compText = this.add.text(width / 2 - modalW / 2 + 180, rowMidY + 7, `${w.name[lang]} + ${p.name[lang]}`, {
-                    fontFamily: "'Rajdhani', sans-serif", fontSize: '9px', color: '#94a3b8'
+                    fontFamily: CONFIG.FONTS.BODY, fontSize: '9px', color: '#94a3b8'
                 }).setDepth(1003);
                 modalGroup.add(compText);
             } else {
@@ -1307,10 +1307,10 @@ class MenuScene extends Phaser.Scene {
                 modalGroup.add(wepIcon);
                 
                 const wepText = this.add.text(wepLeftX + (isCompact ? 18 : 30), rowMidY - (isCompact ? 6 : 8), w.name[lang], {
-                    fontFamily: "'Cinzel', serif", fontSize: isCompact ? '10px' : '13px', fontStyle: 'bold', color: '#ffffff'
+                    fontFamily: CONFIG.FONTS.UI, fontSize: isCompact ? '10px' : '13px', fontStyle: 'bold', color: '#ffffff'
                 }).setDepth(1003);
                 const wepLvl = this.add.text(wepLeftX + (isCompact ? 18 : 30), rowMidY + (isCompact ? 5 : 8), 'Макс. Ур. 5', {
-                    fontFamily: "'Rajdhani', sans-serif", fontSize: isCompact ? '8px' : '11px', color: '#f59e0b'
+                    fontFamily: CONFIG.FONTS.BODY, fontSize: isCompact ? '8px' : '11px', color: '#f59e0b'
                 }).setDepth(1003);
                 modalGroup.add(wepText);
                 modalGroup.add(wepLvl);
@@ -1328,10 +1328,10 @@ class MenuScene extends Phaser.Scene {
                 modalGroup.add(pasIcon);
                 
                 const pasText = this.add.text(pasLeftX + (isCompact ? 18 : 30), rowMidY - (isCompact ? 6 : 8), p.name[lang], {
-                    fontFamily: "'Cinzel', serif", fontSize: isCompact ? '10px' : '13px', fontStyle: 'bold', color: '#ffffff'
+                    fontFamily: CONFIG.FONTS.UI, fontSize: isCompact ? '10px' : '13px', fontStyle: 'bold', color: '#ffffff'
                 }).setDepth(1003);
                 const pasLvl = this.add.text(pasLeftX + (isCompact ? 18 : 30), rowMidY + (isCompact ? 5 : 8), 'Любой уровень', {
-                    fontFamily: "'Rajdhani', sans-serif", fontSize: isCompact ? '8px' : '11px', color: '#38bdf8'
+                    fontFamily: CONFIG.FONTS.BODY, fontSize: isCompact ? '8px' : '11px', color: '#38bdf8'
                 }).setDepth(1003);
                 modalGroup.add(pasText);
                 modalGroup.add(pasLvl);
@@ -1344,20 +1344,20 @@ class MenuScene extends Phaser.Scene {
                 modalGroup.add(arrow);
 
                 // 3. Блок супер-оружия (Эволюция)
-                const supBoxW = isCompact ? (modalW - (arrowX + 20) - 20) : 260;
-                const supCenterX = isCompact ? (arrowX + 15 + supBoxW / 2) : (width / 2 + 255);
-                const supBg = this.add.rectangle(supCenterX, rowMidY, supBoxW, isCompact ? (rowH - 6) : 52, 0x1e1b4b).setDepth(1002);
+                const supBoxW = isCompact ? (modalW - (arrowX + 20) - 20) : 270;
+                const supCenterX = isCompact ? (arrowX + 15 + supBoxW / 2) : (width / 2 + 250);
+                const supBg = this.add.rectangle(supCenterX, rowMidY, supBoxW, isCompact ? (rowH - 4) : 56, 0x1e1b4b).setDepth(1002);
                 supBg.setStrokeStyle(1.5, 0xffd166);
                 modalGroup.add(supBg);
 
-                const supIcon = this.add.image(supCenterX - supBoxW / 2 + (isCompact ? 16 : 24), rowMidY, s.icon).setScale(isCompact ? 0.5 : 0.7).setTint(0xffd166).setDepth(1003);
+                const supIcon = this.add.image(supCenterX - supBoxW / 2 + (isCompact ? 16 : 24), rowMidY, s.icon).setScale(isCompact ? 0.5 : 0.68).setTint(0xffd166).setDepth(1003);
                 modalGroup.add(supIcon);
 
-                const supText = this.add.text(supCenterX - supBoxW / 2 + (isCompact ? 34 : 54), rowMidY - (isCompact ? 6 : 9), s.name[lang].toUpperCase(), {
-                    fontFamily: "'Cinzel', serif", fontSize: isCompact ? '9px' : '12px', fontStyle: 'bold', color: '#ffd166'
+                const supText = this.add.text(supCenterX - supBoxW / 2 + (isCompact ? 34 : 52), rowMidY - (isCompact ? 7 : 11), s.name[lang].toUpperCase(), {
+                    fontFamily: CONFIG.FONTS.TITLE, fontSize: isCompact ? '9px' : '11px', fontStyle: 'bold', color: '#ffd166'
                 }).setDepth(1003);
-                const supDesc = this.add.text(supCenterX - supBoxW / 2 + (isCompact ? 34 : 54), rowMidY + (isCompact ? 4 : 7), s.desc ? s.desc[lang] : 'Супер-Оружие', {
-                    fontFamily: "'Rajdhani', sans-serif", fontSize: isCompact ? '8px' : '10px', color: '#e2e8f0', wordWrap: { width: supBoxW - (isCompact ? 40 : 65) }
+                const supDesc = this.add.text(supCenterX - supBoxW / 2 + (isCompact ? 34 : 52), rowMidY + (isCompact ? 4 : 5), s.desc ? s.desc[lang] : 'Супер-Оружие', {
+                    fontFamily: CONFIG.FONTS.BODY, fontSize: isCompact ? '8px' : '9.5px', color: '#e2e8f0', wordWrap: { width: supBoxW - (isCompact ? 40 : 60) }, lineSpacing: 1
                 }).setDepth(1003);
                 modalGroup.add(supText);
                 modalGroup.add(supDesc);
@@ -1391,7 +1391,7 @@ class MenuScene extends Phaser.Scene {
         modalGroup.add(headerLine);
 
         const title = this.add.text(width / 2, height / 2 - modalH / 2 + (isCompact ? 18 : 28), 'НАСТРОЙКИ', {
-            fontFamily: "'Cinzel', serif", fontSize: isCompact ? '15px' : '20px', fontStyle: 'bold', color: '#c084fc', letterSpacing: 2
+            fontFamily: CONFIG.FONTS.TITLE, fontSize: isCompact ? '15px' : '20px', fontStyle: 'bold', color: '#c084fc', letterSpacing: 2
         }).setOrigin(0.5).setDepth(1002);
         modalGroup.add(title);
 
@@ -1402,7 +1402,7 @@ class MenuScene extends Phaser.Scene {
         const soundBtn = this.add.rectangle(width / 2, height / 2 + (isCompact ? 10 : 12), isCompact ? 220 : 260, isCompact ? 40 : 48, 0x0f172a, 0.95).setInteractive({ useHandCursor: true }).setDepth(1002);
         soundBtn.setStrokeStyle(1.5, 0x38bdf8);
         const soundTxt = this.add.text(width / 2, height / 2 + (isCompact ? 10 : 12), window.Sound.isMuted ? 'ЗВУК: ВЫКЛ' : 'ЗВУК: ВКЛ', {
-            fontFamily: "'Cinzel', serif", fontSize: isCompact ? '14px' : '16px', fontStyle: 'bold', color: '#ffffff', letterSpacing: 1
+            fontFamily: CONFIG.FONTS.TITLE, fontSize: isCompact ? '14px' : '16px', fontStyle: 'bold', color: '#ffffff', letterSpacing: 1
         }).setOrigin(0.5).setDepth(1003);
 
         soundBtn.on('pointerdown', () => {
@@ -1439,7 +1439,7 @@ class MenuScene extends Phaser.Scene {
         modalGroup.add(headerLine);
 
         const title = this.add.text(width / 2, height / 2 - modalH / 2 + (isCompact ? 18 : 28), 'ТАБЛИЦА ЛИДЕРОВ АРЕНЫ', {
-            fontFamily: "'Cinzel', serif", fontSize: isCompact ? '13px' : '18px', fontStyle: 'bold', color: '#ffd166', letterSpacing: 1.5
+            fontFamily: CONFIG.FONTS.TITLE, fontSize: isCompact ? '13px' : '18px', fontStyle: 'bold', color: '#ffd166', letterSpacing: 1.5
         }).setOrigin(0.5).setDepth(1002);
         modalGroup.add(title);
 
@@ -1463,17 +1463,17 @@ class MenuScene extends Phaser.Scene {
             modalGroup.add(rowBg);
 
             const rankT = this.add.text(width / 2 - modalW / 2 + 35, ly, `#${l.rank}`, {
-                fontFamily: "'Cinzel', serif", fontSize: '14px', fontStyle: 'bold', color: idx < 3 ? '#ffd166' : '#94a3b8'
+                fontFamily: CONFIG.FONTS.TITLE, fontSize: '14px', fontStyle: 'bold', color: idx < 3 ? '#ffd166' : '#94a3b8'
             }).setOrigin(0, 0.5).setDepth(1003);
             modalGroup.add(rankT);
 
             const nameT = this.add.text(width / 2 - modalW / 2 + 85, ly, l.name, {
-                fontFamily: "'Cinzel', serif", fontSize: '14px', fontStyle: 'bold', color: isMe ? '#ffd166' : '#f8fafc'
+                fontFamily: CONFIG.FONTS.TITLE, fontSize: '14px', fontStyle: 'bold', color: isMe ? '#ffd166' : '#f8fafc'
             }).setOrigin(0, 0.5).setDepth(1003);
             modalGroup.add(nameT);
 
             const scoreT = this.add.text(width / 2 + modalW / 2 - 35, ly, `${l.kills} УБИЙСТВ  •  ${l.time}`, {
-                fontFamily: "'Rajdhani', sans-serif", fontSize: '13px', fontStyle: 'bold', color: '#38bdf8'
+                fontFamily: CONFIG.FONTS.MONO, fontSize: '13px', fontStyle: 'bold', color: '#38bdf8'
             }).setOrigin(1, 0.5).setDepth(1003);
             modalGroup.add(scoreT);
         });
@@ -1501,7 +1501,7 @@ class MenuScene extends Phaser.Scene {
         modalGroup.add(modalBg);
 
         const title = this.add.text(width / 2, height / 2 - modalH / 2 + (isCompact ? 18 : 28), 'ВЫБОР КАРТЫ (АРЕНЫ)', {
-            fontFamily: "'Cinzel', serif", fontSize: isCompact ? '14px' : (isPortrait ? '16px' : '22px'), fontStyle: 'bold', color: '#38bdf8', letterSpacing: 1.5
+            fontFamily: CONFIG.FONTS.TITLE, fontSize: isCompact ? '14px' : (isPortrait ? '16px' : '22px'), fontStyle: 'bold', color: '#38bdf8', letterSpacing: 1.5
         }).setOrigin(0.5).setDepth(1002);
         modalGroup.add(title);
 
@@ -1571,21 +1571,21 @@ class MenuScene extends Phaser.Scene {
 
                     // Название карты
                     const mTitle = this.add.text(cx, cy - cardH / 2 + (isCompact ? 88 : 130), mapCfg.name[lang], {
-                        fontFamily: "'Cinzel', serif", fontSize: isCompact ? '12px' : '15px', fontStyle: 'bold', color: isSelected ? '#38bdf8' : (isUnlocked ? '#ffffff' : '#64748b')
+                        fontFamily: CONFIG.FONTS.TITLE, fontSize: isCompact ? '12px' : '15px', fontStyle: 'bold', color: isSelected ? '#38bdf8' : (isUnlocked ? '#ffffff' : '#64748b')
                     }).setOrigin(0.5).setDepth(1003);
                     cardGroup.add(mTitle);
 
                     // Описание
                     const descY = cy - cardH / 2 + (isCompact ? 116 : 170);
                     const mDesc = this.add.text(cx, descY, mapCfg.desc[lang], {
-                        fontFamily: "'Rajdhani', sans-serif", fontSize: isCompact ? '9px' : '11px', color: '#94a3b8', align: 'center', lineSpacing: 2, wordWrap: { width: cardW - 14 }
+                        fontFamily: CONFIG.FONTS.BODY, fontSize: isCompact ? '9px' : '11px', color: '#94a3b8', align: 'center', lineSpacing: 2, wordWrap: { width: cardW - 14 }
                     }).setOrigin(0.5).setDepth(1003);
                     cardGroup.add(mDesc);
 
                     // Рекорд
                     const recY = cy + cardH / 2 - (isCompact ? 40 : 55);
                     const recText = this.add.text(cx, recY, recordStr, {
-                        fontFamily: "'Rajdhani', sans-serif", fontSize: isCompact ? '10px' : '12px', fontStyle: 'bold', color: recordSec > 0 ? '#ffd166' : '#64748b'
+                        fontFamily: CONFIG.FONTS.MONO, fontSize: isCompact ? '10px' : '12px', fontStyle: 'bold', color: recordSec > 0 ? '#ffd166' : '#64748b'
                     }).setOrigin(0.5).setDepth(1003);
                     cardGroup.add(recText);
 
@@ -1600,7 +1600,7 @@ class MenuScene extends Phaser.Scene {
                         cardGroup.add(selBtn);
 
                         const selText = this.add.text(cx, btnY, isSelected ? 'ВЫБРАНО' : 'ВЫБРАТЬ', {
-                            fontFamily: "'Cinzel', serif", fontSize: isCompact ? '10px' : '13px', fontStyle: 'bold', color: '#ffffff'
+                            fontFamily: CONFIG.FONTS.TITLE, fontSize: isCompact ? '10px' : '13px', fontStyle: 'bold', color: '#ffffff'
                         }).setOrigin(0.5).setDepth(1004);
                         cardGroup.add(selText);
 
@@ -1616,7 +1616,7 @@ class MenuScene extends Phaser.Scene {
                         cardGroup.add(lockBox);
 
                         const lockText = this.add.text(cx, btnY, isCompact ? '[ ВЫЖИВИТЕ 5 МИН ]' : '[ ЗАКРЫТО ]\nВЫЖИВИТЕ 5 МИН', {
-                            fontFamily: "'Rajdhani', sans-serif", fontSize: isCompact ? '9px' : '11px', fontStyle: 'bold', color: '#ef4444', align: 'center', lineSpacing: 1
+                            fontFamily: CONFIG.FONTS.UI, fontSize: isCompact ? '9px' : '11px', fontStyle: 'bold', color: '#ef4444', align: 'center', lineSpacing: 1
                         }).setOrigin(0.5).setDepth(1004);
                         cardGroup.add(lockText);
                     }
@@ -1628,17 +1628,17 @@ class MenuScene extends Phaser.Scene {
 
                     const titleX = cx - cardW / 2 + 96;
                     const mTitle = this.add.text(titleX, cy - 30, mapCfg.name[lang], {
-                        fontFamily: "'Cinzel', serif", fontSize: '13px', fontStyle: 'bold', color: isSelected ? '#38bdf8' : (isUnlocked ? '#ffffff' : '#64748b')
+                        fontFamily: CONFIG.FONTS.TITLE, fontSize: '13px', fontStyle: 'bold', color: isSelected ? '#38bdf8' : (isUnlocked ? '#ffffff' : '#64748b')
                     }).setDepth(1003);
                     cardGroup.add(mTitle);
 
                     const mDesc = this.add.text(titleX, cy - 10, mapCfg.desc[lang], {
-                        fontFamily: "'Rajdhani', sans-serif", fontSize: '9px', color: '#94a3b8', lineSpacing: 1, wordWrap: { width: cardW - 180 }
+                        fontFamily: CONFIG.FONTS.BODY, fontSize: '9px', color: '#94a3b8', lineSpacing: 1, wordWrap: { width: cardW - 180 }
                     }).setDepth(1003);
                     cardGroup.add(mDesc);
 
                     const recText = this.add.text(titleX, cy + 24, recordStr, {
-                        fontFamily: "'Rajdhani', sans-serif", fontSize: '10px', fontStyle: 'bold', color: recordSec > 0 ? '#ffd166' : '#64748b'
+                        fontFamily: CONFIG.FONTS.MONO, fontSize: '10px', fontStyle: 'bold', color: recordSec > 0 ? '#ffd166' : '#64748b'
                     }).setDepth(1003);
                     cardGroup.add(recText);
 
@@ -1650,7 +1650,7 @@ class MenuScene extends Phaser.Scene {
                         cardGroup.add(selBtn);
 
                         const selText = this.add.text(btnX, cy, isSelected ? 'ВЫБРАНО' : 'ВЫБРАТЬ', {
-                            fontFamily: "'Rajdhani', sans-serif", fontSize: '9px', fontStyle: 'bold', color: '#ffffff'
+                            fontFamily: CONFIG.FONTS.TITLE, fontSize: '9px', fontStyle: 'bold', color: '#ffffff'
                         }).setOrigin(0.5).setDepth(1004);
                         cardGroup.add(selText);
 
@@ -1666,7 +1666,7 @@ class MenuScene extends Phaser.Scene {
                         cardGroup.add(lockBox);
 
                         const lockText = this.add.text(btnX, cy, 'ЗАКРЫТО', {
-                            fontFamily: "'Rajdhani', sans-serif", fontSize: '9px', fontStyle: 'bold', color: '#ef4444'
+                            fontFamily: CONFIG.FONTS.UI, fontSize: '9px', fontStyle: 'bold', color: '#ef4444'
                         }).setOrigin(0.5).setDepth(1004);
                         cardGroup.add(lockText);
                     }

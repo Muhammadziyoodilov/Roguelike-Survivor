@@ -40,7 +40,7 @@ class GameOverScene extends Phaser.Scene {
         const titleY = isCompact ? 22 : (isPortrait ? 45 : 55);
 
         this.add.text(width / 2, titleY, titleText, {
-            fontFamily: "'Cinzel', serif",
+            fontFamily: CONFIG.FONTS.TITLE,
             fontSize: isCompact ? '20px' : (isPortrait ? '24px' : '32px'),
             fontStyle: 'bold',
             color: titleColor,
@@ -67,28 +67,28 @@ class GameOverScene extends Phaser.Scene {
         // 1. Время
         this.add.image(leftX, startY, 'ui_clock').setScale(isCompact ? 0.8 : 1.0);
         this.add.text(leftX + (isCompact ? 20 : 25), startY, `Время:  ${timeStr} / 10:00`, {
-            fontFamily: "'Rajdhani', sans-serif", fontSize: isCompact ? '13px' : (isPortrait ? '15px' : '17px'), fontStyle: 'bold', color: '#f8fafc'
+            fontFamily: CONFIG.FONTS.MONO, fontSize: isCompact ? '13px' : (isPortrait ? '15px' : '17px'), fontStyle: 'bold', color: '#f8fafc'
         }).setOrigin(0, 0.5);
         startY += rowStep;
 
         // 2. Убийства
         this.add.image(leftX, startY, 'ui_skull').setScale(isCompact ? 0.8 : 1.0);
         this.add.text(leftX + (isCompact ? 20 : 25), startY, `Убито монстров:  ${this.kills}`, {
-            fontFamily: "'Rajdhani', sans-serif", fontSize: isCompact ? '13px' : (isPortrait ? '15px' : '17px'), fontStyle: 'bold', color: '#f8fafc'
+            fontFamily: CONFIG.FONTS.MONO, fontSize: isCompact ? '13px' : (isPortrait ? '15px' : '17px'), fontStyle: 'bold', color: '#f8fafc'
         }).setOrigin(0, 0.5);
         startY += rowStep;
 
         // 3. Уровень
         this.add.image(leftX, startY, 'ui_star').setScale(isCompact ? 0.8 : 1.0);
         this.add.text(leftX + (isCompact ? 20 : 25), startY, `Уровень героя:  LVL ${this.level}`, {
-            fontFamily: "'Rajdhani', sans-serif", fontSize: isCompact ? '13px' : (isPortrait ? '15px' : '17px'), fontStyle: 'bold', color: '#f8fafc'
+            fontFamily: CONFIG.FONTS.MONO, fontSize: isCompact ? '13px' : (isPortrait ? '15px' : '17px'), fontStyle: 'bold', color: '#f8fafc'
         }).setOrigin(0, 0.5);
         startY += rowStep;
 
         // 4. Золото
         this.add.image(leftX, startY, 'ui_coin').setScale(isCompact ? 0.8 : 1.0);
         this.add.text(leftX + (isCompact ? 20 : 25), startY, `Получено золота:  +${earnedGold}`, {
-            fontFamily: "'Rajdhani', sans-serif", fontSize: isCompact ? '13px' : (isPortrait ? '15px' : '17px'), color: '#ffd166', fontStyle: 'bold'
+            fontFamily: CONFIG.FONTS.MONO, fontSize: isCompact ? '13px' : (isPortrait ? '15px' : '17px'), color: '#ffd166', fontStyle: 'bold'
         }).setOrigin(0, 0.5);
 
         // Кнопки
@@ -100,7 +100,7 @@ class GameOverScene extends Phaser.Scene {
 
             const doubleBtn = this.add.image(width / 2 - 120, btnY, 'btn_unlock_gold').setDisplaySize(btnW, btnH).setInteractive({ useHandCursor: true });
             const doubleText = this.add.text(width / 2 - 120, btnY, `УДВОИТЬ (+${earnedGold})`, {
-                fontFamily: "'Rajdhani', sans-serif", fontSize: '13px', fontStyle: 'bold', color: '#ffffff'
+                fontFamily: CONFIG.FONTS.TITLE, fontSize: '12px', fontStyle: 'bold', color: '#ffffff'
             }).setOrigin(0.5);
 
             doubleBtn.on('pointerdown', () => {
@@ -116,7 +116,7 @@ class GameOverScene extends Phaser.Scene {
 
             const menuBtn = this.add.image(width / 2 + 120, btnY, 'btn_coop_bg').setDisplaySize(btnW, btnH).setInteractive({ useHandCursor: true });
             this.add.text(width / 2 + 120, btnY, 'В ГЛАВНОЕ МЕНЮ', {
-                fontFamily: "'Cinzel', serif", fontSize: '12px', fontStyle: 'bold', color: '#ffffff', letterSpacing: 1
+                fontFamily: CONFIG.FONTS.TITLE, fontSize: '12px', fontStyle: 'bold', color: '#ffffff', letterSpacing: 1
             }).setOrigin(0.5);
 
             menuBtn.on('pointerdown', () => {
@@ -132,7 +132,7 @@ class GameOverScene extends Phaser.Scene {
 
             const doubleBtn = this.add.image(width / 2, dBtnY, 'btn_unlock_gold').setDisplaySize(btnW, 44).setInteractive({ useHandCursor: true });
             const doubleText = this.add.text(width / 2, dBtnY, `УДВОИТЬ ЗОЛОТО (+${earnedGold})`, {
-                fontFamily: "'Rajdhani', sans-serif", fontSize: isPortrait ? '14px' : '16px', fontStyle: 'bold', color: '#ffffff'
+                fontFamily: CONFIG.FONTS.TITLE, fontSize: isPortrait ? '13px' : '15px', fontStyle: 'bold', color: '#ffffff'
             }).setOrigin(0.5);
 
             doubleBtn.on('pointerdown', () => {
@@ -148,7 +148,7 @@ class GameOverScene extends Phaser.Scene {
 
             const menuBtn = this.add.image(width / 2, mBtnY, 'btn_coop_bg').setDisplaySize(btnW, 44).setInteractive({ useHandCursor: true });
             this.add.text(width / 2, mBtnY, 'В ГЛАВНОЕ МЕНЮ', {
-                fontFamily: "'Cinzel', serif", fontSize: isPortrait ? '13px' : '15px', fontStyle: 'bold', color: '#ffffff', letterSpacing: 1
+                fontFamily: CONFIG.FONTS.TITLE, fontSize: isPortrait ? '13px' : '15px', fontStyle: 'bold', color: '#ffffff', letterSpacing: 1
             }).setOrigin(0.5);
 
             menuBtn.on('pointerdown', () => {

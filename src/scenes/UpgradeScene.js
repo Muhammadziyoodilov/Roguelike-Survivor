@@ -34,7 +34,7 @@ class UpgradeScene extends Phaser.Scene {
         const headerY = isCompact ? 22 : (isPortrait ? 40 : 50);
 
         this.add.text(width / 2, headerY, headerText, {
-            fontFamily: "'Cinzel', serif",
+            fontFamily: CONFIG.FONTS.TITLE,
             fontSize: isCompact ? '18px' : (isPortrait ? '22px' : '28px'),
             fontStyle: 'bold',
             color: headerColor,
@@ -51,14 +51,14 @@ class UpgradeScene extends Phaser.Scene {
                 window.Sound.playJackpot();
                 this.player.addGold(300);
                 const banner = this.add.text(width / 2, subY, 'ЗОЛОТОЙ ДЖЕКПОТ x5 (+300 ЗОЛОТА)!', {
-                    fontFamily: 'sans-serif', fontSize: isCompact ? '11px' : (isPortrait ? '12px' : '15px'), fontStyle: 'bold', color: '#ffd166', stroke: '#000', strokeThickness: 3
+                    fontFamily: CONFIG.FONTS.UI, fontSize: isCompact ? '11px' : (isPortrait ? '12px' : '15px'), fontStyle: 'bold', color: '#ffd166', stroke: '#000', strokeThickness: 3
                 }).setOrigin(0.5);
                 this.tweens.add({ targets: banner, scale: 1.08, yoyo: true, repeat: -1, duration: 400 });
             } else if (roll < 0.25) {
                 this.jackpotCount = 3;
                 window.Sound.playJackpot();
                 const banner = this.add.text(width / 2, subY, 'СЕРЕБРЯНЫЙ ДЖЕКПОТ x3!', {
-                    fontFamily: 'sans-serif', fontSize: isCompact ? '11px' : (isPortrait ? '12px' : '15px'), fontStyle: 'bold', color: '#38bdf8', stroke: '#000', strokeThickness: 3
+                    fontFamily: CONFIG.FONTS.UI, fontSize: isCompact ? '11px' : (isPortrait ? '12px' : '15px'), fontStyle: 'bold', color: '#38bdf8', stroke: '#000', strokeThickness: 3
                 }).setOrigin(0.5);
                 this.tweens.add({ targets: banner, scale: 1.06, yoyo: true, repeat: -1, duration: 400 });
             } else {
@@ -75,7 +75,7 @@ class UpgradeScene extends Phaser.Scene {
 
         if (!this.jackpotCount || this.jackpotCount === 1) {
             this.add.text(width / 2, subY, `${playerLabel}Выберите улучшение для героя`, {
-                fontFamily: 'sans-serif',
+                fontFamily: CONFIG.FONTS.UI,
                 fontSize: isCompact ? '11px' : (isPortrait ? '12px' : '14px'),
                 fontStyle: 'bold',
                 color: '#94a3b8'
@@ -122,18 +122,18 @@ class UpgradeScene extends Phaser.Scene {
                 const textStartX = width / 2 - cardWidth / 2 + iconSize + 28;
 
                 const tag = this.add.text(textStartX, cardY - cardHeight / 2 + 14, tagText, {
-                    fontFamily: "'Rajdhani', sans-serif", fontSize: '11px', fontStyle: 'bold', color: tagColor
+                    fontFamily: CONFIG.FONTS.MONO, fontSize: '11px', fontStyle: 'bold', color: tagColor
                 });
                 this.cardsGroup.add(tag);
 
                 const name = this.add.text(textStartX, cardY - cardHeight / 2 + 28, upg.name, {
-                    fontFamily: "'Rajdhani', sans-serif", fontSize: '15px', fontStyle: 'bold', color: '#ffffff',
+                    fontFamily: CONFIG.FONTS.TITLE, fontSize: '14px', fontStyle: 'bold', color: '#ffffff',
                     wordWrap: { width: cardWidth - iconSize - 40 }
                 });
                 this.cardsGroup.add(name);
 
                 const desc = this.add.text(textStartX, cardY + 8, upg.desc, {
-                    fontFamily: "'Rajdhani', sans-serif", fontSize: '11px', color: '#94a3b8',
+                    fontFamily: CONFIG.FONTS.BODY, fontSize: '11px', color: '#94a3b8',
                     wordWrap: { width: cardWidth - iconSize - 40 }
                 });
                 this.cardsGroup.add(desc);
@@ -160,7 +160,7 @@ class UpgradeScene extends Phaser.Scene {
                 let tagText = upg.isSuper ? '[ЭВОЛЮЦИЯ]' : (upg.isNew ? '[НОВОЕ]' : `УРОВЕНЬ ${upg.level}`);
                 let tagColor = upg.isSuper ? '#ffd166' : (upg.isNew ? '#c084fc' : '#38bdf8');
                 const tag = this.add.text(cardX, centerY - cardHeight / 2 + (isCompact ? 14 : 20), tagText, {
-                    fontFamily: "'Rajdhani', sans-serif", fontSize: isCompact ? '11px' : '13px', fontStyle: 'bold', color: tagColor
+                    fontFamily: CONFIG.FONTS.MONO, fontSize: isCompact ? '11px' : '13px', fontStyle: 'bold', color: tagColor
                 }).setOrigin(0.5);
                 this.cardsGroup.add(tag);
 
@@ -174,14 +174,14 @@ class UpgradeScene extends Phaser.Scene {
 
                 const nameY = centerY - cardHeight / 2 + (isCompact ? 95 : 138);
                 const name = this.add.text(cardX, nameY, upg.name, {
-                    fontFamily: "'Cinzel', serif", fontSize: isCompact ? '13px' : '16px', fontStyle: 'bold', color: '#ffffff',
+                    fontFamily: CONFIG.FONTS.TITLE, fontSize: isCompact ? '12px' : '15px', fontStyle: 'bold', color: '#ffffff',
                     align: 'center', wordWrap: { width: cardWidth - 16 }
                 }).setOrigin(0.5);
                 this.cardsGroup.add(name);
 
                 const descY = centerY - cardHeight / 2 + (isCompact ? 135 : 195);
                 const desc = this.add.text(cardX, descY, upg.desc, {
-                    fontFamily: "'Rajdhani', sans-serif", fontSize: isCompact ? '10px' : '12px', color: '#cbd5e1',
+                    fontFamily: CONFIG.FONTS.BODY, fontSize: isCompact ? '10px' : '12px', color: '#cbd5e1',
                     align: 'center', wordWrap: { width: cardWidth - 18 }, lineSpacing: 1
                 }).setOrigin(0.5, 0);
                 this.cardsGroup.add(desc);
@@ -202,10 +202,10 @@ class UpgradeScene extends Phaser.Scene {
 
         // Кнопка Реролла (Reroll)
         const btnY = height - (isCompact ? 20 : 32);
-        const rerollBtn = this.add.rectangle(width / 2, btnY, isCompact ? 180 : 220, isCompact ? 28 : 36, 0x0f172a, 0.95).setInteractive({ useHandCursor: true });
+        const rerollBtn = this.add.rectangle(width / 2, btnY, isCompact ? 200 : 250, isCompact ? 30 : 38, 0x0f172a, 0.95).setInteractive({ useHandCursor: true });
         rerollBtn.setStrokeStyle(1.5, 0x6366f1);
         const rerollText = this.add.text(width / 2, btnY, '🎲  ЗАМЕНИТЬ (REROLL)', {
-            fontFamily: "'Cinzel', serif", fontSize: isCompact ? '11px' : '13px', fontStyle: 'bold', color: '#c084fc', letterSpacing: 1
+            fontFamily: CONFIG.FONTS.TITLE, fontSize: isCompact ? '11px' : '13px', fontStyle: 'bold', color: '#c084fc', letterSpacing: 1
         }).setOrigin(0.5);
 
         rerollBtn.on('pointerdown', () => {

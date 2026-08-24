@@ -29,7 +29,7 @@ class PauseScene extends Phaser.Scene {
         // Заголовок
         const titleY = isCompact ? 18 : (isPortrait ? 28 : 36);
         this.add.text(width / 2, titleY, 'ПАУЗА И СТАТИСТИКА', {
-            fontFamily: "'Cinzel', serif",
+            fontFamily: CONFIG.FONTS.TITLE,
             fontSize: isCompact ? '16px' : (isPortrait ? '20px' : '24px'),
             fontStyle: 'bold',
             color: '#ffd166',
@@ -61,7 +61,7 @@ class PauseScene extends Phaser.Scene {
 
             let curY = y - panelH / 2 + 22;
             this.add.text(x, curY, `${heroCfg.name[lang].toUpperCase()} (УР. ${p.level})`, {
-                fontFamily: "'Cinzel', serif", fontSize: '16px', fontStyle: 'bold', color: '#ffd166'
+                fontFamily: CONFIG.FONTS.TITLE, fontSize: '15px', fontStyle: 'bold', color: '#ffd166'
             }).setOrigin(0.5);
 
             curY += 24;
@@ -70,13 +70,13 @@ class PauseScene extends Phaser.Scene {
                 `Урон: +${Math.round((p.stats.damageMulti - 1) * 100)}%  •  Крит: ${Math.round(p.stats.critChance * 100)}%  •  Золото: ${p.goldCollected || 0}`
             ];
             stats.forEach((s) => {
-                this.add.text(x, curY, s, { fontFamily: "'Rajdhani', sans-serif", fontSize: '11px', color: '#cbd5e1' }).setOrigin(0.5);
+                this.add.text(x, curY, s, { fontFamily: CONFIG.FONTS.BODY, fontSize: '11px', color: '#cbd5e1' }).setOrigin(0.5);
                 curY += 16;
             });
 
             curY += 12;
             this.add.text(x - panelW / 2 + 18, curY, 'ОРУЖИЕ И ЭВОЛЮЦИИ:', {
-                fontFamily: "'Cinzel', serif", fontSize: '12px', fontStyle: 'bold', color: '#38bdf8'
+                fontFamily: CONFIG.FONTS.TITLE, fontSize: '12px', fontStyle: 'bold', color: '#38bdf8'
             });
             curY += 20;
 
@@ -86,26 +86,26 @@ class PauseScene extends Phaser.Scene {
                 const status = p.superWeapons.includes(wep.evolution) ? '[ЭВОЛЮЦИЯ]' : `Ур. ${lvl}/${wep.maxLevel}`;
                 this.add.image(x - panelW / 2 + 28, curY, wep.icon).setScale(0.46);
                 this.add.text(x - panelW / 2 + 46, curY, `${wep.name[lang]} — ${status}`, {
-                    fontFamily: "'Rajdhani', sans-serif", fontSize: '12px', fontStyle: 'bold', color: '#ffffff'
+                    fontFamily: CONFIG.FONTS.UI, fontSize: '12px', fontStyle: 'bold', color: '#ffffff'
                 }).setOrigin(0, 0.5);
                 curY += 22;
             });
 
             curY += 8;
             this.add.text(x - panelW / 2 + 18, curY, 'ПАССИВНЫЕ НАВЫКИ:', {
-                fontFamily: "'Cinzel', serif", fontSize: '12px', fontStyle: 'bold', color: '#c084fc'
+                fontFamily: CONFIG.FONTS.TITLE, fontSize: '12px', fontStyle: 'bold', color: '#c084fc'
             });
             curY += 20;
 
             if (Object.keys(p.passives).length === 0) {
-                this.add.text(x - panelW / 2 + 18, curY, 'Нет активных пассивок', { fontFamily: "'Rajdhani', sans-serif", fontSize: '11px', color: '#64748b' });
+                this.add.text(x - panelW / 2 + 18, curY, 'Нет активных пассивок', { fontFamily: CONFIG.FONTS.BODY, fontSize: '11px', color: '#64748b' });
             } else {
                 Object.entries(p.passives).forEach(([pId, lvl]) => {
                     const pas = CONFIG.PASSIVES[pId];
                     if (!pas) return;
                     this.add.image(x - panelW / 2 + 28, curY, pas.icon).setScale(0.44);
                     this.add.text(x - panelW / 2 + 46, curY, `${pas.name[lang]} — Ур. ${lvl}/${pas.maxLevel}`, {
-                        fontFamily: "'Rajdhani', sans-serif", fontSize: '12px', color: '#e2e8f0'
+                        fontFamily: CONFIG.FONTS.BODY, fontSize: '12px', color: '#e2e8f0'
                     }).setOrigin(0, 0.5);
                     curY += 22;
                 });
@@ -126,11 +126,11 @@ class PauseScene extends Phaser.Scene {
             this.add.sprite(leftX - (isCompact ? 95 : 135), pedY, `hero_${p.heroId}`).setDisplaySize(isCompact ? 48 : 68, isCompact ? 48 : 68);
 
             this.add.text(leftX - (isCompact ? 50 : 75), pedY - (isCompact ? 14 : 20), heroCfg.name[lang].toUpperCase(), {
-                fontFamily: "'Cinzel', serif", fontSize: isCompact ? '14px' : '18px', fontStyle: 'bold', color: '#ffd166'
+                fontFamily: CONFIG.FONTS.TITLE, fontSize: isCompact ? '14px' : '18px', fontStyle: 'bold', color: '#ffd166'
             });
 
             this.add.text(leftX - (isCompact ? 50 : 75), pedY + (isCompact ? 6 : 4), `УРОВЕНЬ ${p.level}`, {
-                fontFamily: "'Rajdhani', sans-serif", fontSize: isCompact ? '11px' : '13px', fontStyle: 'bold', color: '#38bdf8'
+                fontFamily: CONFIG.FONTS.MONO, fontSize: isCompact ? '11px' : '13px', fontStyle: 'bold', color: '#38bdf8'
             });
 
             // Визуальные шкалы статов
@@ -149,10 +149,10 @@ class PauseScene extends Phaser.Scene {
                 const sy = barStartY + (sIdx * barSpacing);
                 this.add.image(leftX - cardW / 2 + (isCompact ? 20 : 30), sy + (isCompact ? 4 : 8), st.icon).setScale(isCompact ? 0.65 : 0.8);
                 this.add.text(leftX - cardW / 2 + (isCompact ? 34 : 45), sy, st.label, {
-                    fontFamily: "'Rajdhani', sans-serif", fontSize: isCompact ? '10px' : '11px', fontStyle: 'bold', color: '#94a3b8'
+                    fontFamily: CONFIG.FONTS.UI, fontSize: isCompact ? '10px' : '11px', fontStyle: 'bold', color: '#94a3b8'
                 });
                 this.add.text(leftX + cardW / 2 - (isCompact ? 16 : 24), sy, st.val, {
-                    fontFamily: "'Rajdhani', sans-serif", fontSize: isCompact ? '10px' : '12px', fontStyle: 'bold', color: '#ffffff'
+                    fontFamily: CONFIG.FONTS.MONO, fontSize: isCompact ? '10px' : '12px', fontStyle: 'bold', color: '#ffffff'
                 }).setOrigin(1, 0);
 
                 const barX = leftX - cardW / 2 + (isCompact ? 90 : 130);
@@ -165,19 +165,19 @@ class PauseScene extends Phaser.Scene {
             const extraY = isCompact ? (y + cardH / 2 - 32) : (y + cardH / 2 - 40);
             this.add.rectangle(leftX, extraY, cardW - (isCompact ? 20 : 30), isCompact ? 32 : 44, 0x0f172a, 0.9).setStrokeStyle(1, 0x1e293b);
 
-            this.add.image(leftX - cardW / 3 + 10, extraY, 'ui_skull').setScale(isCompact ? 0.55 : 0.7);
-            this.add.text(leftX - cardW / 3 + 22, extraY, `УБИТО: ${p.kills || 0}`, {
-                fontFamily: "'Rajdhani', sans-serif", fontSize: isCompact ? '11px' : '13px', fontStyle: 'bold', color: '#f87171'
+            this.add.image(leftX - cardW / 2 + 30, extraY, 'ui_skull').setScale(isCompact ? 0.55 : 0.7);
+            this.add.text(leftX - cardW / 2 + 45, extraY, `УБИТО: ${p.kills || 0}`, {
+                fontFamily: CONFIG.FONTS.MONO, fontSize: isCompact ? '10px' : '12px', fontStyle: 'bold', color: '#f87171'
             }).setOrigin(0, 0.5);
 
-            this.add.image(leftX, extraY, 'ui_coin').setScale(isCompact ? 0.55 : 0.7);
-            this.add.text(leftX + 12, extraY, `ЗОЛОТО: ${p.goldCollected || 0}`, {
-                fontFamily: "'Rajdhani', sans-serif", fontSize: isCompact ? '11px' : '13px', fontStyle: 'bold', color: '#ffd166'
+            this.add.image(leftX - 12, extraY, 'ui_coin').setScale(isCompact ? 0.55 : 0.7);
+            this.add.text(leftX + 2, extraY, `ЗОЛОТО: ${p.goldCollected || 0}`, {
+                fontFamily: CONFIG.FONTS.MONO, fontSize: isCompact ? '10px' : '12px', fontStyle: 'bold', color: '#ffd166'
             }).setOrigin(0, 0.5);
 
-            this.add.text(leftX + cardW / 3, extraY, `БРОНЯ: ${p.stats.armor || 0}`, {
-                fontFamily: "'Rajdhani', sans-serif", fontSize: isCompact ? '11px' : '13px', fontStyle: 'bold', color: '#38bdf8'
-            }).setOrigin(0, 0.5);
+            this.add.text(leftX + cardW / 2 - 20, extraY, `БРОНЯ: ${p.stats.armor || 0}`, {
+                fontFamily: CONFIG.FONTS.MONO, fontSize: isCompact ? '10px' : '12px', fontStyle: 'bold', color: '#38bdf8'
+            }).setOrigin(1, 0.5);
 
             // 2. ПРАВАЯ КАРТОЧКА: АКТИВНЫЙ БИЛД
             const rightX = x + (cardW / 2 + (isCompact ? 8 : 15));
@@ -185,7 +185,7 @@ class PauseScene extends Phaser.Scene {
             rightBg.setStrokeStyle(1.5, 0x334155);
 
             this.add.text(rightX - cardW / 2 + 16, y - cardH / 2 + (isCompact ? 14 : 20), 'АКТИВНОЕ ОРУЖИЕ:', {
-                fontFamily: "'Cinzel', serif", fontSize: isCompact ? '11px' : '14px', fontStyle: 'bold', color: '#38bdf8', letterSpacing: 1
+                fontFamily: CONFIG.FONTS.TITLE, fontSize: isCompact ? '11px' : '14px', fontStyle: 'bold', color: '#38bdf8', letterSpacing: 1
             });
 
             let wepY = y - cardH / 2 + (isCompact ? 36 : 50);
@@ -202,14 +202,14 @@ class PauseScene extends Phaser.Scene {
                 this.add.image(rightX - cardW / 2 + (isCompact ? 24 : 38), wepY, wep.icon).setScale(isCompact ? 0.42 : 0.55);
 
                 this.add.text(rightX - cardW / 2 + (isCompact ? 40 : 58), wepY, wep.name[lang], {
-                    fontFamily: "'Cinzel', serif", fontSize: isCompact ? '10px' : '12px', fontStyle: 'bold', color: isEvolved ? '#ffd166' : '#ffffff'
+                    fontFamily: CONFIG.FONTS.UI, fontSize: isCompact ? '10px' : '12px', fontStyle: 'bold', color: isEvolved ? '#ffd166' : '#ffffff'
                 }).setOrigin(0, 0.5);
 
                 const statusStr = isEvolved ? 'ЭВОЛЮЦИЯ' : (lvl >= wep.maxLevel ? (hasRequired ? 'ГОТОВ ✦' : 'МАКС УР. 5') : `Ур. ${lvl}/5`);
                 const statusColor = isEvolved ? '#ffd166' : (hasRequired && lvl >= 5 ? '#34d399' : '#94a3b8');
 
                 this.add.text(rightX + cardW / 2 - (isCompact ? 20 : 30), wepY, statusStr, {
-                    fontFamily: "'Rajdhani', sans-serif", fontSize: isCompact ? '10px' : '12px', fontStyle: 'bold', color: statusColor
+                    fontFamily: CONFIG.FONTS.MONO, fontSize: isCompact ? '10px' : '12px', fontStyle: 'bold', color: statusColor
                 }).setOrigin(1, 0.5);
 
                 wepY += wepSpacing;
@@ -217,14 +217,14 @@ class PauseScene extends Phaser.Scene {
 
             const pasTitleY = wepY + (isCompact ? 4 : 10);
             this.add.text(rightX - cardW / 2 + 16, pasTitleY, 'ПАССИВНЫЕ НАВЫКИ:', {
-                fontFamily: "'Cinzel', serif", fontSize: isCompact ? '11px' : '14px', fontStyle: 'bold', color: '#c084fc', letterSpacing: 1
+                fontFamily: CONFIG.FONTS.TITLE, fontSize: isCompact ? '11px' : '14px', fontStyle: 'bold', color: '#c084fc', letterSpacing: 1
             });
 
             let pasY = pasTitleY + (isCompact ? 20 : 30);
             const pasSpacing = isCompact ? 24 : 32;
             if (Object.keys(p.passives).length === 0) {
                 this.add.text(rightX - cardW / 2 + 16, pasY, 'Нет активных навыков', {
-                    fontFamily: "'Rajdhani', sans-serif", fontSize: isCompact ? '10px' : '12px', color: '#64748b'
+                    fontFamily: CONFIG.FONTS.BODY, fontSize: isCompact ? '10px' : '12px', color: '#64748b'
                 });
             } else {
                 Object.entries(p.passives).forEach(([pId, lvl]) => {
@@ -237,11 +237,11 @@ class PauseScene extends Phaser.Scene {
                     this.add.image(rightX - cardW / 2 + (isCompact ? 24 : 38), pasY, pas.icon).setScale(isCompact ? 0.38 : 0.48);
 
                     this.add.text(rightX - cardW / 2 + (isCompact ? 40 : 58), pasY, pas.name[lang], {
-                        fontFamily: "'Cinzel', serif", fontSize: isCompact ? '10px' : '11px', fontStyle: 'bold', color: '#e2e8f0'
+                        fontFamily: CONFIG.FONTS.BODY, fontSize: isCompact ? '10px' : '11px', fontStyle: 'bold', color: '#e2e8f0'
                     }).setOrigin(0, 0.5);
 
                     this.add.text(rightX + cardW / 2 - (isCompact ? 20 : 30), pasY, `Ур. ${lvl}/5`, {
-                        fontFamily: "'Rajdhani', sans-serif", fontSize: isCompact ? '10px' : '12px', fontStyle: 'bold', color: '#38bdf8'
+                        fontFamily: CONFIG.FONTS.MONO, fontSize: isCompact ? '10px' : '12px', fontStyle: 'bold', color: '#38bdf8'
                     }).setOrigin(1, 0.5);
 
                     pasY += pasSpacing;
@@ -263,13 +263,13 @@ class PauseScene extends Phaser.Scene {
             // Ряд 1: Продолжить + Рецепты
             const resumeBtn = this.add.image(leftColX, row1Y, 'btn_battle_green').setDisplaySize(btnW, btnH).setInteractive({ useHandCursor: true });
             this.add.text(leftColX, row1Y, 'ПРОДОЛЖИТЬ', {
-                fontFamily: "'Cinzel', serif", fontSize: '12px', fontStyle: 'bold', color: '#fff'
+                fontFamily: CONFIG.FONTS.TITLE, fontSize: '12px', fontStyle: 'bold', color: '#fff'
             }).setOrigin(0.5);
             resumeBtn.on('pointerdown', () => this.resumeGame());
 
             const evoBtn = this.add.image(rightColX, row1Y, 'btn_play_bg').setDisplaySize(btnW, btnH).setInteractive({ useHandCursor: true });
             this.add.text(rightColX, row1Y, 'РЕЦЕПТЫ', {
-                fontFamily: "'Cinzel', serif", fontSize: '12px', fontStyle: 'bold', color: '#fff'
+                fontFamily: CONFIG.FONTS.TITLE, fontSize: '12px', fontStyle: 'bold', color: '#fff'
             }).setOrigin(0.5);
             evoBtn.on('pointerdown', () => this.openEvolutionBookModal(lang));
 
@@ -277,7 +277,7 @@ class PauseScene extends Phaser.Scene {
             const soundBtn = this.add.rectangle(leftColX, row2Y, btnW, btnH, 0x0f172a, 0.95).setInteractive({ useHandCursor: true });
             soundBtn.setStrokeStyle(1.5, 0x334155);
             const soundText = this.add.text(leftColX, row2Y, window.Sound.isMuted ? 'ЗВУК: ВЫКЛ' : 'ЗВУК: ВКЛ', {
-                fontFamily: "'Cinzel', serif", fontSize: '12px', fontStyle: 'bold', color: '#fff'
+                fontFamily: CONFIG.FONTS.TITLE, fontSize: '12px', fontStyle: 'bold', color: '#fff'
             }).setOrigin(0.5);
             soundBtn.on('pointerdown', () => {
                 const isMuted = window.Sound.toggleMute();
@@ -288,7 +288,7 @@ class PauseScene extends Phaser.Scene {
             const menuBtn = this.add.rectangle(rightColX, row2Y, btnW, btnH, 0x991b1b, 0.95).setInteractive({ useHandCursor: true });
             menuBtn.setStrokeStyle(1.5, 0xfca5a5);
             this.add.text(rightColX, row2Y, 'В МЕНЮ', {
-                fontFamily: "'Cinzel', serif", fontSize: '12px', fontStyle: 'bold', color: '#fff'
+                fontFamily: CONFIG.FONTS.TITLE, fontSize: '12px', fontStyle: 'bold', color: '#fff'
             }).setOrigin(0.5);
             menuBtn.on('pointerdown', () => {
                 this.scene.stop(this.parentSceneKey);
@@ -298,28 +298,28 @@ class PauseScene extends Phaser.Scene {
         } else {
             // --- ГОРИЗОНТАЛЬНЫЙ РЯД КНОПОК ---
             const y = height - (isCompact ? 22 : 36);
-            const btnW = isCompact ? 130 : 175;
-            const btnH = isCompact ? 30 : 44;
+            const btnW = isCompact ? 140 : 185;
+            const btnH = isCompact ? 32 : 44;
             const spacing = isCompact ? 10 : 20;
             const totalW = btnW * 4 + spacing * 3;
             const startX = x - totalW / 2 + btnW / 2;
 
             const resumeBtn = this.add.image(startX, y, 'btn_battle_green').setDisplaySize(btnW, btnH).setInteractive({ useHandCursor: true });
             this.add.text(startX, y, 'ПРОДОЛЖИТЬ', {
-                fontFamily: "'Cinzel', serif", fontSize: isCompact ? '11px' : '14px', fontStyle: 'bold', color: '#fff'
+                fontFamily: CONFIG.FONTS.TITLE, fontSize: isCompact ? '11px' : '14px', fontStyle: 'bold', color: '#fff'
             }).setOrigin(0.5);
             resumeBtn.on('pointerdown', () => this.resumeGame());
 
             const evoBtn = this.add.image(startX + (btnW + spacing), y, 'btn_play_bg').setDisplaySize(btnW, btnH).setInteractive({ useHandCursor: true });
             this.add.text(startX + (btnW + spacing), y, 'РЕЦЕПТЫ', {
-                fontFamily: "'Cinzel', serif", fontSize: isCompact ? '11px' : '14px', fontStyle: 'bold', color: '#fff'
+                fontFamily: CONFIG.FONTS.TITLE, fontSize: isCompact ? '11px' : '14px', fontStyle: 'bold', color: '#fff'
             }).setOrigin(0.5);
             evoBtn.on('pointerdown', () => this.openEvolutionBookModal(lang));
 
             const soundBtn = this.add.rectangle(startX + (btnW + spacing) * 2, y, btnW, btnH, 0x0f172a, 0.95).setInteractive({ useHandCursor: true });
             soundBtn.setStrokeStyle(1.5, 0x334155);
             const soundText = this.add.text(startX + (btnW + spacing) * 2, y, window.Sound.isMuted ? 'ЗВУК: ВЫКЛ' : 'ЗВУК: ВКЛ', {
-                fontFamily: "'Cinzel', serif", fontSize: isCompact ? '11px' : '14px', fontStyle: 'bold', color: '#fff'
+                fontFamily: CONFIG.FONTS.TITLE, fontSize: isCompact ? '11px' : '14px', fontStyle: 'bold', color: '#fff'
             }).setOrigin(0.5);
             soundBtn.on('pointerdown', () => {
                 const isMuted = window.Sound.toggleMute();
@@ -330,7 +330,7 @@ class PauseScene extends Phaser.Scene {
             const menuBtn = this.add.rectangle(startX + (btnW + spacing) * 3, y, btnW, btnH, 0x991b1b, 0.95).setInteractive({ useHandCursor: true });
             menuBtn.setStrokeStyle(1.5, 0xfca5a5);
             this.add.text(startX + (btnW + spacing) * 3, y, 'В МЕНЮ', {
-                fontFamily: "'Cinzel', serif", fontSize: isCompact ? '11px' : '14px', fontStyle: 'bold', color: '#fff'
+                fontFamily: CONFIG.FONTS.TITLE, fontSize: isCompact ? '11px' : '14px', fontStyle: 'bold', color: '#fff'
             }).setOrigin(0.5);
             menuBtn.on('pointerdown', () => {
                 this.scene.stop(this.parentSceneKey);
@@ -361,7 +361,7 @@ class PauseScene extends Phaser.Scene {
         modalGroup.add(headerLine);
 
         const title = this.add.text(width / 2, height / 2 - modalH / 2 + (isCompact ? 18 : 28), 'РЕЦЕПТЫ ЭВОЛЮЦИИ СУПЕР-ОРУЖИЯ', {
-            fontFamily: "'Cinzel', serif", fontSize: isCompact ? '13px' : (isPortrait ? '15px' : '20px'), fontStyle: 'bold', color: '#38bdf8', letterSpacing: 1.5
+            fontFamily: CONFIG.FONTS.TITLE, fontSize: isCompact ? '13px' : (isPortrait ? '15px' : '20px'), fontStyle: 'bold', color: '#38bdf8', letterSpacing: 1.5
         }).setOrigin(0.5);
         modalGroup.add(title);
 
@@ -413,12 +413,12 @@ class PauseScene extends Phaser.Scene {
                 modalGroup.add(supIcon);
 
                 const supText = this.add.text(width / 2 - modalW / 2 + 168, rowMidY - 7, s.name[lang].toUpperCase(), {
-                    fontFamily: "'Cinzel', serif", fontSize: '11px', fontStyle: 'bold', color: '#ffd166'
+                    fontFamily: CONFIG.FONTS.TITLE, fontSize: '11px', fontStyle: 'bold', color: '#ffd166'
                 });
                 modalGroup.add(supText);
 
                 const compText = this.add.text(width / 2 - modalW / 2 + 168, rowMidY + 7, `${w.name[lang]} + ${p.name[lang]}`, {
-                    fontFamily: "'Rajdhani', sans-serif", fontSize: '9px', color: '#94a3b8'
+                    fontFamily: CONFIG.FONTS.BODY, fontSize: '9px', color: '#94a3b8'
                 });
                 modalGroup.add(compText);
             } else {
@@ -428,10 +428,10 @@ class PauseScene extends Phaser.Scene {
                 modalGroup.add(wepIcon);
                 
                 const wepText = this.add.text(wepLeftX + (isCompact ? 18 : 30), rowMidY - (isCompact ? 6 : 8), w.name[lang], {
-                    fontFamily: "'Cinzel', serif", fontSize: isCompact ? '10px' : '13px', fontStyle: 'bold', color: '#ffffff'
+                    fontFamily: CONFIG.FONTS.UI, fontSize: isCompact ? '10px' : '13px', fontStyle: 'bold', color: '#ffffff'
                 });
                 const wepLvl = this.add.text(wepLeftX + (isCompact ? 18 : 30), rowMidY + (isCompact ? 5 : 8), 'Макс. Ур. 5', {
-                    fontFamily: "'Rajdhani', sans-serif", fontSize: isCompact ? '8px' : '11px', color: '#f59e0b'
+                    fontFamily: CONFIG.FONTS.BODY, fontSize: isCompact ? '8px' : '11px', color: '#f59e0b'
                 });
                 modalGroup.add(wepText);
                 modalGroup.add(wepLvl);
@@ -449,10 +449,10 @@ class PauseScene extends Phaser.Scene {
                 modalGroup.add(pasIcon);
                 
                 const pasText = this.add.text(pasLeftX + (isCompact ? 18 : 30), rowMidY - (isCompact ? 6 : 8), p.name[lang], {
-                    fontFamily: "'Cinzel', serif", fontSize: isCompact ? '10px' : '13px', fontStyle: 'bold', color: '#ffffff'
+                    fontFamily: CONFIG.FONTS.UI, fontSize: isCompact ? '10px' : '13px', fontStyle: 'bold', color: '#ffffff'
                 });
                 const pasLvl = this.add.text(pasLeftX + (isCompact ? 18 : 30), rowMidY + (isCompact ? 5 : 8), 'Любой уровень', {
-                    fontFamily: "'Rajdhani', sans-serif", fontSize: isCompact ? '8px' : '11px', color: '#38bdf8'
+                    fontFamily: CONFIG.FONTS.BODY, fontSize: isCompact ? '8px' : '11px', color: '#38bdf8'
                 });
                 modalGroup.add(pasText);
                 modalGroup.add(pasLvl);
@@ -465,20 +465,20 @@ class PauseScene extends Phaser.Scene {
                 modalGroup.add(arrow);
 
                 // 3. Блок супер-оружия (Эволюция)
-                const supBoxW = isCompact ? (modalW - (arrowX + 20) - 20) : 260;
-                const supCenterX = isCompact ? (arrowX + 15 + supBoxW / 2) : (width / 2 + 255);
-                const supBg = this.add.rectangle(supCenterX, rowMidY, supBoxW, isCompact ? (rowH - 4) : 52, 0x1e1b4b);
+                const supBoxW = isCompact ? (modalW - (arrowX + 20) - 20) : 270;
+                const supCenterX = isCompact ? (arrowX + 15 + supBoxW / 2) : (width / 2 + 250);
+                const supBg = this.add.rectangle(supCenterX, rowMidY, supBoxW, isCompact ? (rowH - 4) : 56, 0x1e1b4b);
                 supBg.setStrokeStyle(1.5, 0xffd166);
                 modalGroup.add(supBg);
 
-                const supIcon = this.add.image(supCenterX - supBoxW / 2 + (isCompact ? 16 : 24), rowMidY, s.icon).setScale(isCompact ? 0.5 : 0.7).setTint(0xffd166);
+                const supIcon = this.add.image(supCenterX - supBoxW / 2 + (isCompact ? 16 : 24), rowMidY, s.icon).setScale(isCompact ? 0.5 : 0.68).setTint(0xffd166);
                 modalGroup.add(supIcon);
 
-                const supText = this.add.text(supCenterX - supBoxW / 2 + (isCompact ? 34 : 54), rowMidY - (isCompact ? 6 : 9), s.name[lang].toUpperCase(), {
-                    fontFamily: "'Cinzel', serif", fontSize: isCompact ? '9px' : '12px', fontStyle: 'bold', color: '#ffd166'
+                const supText = this.add.text(supCenterX - supBoxW / 2 + (isCompact ? 34 : 52), rowMidY - (isCompact ? 7 : 11), s.name[lang].toUpperCase(), {
+                    fontFamily: CONFIG.FONTS.TITLE, fontSize: isCompact ? '9px' : '11px', fontStyle: 'bold', color: '#ffd166'
                 });
-                const supDesc = this.add.text(supCenterX - supBoxW / 2 + (isCompact ? 34 : 54), rowMidY + (isCompact ? 4 : 7), s.desc ? s.desc[lang] : 'Супер-Оружие', {
-                    fontFamily: "'Rajdhani', sans-serif", fontSize: isCompact ? '8px' : '10px', color: '#e2e8f0', wordWrap: { width: supBoxW - (isCompact ? 40 : 65) }
+                const supDesc = this.add.text(supCenterX - supBoxW / 2 + (isCompact ? 34 : 52), rowMidY + (isCompact ? 4 : 5), s.desc ? s.desc[lang] : 'Супер-Оружие', {
+                    fontFamily: CONFIG.FONTS.BODY, fontSize: isCompact ? '8px' : '9.5px', color: '#e2e8f0', wordWrap: { width: supBoxW - (isCompact ? 40 : 60) }, lineSpacing: 1
                 });
                 modalGroup.add(supText);
                 modalGroup.add(supDesc);
