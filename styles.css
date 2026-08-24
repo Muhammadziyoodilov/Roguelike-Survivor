@@ -1,0 +1,78 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-touch-callout: none;
+}
+
+html, body {
+    width: 100%;
+    height: 100%;
+    height: 100dvh;
+    overflow: hidden;
+    background-color: #070913;
+    font-family: 'Rajdhani', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    color: #ffffff;
+    touch-action: none;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+#game-container {
+    width: 100vw;
+    height: 100vh;
+    height: 100dvh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 0;
+    left: 0;
+    overflow: hidden;
+}
+
+canvas {
+    display: block;
+    width: 100% !important;
+    height: 100% !important;
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+}
+
+/* Мобильный экранный джойстик */
+#joystick-zone {
+    position: absolute;
+    bottom: 30px;
+    left: 30px;
+    width: 140px;
+    height: 140px;
+    display: none; /* Включается скриптом только на тач-устройствах */
+    touch-action: none;
+    z-index: 100;
+}
+
+#joystick-base {
+    width: 120px;
+    height: 120px;
+    background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, rgba(0,0,0,0.5) 100%);
+    border: 2px solid rgba(255, 255, 255, 0.4);
+    border-radius: 50%;
+    position: relative;
+    box-shadow: 0 0 15px rgba(0, 200, 255, 0.3);
+}
+
+#joystick-knob {
+    width: 50px;
+    height: 50px;
+    background: radial-gradient(circle, #00e5ff 0%, #0077b6 100%);
+    border: 2px solid #ffffff;
+    border-radius: 50%;
+    position: absolute;
+    top: 35px;
+    left: 35px;
+    box-shadow: 0 0 10px #00e5ff;
+    pointer-events: none;
+    transition: transform 0.05s ease-out;
+}
