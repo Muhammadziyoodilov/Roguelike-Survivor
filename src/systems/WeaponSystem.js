@@ -120,36 +120,44 @@ class WeaponSystem {
                 const radius = (120 + (data.area - 1) * 60) * data.area;
 
                 if (isCrit) {
-                    // Крит: Рывок вперед + Золотой Мега-Взмах
-                    const dashDist = 55;
-                    const dx = Math.cos(targetAngle) * dashDist;
-                    const dy = Math.sin(targetAngle) * dashDist;
-                    const targetX = Phaser.Math.Clamp(p.x + dx, 80, CONFIG.GAME.WORLD_WIDTH - 80);
-                    const targetY = Phaser.Math.Clamp(p.y + dy, 80, CONFIG.GAME.WORLD_HEIGHT - 80);
-
-                    // Призрачный шлейф
-                    const ghost = this.scene.add.sprite(p.x, p.y, p.texture.key).setAlpha(0.6).setTint(0x38bdf8).setDepth(20);
-                    ghost.setFlipX(p.flipX);
-                    this.scene.tweens.add({ targets: ghost, alpha: 0, scale: 1.15, duration: 200, onComplete: () => ghost.destroy() });
-                    p.x = targetX;
-                    p.y = targetY;
-
+                    // Крит: Золотой Мега-Взмах с искрами (без рывка/телепортации героя)
                     window.Sound.playDashSlash();
-                    this.scene.cameras.main.shake(100, 0.007);
+                    this.scene.cameras.main.shake(80, 0.005);
 
-                    const slashX = p.x + Math.cos(targetAngle) * 35;
-                    const slashY = p.y + Math.sin(targetAngle) * 35;
-                    const slash = this.scene.add.sprite(slashX, slashY, 'fx_slash').setScale(data.area * 1.6).setTint(0xffd166).setDepth(25);
+                    const slashX = p.x + Math.cos(targetAngle) * 32;
+                    const slashY = p.y + Math.sin(targetAngle) * 32;
+
+                    // Золотой светящийся взмах
+                    const slash = this.scene.add.sprite(slashX, slashY, 'fx_slash')
+                        .setScale(data.area * 1.8)
+                        .setTint(0xffd166)
+                        .setDepth(26);
                     slash.rotation = targetAngle;
                     this.scene.tweens.add({
                         targets: slash,
-                        scale: data.area * 2.0,
+                        scale: data.area * 2.2,
                         alpha: 0,
-                        duration: 180,
+                        duration: 200,
+                        ease: 'Cubic.easeOut',
                         onComplete: () => slash.destroy()
                     });
 
-                    this.scene.damageCone(p.x, p.y, radius * 1.25, targetAngle, finalDamage, 1.0, data.knockback * 1.5, arcAngle * 1.2);
+                    // Золотые искры по дуге взмаха
+                    for (let i = 0; i < 7; i++) {
+                        const spkAngle = targetAngle + (i - 3) * 0.22;
+                        const spk = this.scene.add.circle(p.x, p.y, 3.5, 0xffd166).setDepth(27);
+                        this.scene.tweens.add({
+                            targets: spk,
+                            x: p.x + Math.cos(spkAngle) * (radius * 1.15),
+                            y: p.y + Math.sin(spkAngle) * (radius * 1.15),
+                            alpha: 0,
+                            duration: 250,
+                            ease: 'Cubic.easeOut',
+                            onComplete: () => spk.destroy()
+                        });
+                    }
+
+                    this.scene.damageCone(p.x, p.y, radius * 1.3, targetAngle, finalDamage, 1.0, data.knockback * 1.6, arcAngle * 1.25);
                 } else {
                     window.Sound.playSlash();
                     const slashX = p.x + Math.cos(targetAngle) * 28;

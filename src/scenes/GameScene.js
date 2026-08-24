@@ -583,7 +583,7 @@ class GameScene extends Phaser.Scene {
                     let diff = Math.abs(Phaser.Math.Angle.Wrap(angle - centerAngle));
                     if (diff <= arcAngle) {
                         const isCrit = Math.random() < critChance;
-                        enemy.takeDamage(damage, isCrit, knockback, centerAngle);
+                        enemy.takeDamage(damage, isCrit, knockback, angle);
                     }
                 }
             }
@@ -642,6 +642,35 @@ class GameScene extends Phaser.Scene {
         const stroke = isCrit ? '#7f1d1d' : '#000000';
         const strokeThick = isCrit ? 5 : 3;
         const textVal = isCrit ? `КРИТ ${amount}!` : `${amount}`;
+
+        if (isCrit) {
+            // Золотой звездный взрыв при критическом ударе
+            const starFlash = this.add.circle(x, y, 14, 0xffd166, 0.7).setDepth(34);
+            this.tweens.add({
+                targets: starFlash,
+                radius: 32,
+                alpha: 0,
+                duration: 200,
+                ease: 'Cubic.easeOut',
+                onComplete: () => starFlash.destroy()
+            });
+
+            for (let i = 0; i < 5; i++) {
+                const spk = this.add.circle(x, y, 3, i % 2 === 0 ? 0xffd166 : 0xff7b00).setDepth(34);
+                const a = (i * Math.PI * 2) / 5 + (Math.random() - 0.5) * 0.4;
+                const dist = 26 + Math.random() * 18;
+                this.tweens.add({
+                    targets: spk,
+                    x: x + Math.cos(a) * dist,
+                    y: y + Math.sin(a) * dist,
+                    scale: 0.2,
+                    alpha: 0,
+                    duration: 260,
+                    ease: 'Cubic.easeOut',
+                    onComplete: () => spk.destroy()
+                });
+            }
+        }
 
         const txt = this.add.text(x, y, textVal, {
             fontFamily: CONFIG.FONTS.MONO,
