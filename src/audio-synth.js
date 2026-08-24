@@ -659,6 +659,28 @@ class SoundEngine {
         osc.stop(now + 0.46);
     }
 
+    playPowerup() {
+        this.duckBGM(0.12, 1200);
+        if (this.playSoundFile('sfx_levelup', this.volumes.sfxLevelUp)) return;
+
+        if (!this.ctx || this.isMuted) return;
+        this.resume();
+        const now = this.ctx.currentTime;
+        const chords = [523.25, 659.25, 783.99, 1046.50];
+        chords.forEach((freq, i) => {
+            const osc = this.ctx.createOscillator();
+            const gain = this.ctx.createGain();
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(freq, now + i * 0.05);
+            gain.gain.setValueAtTime(0.18, now + i * 0.05);
+            gain.gain.exponentialRampToValueAtTime(0.01, now + i * 0.05 + 0.25);
+            osc.connect(gain);
+            gain.connect(this.ctx.destination);
+            osc.start(now + i * 0.05);
+            osc.stop(now + i * 0.05 + 0.26);
+        });
+    }
+
     playJackpot() {
         if (!this.canPlaySFX('sfx_jackpot')) return;
         this.duckBGM(0.08, 2500);

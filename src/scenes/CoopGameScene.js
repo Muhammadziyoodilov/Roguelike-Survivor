@@ -625,53 +625,91 @@ class CoopGameScene extends Phaser.Scene {
         }
         this.p1LevelCards = [];
 
-        // Заголовок панели
-        const titleBg = this.add.rectangle(centerX, height / 2 - 120, Math.min(halfW - 30, 310), 30, 0x0284c7, 0.95).setDepth(250);
-        titleBg.setStrokeStyle(1.5, 0x38bdf8);
-        const titleTxt = this.add.text(centerX, height / 2 - 120, `1P: УРОВЕНЬ ${this.player1.level}! ВЫБЕРИТЕ НАВЫК`, {
-            fontFamily: CONFIG.FONTS.TITLE, fontSize: '11px', fontStyle: 'bold', color: '#ffffff', letterSpacing: 0.5
-        }).setOrigin(0.5).setDepth(251);
+        // 1. Затемняющий полупрозрачный фон на левую половину экрана
+        const backdrop = this.add.rectangle(centerX, height / 2, halfW, height, 0x000000, 0.85)
+            .setInteractive().setDepth(180);
+        this.hudGroup.add(backdrop);
+        this.p1LevelCards.push(backdrop);
 
-        this.hudGroup.add(titleBg);
+        // 2. Заголовок и подзаголовок
+        const titleY = Math.max(38, height / 2 - 170);
+        const titleTxt = this.add.text(centerX, titleY, `1P: ПОВЫШЕНИЕ УРОВНЯ`, {
+            fontFamily: CONFIG.FONTS.TITLE, fontSize: '19px', fontStyle: 'bold', color: '#00f5d4', stroke: '#000000', strokeThickness: 4
+        }).setOrigin(0.5).setDepth(242);
+
+        const subTxt = this.add.text(centerX, titleY + 22, `Уровень ${this.player1.level} • Выберите улучшение`, {
+            fontFamily: CONFIG.FONTS.UI, fontSize: '11px', fontStyle: 'bold', color: '#94a3b8'
+        }).setOrigin(0.5).setDepth(242);
+
         this.hudGroup.add(titleTxt);
-        this.p1LevelCards.push(titleBg, titleTxt);
+        this.hudGroup.add(subTxt);
+        this.p1LevelCards.push(titleTxt, subTxt);
 
-        const cardW = Math.min(halfW - 30, 310);
-        const cardH = 54;
-        const startY = height / 2 - 65;
+        // 3. Карточки улучшений
+        const cardW = Math.min(halfW - 28, 380);
+        const cardH = 78;
+        const spacing = 10;
+        const startY = height / 2 - 70;
 
         upgrades.forEach((upg, idx) => {
-            const cy = startY + (idx * 62);
-            const cardBg = this.add.rectangle(centerX, cy, cardW, cardH, upg.isSuper ? 0x2e1065 : 0x0f172a, 0.95)
-                .setInteractive({ useHandCursor: true }).setDepth(250);
-            cardBg.setStrokeStyle(1.5, upg.isSuper ? 0xffd166 : 0x0284c7);
+            const cy = startY + (idx * (cardH + spacing));
+            let borderColor = upg.isSuper ? 0xffd166 : (upg.isNew ? 0xa855f7 : 0x38bdf8);
 
-            const icon = this.add.image(centerX - cardW / 2 + 25, cy, upg.icon).setScale(0.55).setDepth(251);
+            const cardBg = this.add.rectangle(centerX, cy, cardW, cardH, upg.isSuper ? 0x240938 : 0x0f172a, 0.96)
+                .setInteractive({ useHandCursor: true }).setDepth(245);
+            cardBg.setStrokeStyle(1.8, borderColor);
+
+            // Иконка в рамке слева
+            const iconBg = this.add.rectangle(centerX - cardW / 2 + 34, cy, 48, 48, 0x1e293b, 0.95).setDepth(246);
+            iconBg.setStrokeStyle(1.5, borderColor);
+
+            const icon = this.add.image(centerX - cardW / 2 + 34, cy, upg.icon).setScale(0.82).setDepth(247);
             if (upg.isSuper) icon.setTint(0xffd166);
 
-            const name = this.add.text(centerX - cardW / 2 + 52, cy - 10, upg.name.toUpperCase(), {
-                fontFamily: CONFIG.FONTS.TITLE, fontSize: '11px', fontStyle: 'bold', color: upg.isSuper ? '#ffd166' : '#38bdf8'
-            }).setDepth(251);
+            // Тег, название и описание
+            const tagText = upg.isSuper ? '[ЭВОЛЮЦИЯ]' : (upg.isNew ? '[НОВОЕ]' : `УРОВЕНЬ ${upg.level}`);
+            const tagColor = upg.isSuper ? '#ffd166' : (upg.isNew ? '#c084fc' : '#38bdf8');
+            const textStartX = centerX - cardW / 2 + 66;
 
-            const desc = this.add.text(centerX - cardW / 2 + 52, cy + 6, upg.desc, {
-                fontFamily: CONFIG.FONTS.BODY, fontSize: '9px', color: '#cbd5e1', wordWrap: { width: cardW - 105 }
-            }).setDepth(251);
+            const tag = this.add.text(textStartX, cy - cardH / 2 + 10, tagText, {
+                fontFamily: CONFIG.FONTS.MONO, fontSize: '10px', fontStyle: 'bold', color: tagColor
+            }).setDepth(247);
 
-            const keyBadge = this.add.rectangle(centerX + cardW / 2 - 20, cy, 26, 26, 0x1e293b, 0.95).setDepth(251);
+            const name = this.add.text(textStartX, cy - cardH / 2 + 24, upg.name, {
+                fontFamily: CONFIG.FONTS.TITLE, fontSize: '13px', fontStyle: 'bold', color: '#ffffff'
+            }).setDepth(247);
+
+            const desc = this.add.text(textStartX, cy + 3, upg.desc, {
+                fontFamily: CONFIG.FONTS.BODY, fontSize: '10px', color: '#94a3b8', wordWrap: { width: cardW - 105 }
+            }).setDepth(247);
+
+            // Бейдж горячей клавиши
+            const keyBadge = this.add.rectangle(centerX + cardW / 2 - 20, cy - cardH / 2 + 16, 26, 20, 0x1e293b, 0.95).setDepth(247);
             keyBadge.setStrokeStyle(1, 0x38bdf8);
-            const keyTxt = this.add.text(centerX + cardW / 2 - 20, cy, `${idx + 1}`, {
-                fontFamily: CONFIG.FONTS.MONO, fontSize: '12px', fontStyle: 'bold', color: '#ffd166'
-            }).setOrigin(0.5).setDepth(252);
+            const keyTxt = this.add.text(centerX + cardW / 2 - 20, cy - cardH / 2 + 16, `${idx + 1}`, {
+                fontFamily: CONFIG.FONTS.MONO, fontSize: '11px', fontStyle: 'bold', color: '#ffd166'
+            }).setOrigin(0.5).setDepth(248);
 
             this.hudGroup.add(cardBg);
+            this.hudGroup.add(iconBg);
             this.hudGroup.add(icon);
+            this.hudGroup.add(tag);
             this.hudGroup.add(name);
             this.hudGroup.add(desc);
             this.hudGroup.add(keyBadge);
             this.hudGroup.add(keyTxt);
 
-            this.p1LevelCards.push(cardBg, icon, name, desc, keyBadge, keyTxt);
+            this.p1LevelCards.push(cardBg, iconBg, icon, tag, name, desc, keyBadge, keyTxt);
 
+            // Ховер эффекты
+            cardBg.on('pointerover', () => {
+                cardBg.fillColor = 0x1e293b;
+                cardBg.setScale(1.02);
+            });
+            cardBg.on('pointerout', () => {
+                cardBg.fillColor = upg.isSuper ? 0x240938 : 0x0f172a;
+                cardBg.setScale(1.0);
+            });
             cardBg.on('pointerdown', () => this.selectP1Upgrade(idx));
         });
 
@@ -716,53 +754,92 @@ class CoopGameScene extends Phaser.Scene {
         }
         this.p2LevelCards = [];
 
-        const titleBg = this.add.rectangle(centerX, height / 2 - 120, Math.min(halfW - 30, 310), 30, 0x7e22ce, 0.95).setDepth(250);
-        titleBg.setStrokeStyle(1.5, 0xc084fc);
-        const titleTxt = this.add.text(centerX, height / 2 - 120, `2P: УРОВЕНЬ ${this.player2.level}! ВЫБЕРИТЕ НАВЫК`, {
-            fontFamily: CONFIG.FONTS.TITLE, fontSize: '11px', fontStyle: 'bold', color: '#ffffff', letterSpacing: 0.5
-        }).setOrigin(0.5).setDepth(251);
+        // 1. Затемняющий полупрозрачный фон на правую половину экрана
+        const backdrop = this.add.rectangle(centerX, height / 2, width - halfW, height, 0x000000, 0.85)
+            .setInteractive().setDepth(180);
+        this.hudGroup.add(backdrop);
+        this.p2LevelCards.push(backdrop);
 
-        this.hudGroup.add(titleBg);
+        // 2. Заголовок и подзаголовок
+        const titleY = Math.max(38, height / 2 - 170);
+        const titleTxt = this.add.text(centerX, titleY, `2P: ПОВЫШЕНИЕ УРОВНЯ`, {
+            fontFamily: CONFIG.FONTS.TITLE, fontSize: '19px', fontStyle: 'bold', color: '#c084fc', stroke: '#000000', strokeThickness: 4
+        }).setOrigin(0.5).setDepth(242);
+
+        const subTxt = this.add.text(centerX, titleY + 22, `Уровень ${this.player2.level} • Выберите улучшение`, {
+            fontFamily: CONFIG.FONTS.UI, fontSize: '11px', fontStyle: 'bold', color: '#94a3b8'
+        }).setOrigin(0.5).setDepth(242);
+
         this.hudGroup.add(titleTxt);
-        this.p2LevelCards.push(titleBg, titleTxt);
+        this.hudGroup.add(subTxt);
+        this.p2LevelCards.push(titleTxt, subTxt);
 
-        const cardW = Math.min(halfW - 30, 310);
-        const cardH = 54;
-        const startY = height / 2 - 65;
+        // 3. Карточки улучшений
+        const cardW = Math.min(halfW - 28, 380);
+        const cardH = 78;
+        const spacing = 10;
+        const startY = height / 2 - 70;
         const hotkeyLabels = ['7/J', '8/K', '9/L'];
 
         upgrades.forEach((upg, idx) => {
-            const cy = startY + (idx * 62);
-            const cardBg = this.add.rectangle(centerX, cy, cardW, cardH, upg.isSuper ? 0x2e1065 : 0x0f172a, 0.95)
-                .setInteractive({ useHandCursor: true }).setDepth(250);
-            cardBg.setStrokeStyle(1.5, upg.isSuper ? 0xffd166 : 0xa855f7);
+            const cy = startY + (idx * (cardH + spacing));
+            let borderColor = upg.isSuper ? 0xffd166 : (upg.isNew ? 0xa855f7 : 0x38bdf8);
 
-            const icon = this.add.image(centerX - cardW / 2 + 25, cy, upg.icon).setScale(0.55).setDepth(251);
+            const cardBg = this.add.rectangle(centerX, cy, cardW, cardH, upg.isSuper ? 0x240938 : 0x0f172a, 0.96)
+                .setInteractive({ useHandCursor: true }).setDepth(245);
+            cardBg.setStrokeStyle(1.8, borderColor);
+
+            // Иконка в рамке слева
+            const iconBg = this.add.rectangle(centerX - cardW / 2 + 34, cy, 48, 48, 0x1e293b, 0.95).setDepth(246);
+            iconBg.setStrokeStyle(1.5, borderColor);
+
+            const icon = this.add.image(centerX - cardW / 2 + 34, cy, upg.icon).setScale(0.82).setDepth(247);
             if (upg.isSuper) icon.setTint(0xffd166);
 
-            const name = this.add.text(centerX - cardW / 2 + 52, cy - 10, upg.name.toUpperCase(), {
-                fontFamily: CONFIG.FONTS.TITLE, fontSize: '11px', fontStyle: 'bold', color: upg.isSuper ? '#ffd166' : '#c084fc'
-            }).setDepth(251);
+            // Тег, название и описание
+            const tagText = upg.isSuper ? '[ЭВОЛЮЦИЯ]' : (upg.isNew ? '[НОВОЕ]' : `УРОВЕНЬ ${upg.level}`);
+            const tagColor = upg.isSuper ? '#ffd166' : (upg.isNew ? '#c084fc' : '#38bdf8');
+            const textStartX = centerX - cardW / 2 + 66;
 
-            const desc = this.add.text(centerX - cardW / 2 + 52, cy + 6, upg.desc, {
-                fontFamily: CONFIG.FONTS.BODY, fontSize: '9px', color: '#cbd5e1', wordWrap: { width: cardW - 105 }
-            }).setDepth(251);
+            const tag = this.add.text(textStartX, cy - cardH / 2 + 10, tagText, {
+                fontFamily: CONFIG.FONTS.MONO, fontSize: '10px', fontStyle: 'bold', color: tagColor
+            }).setDepth(247);
 
-            const keyBadge = this.add.rectangle(centerX + cardW / 2 - 20, cy, 26, 26, 0x1e293b, 0.95).setDepth(251);
+            const name = this.add.text(textStartX, cy - cardH / 2 + 24, upg.name, {
+                fontFamily: CONFIG.FONTS.TITLE, fontSize: '13px', fontStyle: 'bold', color: '#ffffff'
+            }).setDepth(247);
+
+            const desc = this.add.text(textStartX, cy + 3, upg.desc, {
+                fontFamily: CONFIG.FONTS.BODY, fontSize: '10px', color: '#94a3b8', wordWrap: { width: cardW - 105 }
+            }).setDepth(247);
+
+            // Бейдж горячей клавиши
+            const keyBadge = this.add.rectangle(centerX + cardW / 2 - 20, cy - cardH / 2 + 16, 26, 20, 0x1e293b, 0.95).setDepth(247);
             keyBadge.setStrokeStyle(1, 0xa855f7);
-            const keyTxt = this.add.text(centerX + cardW / 2 - 20, cy, hotkeyLabels[idx], {
+            const keyTxt = this.add.text(centerX + cardW / 2 - 20, cy - cardH / 2 + 16, hotkeyLabels[idx], {
                 fontFamily: CONFIG.FONTS.MONO, fontSize: '10px', fontStyle: 'bold', color: '#ffd166'
-            }).setOrigin(0.5).setDepth(252);
+            }).setOrigin(0.5).setDepth(248);
 
             this.hudGroup.add(cardBg);
+            this.hudGroup.add(iconBg);
             this.hudGroup.add(icon);
+            this.hudGroup.add(tag);
             this.hudGroup.add(name);
             this.hudGroup.add(desc);
             this.hudGroup.add(keyBadge);
             this.hudGroup.add(keyTxt);
 
-            this.p2LevelCards.push(cardBg, icon, name, desc, keyBadge, keyTxt);
+            this.p2LevelCards.push(cardBg, iconBg, icon, tag, name, desc, keyBadge, keyTxt);
 
+            // Ховер эффекты
+            cardBg.on('pointerover', () => {
+                cardBg.fillColor = 0x1e293b;
+                cardBg.setScale(1.02);
+            });
+            cardBg.on('pointerout', () => {
+                cardBg.fillColor = upg.isSuper ? 0x240938 : 0x0f172a;
+                cardBg.setScale(1.0);
+            });
             cardBg.on('pointerdown', () => this.selectP2Upgrade(idx));
         });
 
@@ -953,6 +1030,48 @@ class CoopGameScene extends Phaser.Scene {
         });
     }
 
+    attractAllGems() {
+        if (!this.poolManager || !this.poolManager.dropGroup) return;
+        this.poolManager.dropGroup.children.iterate((drop) => {
+            if (drop && drop.active) {
+                drop.attracted = true;
+            }
+        });
+    }
+
+    showFloatingText(x, y, message, color = 0x00f5d4) {
+        const colorStr = typeof color === 'number' ? '#' + color.toString(16).padStart(6, '0') : color;
+        const txt = this.add.text(x, y, message, {
+            fontFamily: CONFIG.FONTS.TITLE,
+            fontSize: '18px',
+            fontStyle: 'bold',
+            color: colorStr,
+            stroke: '#000000',
+            strokeThickness: 4
+        }).setOrigin(0.5).setDepth(40);
+        this.worldGroup.add(txt);
+
+        this.tweens.add({
+            targets: txt,
+            y: y - 40,
+            alpha: 0,
+            duration: 800,
+            ease: 'Cubic.easeOut',
+            onComplete: () => txt.destroy()
+        });
+    }
+
+    openChest(isEvolution = 0) {
+        const target = this.getNearestActivePlayer();
+        if (target) {
+            this.showLevelUpOverlay(target);
+        }
+    }
+
+    updateGoldHUD() {
+        this.goldEarned = (this.player1 ? this.player1.goldCollected : 0) + (this.player2 ? this.player2.goldCollected : 0);
+    }
+
     getTargetPlayer() {
         return this.getNearestActivePlayer();
     }
@@ -1012,11 +1131,11 @@ class CoopGameScene extends Phaser.Scene {
             if (this.p1LvlText) this.p1LvlText.setText(`LVL ${this.player1.level}`);
             const hpRatio = Math.max(0, Math.min(1, this.player1.hp / this.player1.stats.maxHp));
             if (this.p1HpFill) this.p1HpFill.width = 125 * hpRatio;
-            if (this.p1HpText) this.p1HpText.setText(`${Math.ceil(this.player1.hp)}/${this.player1.stats.maxHp} HP`);
+            if (this.p1HpText) this.p1HpText.setText(`${Math.round(this.player1.hp)}/${this.player1.stats.maxHp} HP`);
 
             const xpRatio = Math.max(0, Math.min(1, this.player1.xp / this.player1.nextLevelXp));
             if (this.p1XpFill) this.p1XpFill.width = 125 * xpRatio;
-            if (this.p1XpText) this.p1XpText.setText(`XP: ${this.player1.xp}/${this.player1.nextLevelXp}`);
+            if (this.p1XpText) this.p1XpText.setText(`XP: ${Math.floor(this.player1.xp)}/${Math.round(this.player1.nextLevelXp)}`);
         }
 
         // P2 Stats
@@ -1024,11 +1143,11 @@ class CoopGameScene extends Phaser.Scene {
             if (this.p2LvlText) this.p2LvlText.setText(`LVL ${this.player2.level}`);
             const hpRatio = Math.max(0, Math.min(1, this.player2.hp / this.player2.stats.maxHp));
             if (this.p2HpFill) this.p2HpFill.width = 125 * hpRatio;
-            if (this.p2HpText) this.p2HpText.setText(`${Math.ceil(this.player2.hp)}/${this.player2.stats.maxHp} HP`);
+            if (this.p2HpText) this.p2HpText.setText(`${Math.round(this.player2.hp)}/${this.player2.stats.maxHp} HP`);
 
             const xpRatio = Math.max(0, Math.min(1, this.player2.xp / this.player2.nextLevelXp));
             if (this.p2XpFill) this.p2XpFill.width = 125 * xpRatio;
-            if (this.p2XpText) this.p2XpText.setText(`XP: ${this.player2.xp}/${this.player2.nextLevelXp}`);
+            if (this.p2XpText) this.p2XpText.setText(`XP: ${Math.floor(this.player2.xp)}/${Math.round(this.player2.nextLevelXp)}`);
         }
     }
 

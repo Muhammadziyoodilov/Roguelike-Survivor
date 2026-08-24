@@ -1629,258 +1629,457 @@ class TextureGenerator {
         });
     }
 
-    // --- ICONS ---
+    // --- ICON GENERATION ДЛЯ КАРТОЧЕК НАВЫКОВ, СУПЕР-ОРУЖИЯ И ПАССИВОК ---
     static createIcons() {
         const createSquareIcon = (key, baseColor, isSuper, symbolDraw) => {
             this.createCanvas(key, 48, 48, (ctx) => {
-                // Тёмный обсидиановый контейнер со скруглёнными углами
-                ctx.fillStyle = '#090d16';
+                // 1. Внешняя глубокая темная рамка
+                ctx.fillStyle = '#060913';
                 ctx.beginPath();
-                ctx.roundRect(1, 1, 46, 46, 8);
+                ctx.roundRect(0, 0, 48, 48, 8);
                 ctx.fill();
 
-                // Внутренняя цветная пластина с градиентом
-                const grad = ctx.createLinearGradient(4, 4, 44, 44);
+                // 2. Внутренняя цветная пластина с насыщенным градиентом
+                const grad = ctx.createLinearGradient(0, 0, 48, 48);
                 grad.addColorStop(0, baseColor);
-                grad.addColorStop(1, '#0f172a');
+                grad.addColorStop(0.65, '#0f172a');
+                grad.addColorStop(1, '#020617');
                 ctx.fillStyle = grad;
                 ctx.beginPath();
-                ctx.roundRect(3, 3, 42, 42, 7);
+                ctx.roundRect(2, 2, 44, 44, 6);
                 ctx.fill();
 
-                // Верхний стеклянный блик (Gloss)
-                const gloss = ctx.createLinearGradient(0, 3, 0, 22);
-                gloss.addColorStop(0, 'rgba(255, 255, 255, 0.35)');
+                // 3. Фоновая пиксельная текстура / сетка
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.04)';
+                for (let px = 4; px < 44; px += 4) {
+                    for (let py = 4; py < 44; py += 4) {
+                        if ((px + py) % 8 === 0) ctx.fillRect(px, py, 2, 2);
+                    }
+                }
+
+                // 4. Верхний стеклянный блик (Gloss)
+                const gloss = ctx.createLinearGradient(0, 2, 0, 20);
+                gloss.addColorStop(0, 'rgba(255, 255, 255, 0.4)');
                 gloss.addColorStop(1, 'rgba(255, 255, 255, 0.0)');
                 ctx.fillStyle = gloss;
                 ctx.beginPath();
-                ctx.roundRect(4, 4, 40, 18, [6, 6, 2, 2]);
+                ctx.roundRect(3, 3, 42, 16, [5, 5, 2, 2]);
                 ctx.fill();
 
-                // Металлическая окантовка (Золотая для эволюций, серебряная для базовых)
-                ctx.strokeStyle = isSuper ? '#ffd166' : '#475569';
-                ctx.lineWidth = isSuper ? 2 : 1.5;
+                // 5. Металлическая окантовка (Золотая для эволюций, неоновая/серебряная для базовых)
+                ctx.strokeStyle = isSuper ? '#ffd166' : (baseColor === '#1e40af' ? '#38bdf8' : (baseColor === '#581c87' ? '#c084fc' : '#64748b'));
+                ctx.lineWidth = isSuper ? 2.5 : 1.5;
                 ctx.beginPath();
-                ctx.roundRect(2, 2, 44, 44, 8);
+                ctx.roundRect(2, 2, 44, 44, 6);
                 ctx.stroke();
 
-                // Отрисовка символа
+                if (isSuper) {
+                    // Золотые уголки для супер-оружия
+                    ctx.fillStyle = '#fef08a';
+                    ctx.fillRect(1, 1, 4, 2); ctx.fillRect(1, 1, 2, 4);
+                    ctx.fillRect(43, 1, 4, 2); ctx.fillRect(45, 1, 2, 4);
+                    ctx.fillRect(1, 45, 4, 2); ctx.fillRect(1, 43, 2, 4);
+                    ctx.fillRect(43, 45, 4, 2); ctx.fillRect(45, 43, 2, 4);
+                }
+
+                // 6. Отрисовка уникального пиксель-арт символа
                 symbolDraw(ctx);
             });
         };
 
         // 1. БАЗОВОЕ ОРУЖИЕ
+        // --- Меч Героя (Кованый клинок с золотой гардой и синим свечением) ---
         createSquareIcon('icon_sword', '#1e40af', false, (ctx) => {
-            ctx.fillStyle = '#e2e8f0';
+            // Лезвие (45 градусов)
+            ctx.fillStyle = '#f8fafc';
             ctx.beginPath();
-            ctx.moveTo(24, 7); ctx.lineTo(27, 12); ctx.lineTo(27, 30); ctx.lineTo(21, 30); ctx.lineTo(21, 12); ctx.closePath();
+            ctx.moveTo(36, 10); ctx.lineTo(39, 13); ctx.lineTo(26, 26); ctx.lineTo(23, 23); ctx.closePath();
             ctx.fill();
+            // Тень лезвия
             ctx.fillStyle = '#94a3b8';
-            ctx.fillRect(23, 10, 2, 20);
-            ctx.fillStyle = '#ffd166';
-            ctx.fillRect(16, 30, 16, 3);
-            ctx.fillStyle = '#78350f';
-            ctx.fillRect(22, 33, 4, 8);
-            ctx.fillStyle = '#ffd166';
-            ctx.beginPath(); ctx.arc(24, 42, 3, 0, Math.PI * 2); ctx.fill();
-        });
-
-        createSquareIcon('icon_bow', '#166534', false, (ctx) => {
-            ctx.strokeStyle = '#fef08a';
-            ctx.lineWidth = 2.5;
             ctx.beginPath();
-            ctx.arc(20, 24, 15, -Math.PI * 0.45, Math.PI * 0.45);
-            ctx.stroke();
-            ctx.strokeStyle = '#ffffff';
-            ctx.lineWidth = 1;
-            ctx.beginPath();
-            ctx.moveTo(22, 10); ctx.lineTo(22, 38);
-            ctx.stroke();
-            // Стрела
-            ctx.fillStyle = '#38bdf8';
-            ctx.fillRect(12, 23, 22, 2);
-            ctx.beginPath(); ctx.moveTo(34, 24); ctx.lineTo(28, 20); ctx.lineTo(28, 28); ctx.closePath(); ctx.fill();
-        });
-
-        createSquareIcon('icon_fireball', '#991b1b', false, (ctx) => {
-            const rad = ctx.createRadialGradient(24, 24, 2, 24, 24, 14);
-            rad.addColorStop(0, '#ffffff');
-            rad.addColorStop(0.3, '#fef08a');
-            rad.addColorStop(0.7, '#f97316');
-            rad.addColorStop(1, '#dc2626');
-            ctx.fillStyle = rad;
-            ctx.beginPath();
-            ctx.arc(24, 24, 14, 0, Math.PI * 2);
+            ctx.moveTo(39, 13); ctx.lineTo(26, 26); ctx.lineTo(24, 28); ctx.lineTo(23, 23); ctx.closePath();
             ctx.fill();
+            // Острие
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(37, 9, 3, 3);
+            // Магическая синяя кромка
+            ctx.fillStyle = '#38bdf8';
+            ctx.fillRect(32, 14, 2, 2); ctx.fillRect(28, 18, 2, 2);
+            // Гарда (Золото)
+            ctx.fillStyle = '#ffd166';
+            ctx.beginPath();
+            ctx.moveTo(18, 28); ctx.lineTo(28, 18); ctx.lineTo(30, 20); ctx.lineTo(20, 30); ctx.closePath();
+            ctx.fill();
+            ctx.fillStyle = '#d97706';
+            ctx.fillRect(23, 23, 3, 3);
+            // Рукоять (Кожа)
+            ctx.fillStyle = '#78350f';
+            ctx.beginPath();
+            ctx.moveTo(19, 29); ctx.lineTo(13, 35); ctx.lineTo(15, 37); ctx.lineTo(21, 31); ctx.closePath();
+            ctx.fill();
+            // Навершие (Рубин в золоте)
+            ctx.fillStyle = '#ffd166';
+            ctx.beginPath(); ctx.arc(12, 38, 4, 0, Math.PI * 2); ctx.fill();
+            ctx.fillStyle = '#ef4444';
+            ctx.beginPath(); ctx.arc(12, 38, 2, 0, Math.PI * 2); ctx.fill();
         });
 
+        // --- Быстрый Лук (Изящный эльфийский лук с бирюзовой стрелой) ---
+        createSquareIcon('icon_bow', '#166534', false, (ctx) => {
+            // Древко лука
+            ctx.strokeStyle = '#f59e0b';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.arc(18, 24, 16, -Math.PI * 0.42, Math.PI * 0.42);
+            ctx.stroke();
+            // Золотые наконечники лука
+            ctx.fillStyle = '#ffd166';
+            ctx.fillRect(27, 8, 3, 3);
+            ctx.fillRect(27, 37, 3, 3);
+            // Тетива
+            ctx.strokeStyle = '#ffffff';
+            ctx.lineWidth = 1.2;
+            ctx.beginPath();
+            ctx.moveTo(28, 9); ctx.lineTo(19, 24); ctx.lineTo(28, 39);
+            ctx.stroke();
+            // Стрела (Древко)
+            ctx.fillStyle = '#e2e8f0';
+            ctx.fillRect(11, 23, 24, 2);
+            // Наконечник стрелы (Светящийся кристалл)
+            ctx.fillStyle = '#00f5d4';
+            ctx.beginPath(); ctx.moveTo(38, 24); ctx.lineTo(32, 20); ctx.lineTo(34, 24); ctx.lineTo(32, 28); ctx.closePath(); ctx.fill();
+            // Оперение
+            ctx.fillStyle = '#38bdf8';
+            ctx.fillRect(9, 21, 3, 2); ctx.fillRect(9, 25, 3, 2);
+        });
+
+        // --- Огненный Шар (Яростная пылающая плазменная сфера) ---
+        createSquareIcon('icon_fireball', '#991b1b', false, (ctx) => {
+            // Внешнее огненное кольцо
+            const rad = ctx.createRadialGradient(24, 24, 2, 24, 24, 16);
+            rad.addColorStop(0, '#ffffff');
+            rad.addColorStop(0.25, '#fef08a');
+            rad.addColorStop(0.55, '#f97316');
+            rad.addColorStop(0.85, '#dc2626');
+            rad.addColorStop(1, 'rgba(153, 27, 27, 0)');
+            ctx.fillStyle = rad;
+            ctx.beginPath(); ctx.arc(24, 24, 16, 0, Math.PI * 2); ctx.fill();
+
+            // Ядро фаербола
+            ctx.fillStyle = '#fef08a';
+            ctx.beginPath(); ctx.arc(23, 23, 8, 0, Math.PI * 2); ctx.fill();
+            ctx.fillStyle = '#ffffff';
+            ctx.beginPath(); ctx.arc(22, 22, 4, 0, Math.PI * 2); ctx.fill();
+
+            // Огненные языки и искры вокруг
+            ctx.fillStyle = '#ffd166';
+            ctx.fillRect(34, 14, 3, 3);
+            ctx.fillRect(12, 32, 3, 3);
+            ctx.fillRect(32, 30, 2, 2);
+            ctx.fillRect(14, 12, 2, 2);
+        });
+
+        // --- Сюрикены (4-конечная сюрикен-звезда ниндзя) ---
         createSquareIcon('icon_shuriken', '#581c87', false, (ctx) => {
+            // Лопасти сюрикена
             ctx.fillStyle = '#e2e8f0';
             ctx.beginPath();
             ctx.moveTo(24, 6); ctx.lineTo(27, 21); ctx.lineTo(42, 24); ctx.lineTo(27, 27);
             ctx.lineTo(24, 42); ctx.lineTo(21, 27); ctx.lineTo(6, 24); ctx.lineTo(21, 21);
-            ctx.closePath(); ctx.fill();
+            ctx.closePath();
+            ctx.fill();
+
+            // Теневые грани лопастей
+            ctx.fillStyle = '#94a3b8';
+            ctx.beginPath();
+            ctx.moveTo(24, 6); ctx.lineTo(24, 24); ctx.lineTo(42, 24); ctx.closePath(); ctx.fill();
+            ctx.beginPath();
+            ctx.moveTo(24, 42); ctx.lineTo(24, 24); ctx.lineTo(6, 24); ctx.closePath(); ctx.fill();
+
+            // Неоновая фиолетовая подсветка лезвий
+            ctx.strokeStyle = '#c084fc';
+            ctx.lineWidth = 1.5;
+            ctx.stroke();
+
+            // Центральное отверстие
             ctx.fillStyle = '#0f172a';
-            ctx.beginPath(); ctx.arc(24, 24, 4, 0, Math.PI * 2); ctx.fill();
-            ctx.strokeStyle = '#c084fc'; ctx.lineWidth = 1.5; ctx.stroke();
+            ctx.beginPath(); ctx.arc(24, 24, 4.5, 0, Math.PI * 2); ctx.fill();
+            ctx.strokeStyle = '#ffd166';
+            ctx.lineWidth = 1.5;
+            ctx.stroke();
         });
 
+        // --- Посох Молний (Искрящийся громовой посох с золотой молнией) ---
         createSquareIcon('icon_lightning', '#0369a1', false, (ctx) => {
+            // Электрический разряд молнии
             ctx.fillStyle = '#fde047';
             ctx.beginPath();
-            ctx.moveTo(27, 6); ctx.lineTo(15, 23); ctx.lineTo(25, 23);
-            ctx.lineTo(19, 42); ctx.lineTo(33, 21); ctx.lineTo(23, 21);
-            ctx.closePath(); ctx.fill();
-            ctx.strokeStyle = '#ffffff'; ctx.lineWidth = 1; ctx.stroke();
+            ctx.moveTo(28, 6); ctx.lineTo(15, 23); ctx.lineTo(26, 23);
+            ctx.lineTo(18, 42); ctx.lineTo(34, 20); ctx.lineTo(24, 20);
+            ctx.closePath();
+            ctx.fill();
+
+            // Белая центральная плазма молнии
+            ctx.strokeStyle = '#ffffff';
+            ctx.lineWidth = 1.5;
+            ctx.beginPath();
+            ctx.moveTo(27, 9); ctx.lineTo(18, 22); ctx.lineTo(26, 22); ctx.lineTo(21, 38);
+            ctx.stroke();
+
+            // Электрические искры
+            ctx.fillStyle = '#38bdf8';
+            ctx.fillRect(11, 14, 2, 2);
+            ctx.fillRect(36, 16, 2, 2);
+            ctx.fillRect(12, 32, 2, 2);
+            ctx.fillRect(32, 34, 2, 2);
         });
 
+        // --- Чумная Аура (Ядовитый алхимический череп в зеленом дыму) ---
         createSquareIcon('icon_poison', '#15803d', false, (ctx) => {
+            // Ядовитое облако
             ctx.fillStyle = '#84cc16';
-            ctx.beginPath(); ctx.arc(20, 26, 9, 0, Math.PI * 2); ctx.fill();
-            ctx.beginPath(); ctx.arc(28, 22, 10, 0, Math.PI * 2); ctx.fill();
-            ctx.beginPath(); ctx.arc(22, 16, 7, 0, Math.PI * 2); ctx.fill();
+            ctx.beginPath(); ctx.arc(19, 26, 10, 0, Math.PI * 2); ctx.fill();
+            ctx.beginPath(); ctx.arc(29, 23, 11, 0, Math.PI * 2); ctx.fill();
+            ctx.beginPath(); ctx.arc(23, 16, 8, 0, Math.PI * 2); ctx.fill();
+
+            // Токсичные пузырьки
             ctx.fillStyle = '#ecfccb';
-            ctx.beginPath(); ctx.arc(26, 20, 3, 0, Math.PI * 2); ctx.fill();
-            ctx.beginPath(); ctx.arc(18, 25, 2, 0, Math.PI * 2); ctx.fill();
+            ctx.beginPath(); ctx.arc(27, 19, 3.5, 0, Math.PI * 2); ctx.fill();
+            ctx.beginPath(); ctx.arc(17, 24, 2.5, 0, Math.PI * 2); ctx.fill();
+            ctx.beginPath(); ctx.arc(22, 30, 2, 0, Math.PI * 2); ctx.fill();
+
+            // Череп яда в центре
+            ctx.fillStyle = '#064e3b';
+            ctx.beginPath(); ctx.arc(24, 22, 6, 0, Math.PI * 2); ctx.fill();
+            ctx.fillRect(22, 26, 4, 3);
+            ctx.fillStyle = '#a3e635';
+            ctx.fillRect(22, 21, 2, 2); ctx.fillRect(25, 21, 2, 2);
         });
 
         // 2. СУПЕР-ОРУЖИЕ (ЭВОЛЮЦИИ)
+        // --- Клинок Бури (Парные золотые клинки в вихре молний) ---
         createSquareIcon('icon_super_blade', '#1e3a8a', true, (ctx) => {
-            ctx.fillStyle = '#38bdf8';
-            ctx.fillRect(22, 6, 4, 36);
-            ctx.fillRect(6, 22, 36, 4);
+            // Силовой вихрь
+            ctx.strokeStyle = '#38bdf8';
+            ctx.lineWidth = 2.5;
+            ctx.beginPath(); ctx.arc(24, 24, 16, 0, Math.PI * 1.6); ctx.stroke();
+
+            // Скрещенные клинки
             ctx.fillStyle = '#fef08a';
+            ctx.beginPath();
+            ctx.moveTo(10, 10); ctx.lineTo(38, 38); ctx.lineTo(36, 40); ctx.lineTo(8, 12); ctx.closePath(); ctx.fill();
+            ctx.beginPath();
+            ctx.moveTo(38, 10); ctx.lineTo(10, 38); ctx.lineTo(8, 36); ctx.lineTo(36, 8); ctx.closePath(); ctx.fill();
+
+            // Золотое ядро энергии
+            ctx.fillStyle = '#ffd166';
             ctx.beginPath(); ctx.arc(24, 24, 7, 0, Math.PI * 2); ctx.fill();
-            ctx.strokeStyle = '#ffffff'; ctx.lineWidth = 2; ctx.stroke();
+            ctx.fillStyle = '#ffffff';
+            ctx.beginPath(); ctx.arc(24, 24, 3.5, 0, Math.PI * 2); ctx.fill();
         });
 
+        // --- Бесконечный Шквал (Эпический лук с 3 лазерными стрелами) ---
         createSquareIcon('icon_super_bow', '#065f46', true, (ctx) => {
-            ctx.strokeStyle = '#34d399'; ctx.lineWidth = 3;
-            ctx.beginPath(); ctx.arc(18, 24, 15, -Math.PI * 0.45, Math.PI * 0.45); ctx.stroke();
+            // Тройной лук
+            ctx.strokeStyle = '#34d399';
+            ctx.lineWidth = 3.5;
+            ctx.beginPath(); ctx.arc(17, 24, 16, -Math.PI * 0.45, Math.PI * 0.45); ctx.stroke();
+
+            // 3 лазерные золотые стрелы
             ctx.fillStyle = '#fef08a';
-            ctx.fillRect(18, 22, 22, 4);
-            ctx.fillRect(18, 14, 18, 3);
-            ctx.fillRect(18, 30, 18, 3);
+            ctx.fillRect(16, 23, 25, 2);
+            ctx.fillRect(16, 15, 21, 2);
+            ctx.fillRect(16, 31, 21, 2);
+
+            // Наконечники
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(39, 22, 4, 4);
+            ctx.fillRect(35, 14, 4, 4);
+            ctx.fillRect(35, 30, 4, 4);
         });
 
+        // --- Метеоритный Апокалипсис (Гигантский пылающий метеорит) ---
         createSquareIcon('icon_super_meteor', '#7f1d1d', true, (ctx) => {
-            const rad = ctx.createRadialGradient(24, 24, 3, 24, 24, 16);
+            const rad = ctx.createRadialGradient(24, 24, 3, 24, 24, 18);
             rad.addColorStop(0, '#ffffff');
-            rad.addColorStop(0.3, '#fef08a');
-            rad.addColorStop(0.7, '#f97316');
-            rad.addColorStop(1, '#7f1d1d');
+            rad.addColorStop(0.25, '#fef08a');
+            rad.addColorStop(0.6, '#ea580c');
+            rad.addColorStop(0.9, '#991b1b');
+            rad.addColorStop(1, 'rgba(127, 29, 29, 0)');
             ctx.fillStyle = rad;
-            ctx.beginPath(); ctx.arc(24, 24, 15, 0, Math.PI * 2); ctx.fill();
+            ctx.beginPath(); ctx.arc(24, 24, 18, 0, Math.PI * 2); ctx.fill();
+
+            // Кратеры и магма
+            ctx.fillStyle = '#450a0a';
+            ctx.beginPath(); ctx.arc(21, 21, 6, 0, Math.PI * 2); ctx.fill();
+            ctx.beginPath(); ctx.arc(29, 26, 4, 0, Math.PI * 2); ctx.fill();
+            ctx.fillStyle = '#fde047';
+            ctx.fillRect(20, 20, 2, 2); ctx.fillRect(28, 25, 2, 2);
         });
 
+        // --- Омега-Сюрикены (8-лучевой силовой диск с фиолетовой плазмой) ---
         createSquareIcon('icon_super_shuriken', '#581c87', true, (ctx) => {
             ctx.fillStyle = '#c084fc';
             ctx.fillRect(21, 6, 6, 36);
             ctx.fillRect(6, 21, 36, 6);
-            ctx.fillStyle = '#ffd166';
-            ctx.beginPath(); ctx.arc(24, 24, 8, 0, Math.PI * 2); ctx.fill();
-        });
 
-        createSquareIcon('icon_super_lightning', '#0c4a6e', true, (ctx) => {
-            ctx.fillStyle = '#fde047';
+            // Диагональные лезвия
             ctx.beginPath();
-            ctx.moveTo(29, 5); ctx.lineTo(13, 24); ctx.lineTo(26, 24);
-            ctx.lineTo(17, 43); ctx.lineTo(35, 19); ctx.lineTo(22, 19);
-            ctx.closePath(); ctx.fill();
-            ctx.strokeStyle = '#ffffff'; ctx.lineWidth = 1.5; ctx.stroke();
-        });
+            ctx.moveTo(12, 12); ctx.lineTo(36, 36); ctx.lineTo(34, 38); ctx.lineTo(10, 14); ctx.closePath(); ctx.fill();
+            ctx.beginPath();
+            ctx.moveTo(36, 12); ctx.lineTo(12, 36); ctx.lineTo(10, 34); ctx.lineTo(34, 10); ctx.closePath(); ctx.fill();
 
-        createSquareIcon('icon_super_poison', '#14532d', true, (ctx) => {
-            ctx.fillStyle = '#a3e635';
-            ctx.beginPath(); ctx.arc(24, 24, 15, 0, Math.PI * 2); ctx.fill();
-            ctx.fillStyle = '#4ade80';
+            // Золотое ядро Омега
+            ctx.fillStyle = '#ffd166';
             ctx.beginPath(); ctx.arc(24, 24, 8, 0, Math.PI * 2); ctx.fill();
             ctx.fillStyle = '#ffffff';
             ctx.beginPath(); ctx.arc(24, 24, 3, 0, Math.PI * 2); ctx.fill();
         });
 
-        // 3. ПАССИВНЫЕ НАВЫКИ И ТАЛАНТЫ
-        createSquareIcon('icon_might', '#991b1b', false, (ctx) => {
-            // Меч силы
-            ctx.fillStyle = '#fca5a5';
-            ctx.beginPath(); ctx.moveTo(24, 8); ctx.lineTo(28, 14); ctx.lineTo(28, 30); ctx.lineTo(20, 30); ctx.lineTo(20, 14); ctx.closePath(); ctx.fill();
+        // --- Гнев Зевса (Золотой трезубец громовержца в каскаде молний) ---
+        createSquareIcon('icon_super_lightning', '#0c4a6e', true, (ctx) => {
+            // Молния
+            ctx.fillStyle = '#fde047';
+            ctx.beginPath();
+            ctx.moveTo(30, 5); ctx.lineTo(13, 24); ctx.lineTo(26, 24);
+            ctx.lineTo(17, 43); ctx.lineTo(36, 19); ctx.lineTo(23, 19);
+            ctx.closePath(); ctx.fill();
+
+            // Золотой трезубец поверх
             ctx.fillStyle = '#ffd166';
-            ctx.fillRect(16, 30, 16, 4);
-            ctx.fillStyle = '#78350f';
-            ctx.fillRect(22, 34, 4, 8);
+            ctx.fillRect(22, 10, 4, 28);
+            ctx.fillRect(14, 12, 20, 3);
+            ctx.fillRect(14, 8, 3, 7);
+            ctx.fillRect(31, 8, 3, 7);
+            ctx.fillRect(22, 6, 4, 6);
         });
 
+        // --- Чумная Сверхновая (Радиоактивная звезда антиматерии) ---
+        createSquareIcon('icon_super_poison', '#14532d', true, (ctx) => {
+            // Внешнее токсичное сияние
+            const rad = ctx.createRadialGradient(24, 24, 4, 24, 24, 18);
+            rad.addColorStop(0, '#ffffff');
+            rad.addColorStop(0.3, '#bef264');
+            rad.addColorStop(0.7, '#22c55e');
+            rad.addColorStop(1, 'rgba(20, 83, 45, 0)');
+            ctx.fillStyle = rad;
+            ctx.beginPath(); ctx.arc(24, 24, 18, 0, Math.PI * 2); ctx.fill();
+
+            // Токсичная звезда
+            ctx.fillStyle = '#15803d';
+            ctx.beginPath(); ctx.arc(24, 24, 9, 0, Math.PI * 2); ctx.fill();
+            ctx.fillStyle = '#ffffff';
+            ctx.beginPath(); ctx.arc(24, 24, 4, 0, Math.PI * 2); ctx.fill();
+        });
+
+        // 3. ПАССИВНЫЕ НАВЫКИ И ТАЛАНТЫ
+        // --- Сила Героя (Меч силы / Рубиновый кулак) ---
+        createSquareIcon('icon_might', '#991b1b', false, (ctx) => {
+            ctx.fillStyle = '#fca5a5';
+            ctx.beginPath(); ctx.moveTo(24, 7); ctx.lineTo(29, 13); ctx.lineTo(29, 31); ctx.lineTo(19, 31); ctx.lineTo(19, 13); ctx.closePath(); ctx.fill();
+            ctx.fillStyle = '#ffd166';
+            ctx.fillRect(15, 31, 18, 4);
+            ctx.fillStyle = '#78350f';
+            ctx.fillRect(22, 35, 4, 8);
+            ctx.fillStyle = '#f59e0b';
+            ctx.beginPath(); ctx.arc(24, 43, 3, 0, Math.PI * 2); ctx.fill();
+        });
+
+        // --- Сапоги Ветра (Крылатый сапог Гермеса) ---
         createSquareIcon('icon_boots', '#15803d', false, (ctx) => {
-            // Крылатый сапог ветра
             ctx.fillStyle = '#86efac';
             ctx.beginPath();
-            ctx.moveTo(14, 14); ctx.lineTo(26, 14); ctx.lineTo(26, 26); ctx.lineTo(36, 30); ctx.lineTo(36, 36); ctx.lineTo(14, 36); ctx.closePath();
+            ctx.moveTo(13, 14); ctx.lineTo(25, 14); ctx.lineTo(25, 26); ctx.lineTo(37, 30); ctx.lineTo(37, 37); ctx.lineTo(13, 37); ctx.closePath();
             ctx.fill();
-            ctx.strokeStyle = '#ffd166'; ctx.lineWidth = 1.5; ctx.stroke();
+            ctx.strokeStyle = '#ffd166'; ctx.lineWidth = 2; ctx.stroke();
+
+            // Крыло
+            ctx.fillStyle = '#ffffff';
+            ctx.beginPath();
+            ctx.moveTo(15, 18); ctx.lineTo(7, 10); ctx.lineTo(16, 12); ctx.lineTo(9, 6); ctx.lineTo(20, 10);
+            ctx.closePath(); ctx.fill();
         });
 
+        // --- Сфера Притяжения (Электромагнит) ---
         createSquareIcon('icon_magnet', '#0369a1', false, (ctx) => {
-            // Магнит
             ctx.strokeStyle = '#38bdf8'; ctx.lineWidth = 6;
             ctx.beginPath(); ctx.arc(24, 22, 11, Math.PI, 0, false); ctx.stroke();
-            ctx.fillStyle = '#ffffff';
-            ctx.fillRect(10, 22, 6, 8);
-            ctx.fillRect(22, 22, 6, 8);
+            // Полюса магнита
+            ctx.fillStyle = '#ef4444'; ctx.fillRect(10, 22, 6, 9);
+            ctx.fillStyle = '#ffffff'; ctx.fillRect(22, 22, 6, 9);
+            // Магнитные силовые линии
+            ctx.strokeStyle = '#ffd166'; ctx.lineWidth = 1.5;
+            ctx.beginPath(); ctx.arc(24, 33, 5, Math.PI, 0, false); ctx.stroke();
         });
 
+        // --- Камень Жизни (Кристалл здоровья) ---
         createSquareIcon('icon_vitality', '#be123c', false, (ctx) => {
-            // Рунический крест жизни
             ctx.fillStyle = '#fda4af';
-            ctx.fillRect(20, 10, 8, 28);
-            ctx.fillRect(10, 20, 28, 8);
-            ctx.strokeStyle = '#ffffff'; ctx.lineWidth = 1; ctx.strokeRect(20, 10, 8, 28); ctx.strokeRect(10, 20, 28, 8);
+            ctx.beginPath();
+            ctx.moveTo(24, 7); ctx.lineTo(37, 20); ctx.lineTo(24, 41); ctx.lineTo(11, 20); ctx.closePath();
+            ctx.fill();
+            ctx.strokeStyle = '#ffffff'; ctx.lineWidth = 1.5; ctx.stroke();
+
+            // Святой белый крест в центре кристалла
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(22, 14, 4, 14);
+            ctx.fillRect(17, 19, 14, 4);
         });
 
+        // --- Перчатки Ловкости ---
         createSquareIcon('icon_gloves', '#86198f', false, (ctx) => {
-            // Перчатки ловкости
             ctx.fillStyle = '#f0abfc';
             ctx.beginPath(); ctx.roundRect(14, 14, 20, 22, 6); ctx.fill();
-            ctx.fillStyle = '#ffffff'; ctx.fillRect(10, 18, 8, 8);
+            ctx.strokeStyle = '#ffd166'; ctx.lineWidth = 2; ctx.stroke();
+            // Пальцы перчатки
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(16, 8, 3, 7); ctx.fillRect(21, 6, 3, 9); ctx.fillRect(26, 7, 3, 8); ctx.fillRect(31, 10, 3, 5);
         });
 
+        // --- Клевер Удачи (4-листный золотой клевер) ---
         createSquareIcon('icon_clover', '#15803d', false, (ctx) => {
-            // 4-листный клевер удачи
             ctx.fillStyle = '#4ade80';
             ctx.beginPath();
-            ctx.arc(19, 18, 6, 0, Math.PI * 2); ctx.arc(29, 18, 6, 0, Math.PI * 2);
-            ctx.arc(19, 28, 6, 0, Math.PI * 2); ctx.arc(29, 28, 6, 0, Math.PI * 2);
+            ctx.arc(18, 17, 6.5, 0, Math.PI * 2); ctx.arc(30, 17, 6.5, 0, Math.PI * 2);
+            ctx.arc(18, 29, 6.5, 0, Math.PI * 2); ctx.arc(30, 29, 6.5, 0, Math.PI * 2);
             ctx.fill();
-            ctx.strokeStyle = '#ffffff'; ctx.lineWidth = 1.5;
-            ctx.beginPath(); ctx.moveTo(24, 24); ctx.lineTo(24, 38); ctx.stroke();
+            ctx.strokeStyle = '#fef08a'; ctx.lineWidth = 1.5;
+            ctx.beginPath(); ctx.moveTo(24, 24); ctx.lineTo(24, 40); ctx.stroke();
+            // Блик
+            ctx.fillStyle = '#ffffff';
+            ctx.beginPath(); ctx.arc(17, 16, 2, 0, Math.PI * 2); ctx.fill();
         });
 
+        // --- Регенерация (Сердце) ---
         createSquareIcon('icon_heart', '#991b1b', false, (ctx) => {
-            // Регенерация (Сердце)
             ctx.fillStyle = '#ef4444';
             ctx.beginPath();
-            ctx.moveTo(24, 38);
-            ctx.bezierCurveTo(12, 26, 10, 14, 24, 14);
-            ctx.bezierCurveTo(38, 14, 36, 26, 24, 38);
+            ctx.moveTo(24, 39);
+            ctx.bezierCurveTo(10, 26, 8, 13, 24, 13);
+            ctx.bezierCurveTo(40, 13, 38, 26, 24, 39);
             ctx.fill();
-            ctx.fillStyle = '#ffffff'; ctx.fillRect(18, 18, 4, 4);
+            ctx.strokeStyle = '#fca5a5'; ctx.lineWidth = 1.5; ctx.stroke();
+            ctx.fillStyle = '#ffffff'; ctx.fillRect(17, 17, 4, 4);
         });
 
+        // --- Золото / Жадность ---
         createSquareIcon('icon_coin', '#b45309', false, (ctx) => {
-            // Золото (Мешок с монетами)
             ctx.fillStyle = '#ffd166';
             ctx.beginPath(); ctx.arc(24, 24, 15, 0, Math.PI * 2); ctx.fill();
-            ctx.strokeStyle = '#d97706'; ctx.lineWidth = 2; ctx.stroke();
-            ctx.fillStyle = '#78350f'; ctx.font = 'bold 16px sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+            ctx.strokeStyle = '#d97706'; ctx.lineWidth = 2.5; ctx.stroke();
+            ctx.fillStyle = '#78350f'; ctx.font = 'bold 16px monospace'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
             ctx.fillText('$', 24, 24);
         });
 
+        // --- Второе Дыхание (Крест Воскрешения) ---
         createSquareIcon('icon_revive', '#0f766e', false, (ctx) => {
-            // Второе дыхание (Крест возрождения)
             ctx.fillStyle = '#2dd4bf';
-            ctx.beginPath(); ctx.arc(24, 24, 15, 0, Math.PI * 2); ctx.fill();
+            ctx.beginPath(); ctx.arc(24, 24, 16, 0, Math.PI * 2); ctx.fill();
+            ctx.strokeStyle = '#99f6e4'; ctx.lineWidth = 2; ctx.stroke();
             ctx.fillStyle = '#ffffff';
-            ctx.fillRect(21, 13, 6, 22);
-            ctx.fillRect(13, 21, 22, 6);
+            ctx.fillRect(21, 12, 6, 24);
+            ctx.fillRect(12, 21, 24, 6);
         });
     }
 
