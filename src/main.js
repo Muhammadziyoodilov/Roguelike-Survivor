@@ -36,12 +36,20 @@ window.addEventListener('load', () => {
     const game = new Phaser.Game(config);
     window.game = game;
 
-    // Автоматическая пауза при потере фокуса вкладки
+    // Автоматическая пауза звука при потере фокуса вкладки или сворачивании
     window.addEventListener('blur', () => {
         if (window.Sound) window.Sound.stopBGM();
     });
 
     window.addEventListener('focus', () => {
         if (window.Sound && !window.Sound.isMuted) window.Sound.startBGM();
+    });
+
+    document.addEventListener('visibilitychange', () => {
+        if (document.hidden) {
+            if (window.Sound) window.Sound.stopBGM();
+        } else {
+            if (window.Sound && !window.Sound.isMuted) window.Sound.startBGM();
+        }
     });
 });

@@ -61,6 +61,24 @@ class YandexSDKWrapper {
         console.log('[Yandex SDK] Запущен в Mock-режиме (локально)');
     }
 
+    gameplayStart() {
+        if (this.ysdk && this.ysdk.features && this.ysdk.features.GameplayAPI) {
+            try {
+                this.ysdk.features.GameplayAPI.start();
+                console.log('[Yandex SDK] GameplayAPI: start');
+            } catch (e) {}
+        }
+    }
+
+    gameplayStop() {
+        if (this.ysdk && this.ysdk.features && this.ysdk.features.GameplayAPI) {
+            try {
+                this.ysdk.features.GameplayAPI.stop();
+                console.log('[Yandex SDK] GameplayAPI: stop');
+            } catch (e) {}
+        }
+    }
+
     getLang() {
         if (this.ysdk && this.ysdk.environment && this.ysdk.environment.i18n) {
             const lang = this.ysdk.environment.i18n.lang;
