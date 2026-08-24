@@ -1135,6 +1135,9 @@ class MenuScene extends Phaser.Scene {
         startBtn.on('pointerdown', () => {
             const h1 = availableHeroes[p1Idx];
             const h2 = availableHeroes[p2Idx];
+            if (screen.orientation && screen.orientation.lock) {
+                screen.orientation.lock('landscape').catch(() => {});
+            }
             if (this.coopPicksGroup) this.coopPicksGroup.destroy(true);
             this.closeCurrentModal();
             this.startBattleTransition('CoopGameScene', { hero1Id: h1, hero2Id: h2 });

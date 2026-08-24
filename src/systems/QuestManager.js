@@ -87,6 +87,15 @@ class QuestManager {
             strokeThickness: 3
         }).setScrollFactor(0).setOrigin(0.5).setDepth(301);
 
+        if (scene.hudGroup) {
+            scene.hudGroup.add(toastBg);
+            scene.hudGroup.add(trophyIcon);
+            scene.hudGroup.add(toastText);
+            if (typeof scene.applyCameraIgnores === 'function') {
+                scene.applyCameraIgnores();
+            }
+        }
+
         scene.tweens.add({
             targets: [toastBg, trophyIcon, toastText],
             y: targetY,

@@ -143,11 +143,20 @@ class Player extends Phaser.GameObjects.Sprite {
         if (this.keys.up.isDown || (this.keys.upAlt && this.keys.upAlt.isDown)) vy -= 1;
         if (this.keys.down.isDown || (this.keys.downAlt && this.keys.downAlt.isDown)) vy += 1;
 
-        // Экранный тач-джойстик (только для Player 1)
-        if (this.playerIndex === 1 && this.scene.joystickVector) {
-            if (this.scene.joystickVector.x !== 0 || this.scene.joystickVector.y !== 0) {
-                vx = this.scene.joystickVector.x;
-                vy = this.scene.joystickVector.y;
+        // Экранный тач-джойстик (Player 1)
+        if (this.playerIndex === 1) {
+            const joy = this.scene.joystickVector1 || this.scene.joystickVector;
+            if (joy && (joy.x !== 0 || joy.y !== 0)) {
+                vx = joy.x;
+                vy = joy.y;
+            }
+        }
+        // Экранный тач-джойстик (Player 2 в Co-op)
+        if (this.playerIndex === 2) {
+            const joy = this.scene.joystickVector2;
+            if (joy && (joy.x !== 0 || joy.y !== 0)) {
+                vx = joy.x;
+                vy = joy.y;
             }
         }
 

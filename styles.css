@@ -76,3 +76,139 @@ canvas {
     pointer-events: none;
     transition: transform 0.05s ease-out;
 }
+
+/* Виртуальные джойстики для Co-op режима */
+#joystick-coop-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    height: 100dvh;
+    pointer-events: none;
+    z-index: 120;
+}
+
+.coop-joystick-zone {
+    position: absolute;
+    bottom: 25px;
+    width: 130px;
+    height: 130px;
+    pointer-events: auto;
+    touch-action: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.coop-joystick-zone.left {
+    left: 20px;
+}
+
+.coop-joystick-zone.right {
+    right: 20px;
+}
+
+.joystick-label {
+    font-family: 'Russo One', sans-serif;
+    font-size: 11px;
+    margin-bottom: 6px;
+    letter-spacing: 1px;
+    text-shadow: 0 0 6px rgba(0,0,0,0.8);
+}
+
+.p1-label { color: #38bdf8; }
+.p2-label { color: #c084fc; }
+
+.coop-joy-base {
+    width: 110px;
+    height: 110px;
+    border-radius: 50%;
+    position: relative;
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+}
+
+.p1-base {
+    background: radial-gradient(circle, rgba(56, 189, 248, 0.25) 0%, rgba(15, 23, 42, 0.75) 100%);
+    border: 2px solid rgba(56, 189, 248, 0.6);
+    box-shadow: 0 0 16px rgba(56, 189, 248, 0.35);
+}
+
+.p2-base {
+    background: radial-gradient(circle, rgba(192, 132, 252, 0.25) 0%, rgba(15, 23, 42, 0.75) 100%);
+    border: 2px solid rgba(192, 132, 252, 0.6);
+    box-shadow: 0 0 16px rgba(192, 132, 252, 0.35);
+}
+
+.coop-joy-knob {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    position: absolute;
+    top: 33px;
+    left: 33px;
+    border: 2px solid #ffffff;
+    pointer-events: none;
+    transition: transform 0.04s ease-out;
+}
+
+.p1-knob {
+    background: radial-gradient(circle, #38bdf8 0%, #0284c7 100%);
+    box-shadow: 0 0 12px #38bdf8;
+}
+
+.p2-knob {
+    background: radial-gradient(circle, #c084fc 0%, #7e22ce 100%);
+    box-shadow: 0 0 12px #c084fc;
+}
+
+/* Оверлей принудительного поворота устройства */
+#rotate-device-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    height: 100dvh;
+    background: rgba(7, 9, 19, 0.96);
+    z-index: 9999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 24px;
+}
+
+.rotate-content {
+    max-width: 320px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+}
+
+.rotate-icon-anim {
+    animation: rotatePhone 2s ease-in-out infinite;
+}
+
+@keyframes rotatePhone {
+    0%, 10% { transform: rotate(0deg); }
+    40%, 60% { transform: rotate(90deg); }
+    90%, 100% { transform: rotate(0deg); }
+}
+
+.rotate-content h2 {
+    font-family: 'Russo One', sans-serif;
+    font-size: 20px;
+    color: #ffd166;
+    letter-spacing: 1px;
+}
+
+.rotate-content p {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 13px;
+    line-height: 1.5;
+    color: #94a3b8;
+}

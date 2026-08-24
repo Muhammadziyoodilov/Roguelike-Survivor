@@ -23,10 +23,40 @@
 <body>
     <div id="game-container"></div>
     
-    <!-- Виртуальный джойстик для мобильных устройств -->
+    <!-- Виртуальный джойстик для одиночной игры на смартфонах -->
     <div id="joystick-zone">
         <div id="joystick-base">
             <div id="joystick-knob"></div>
+        </div>
+    </div>
+
+    <!-- Виртуальные джойстики для Co-op режима (Игрок 1 и Игрок 2) -->
+    <div id="joystick-coop-container" style="display: none;">
+        <div id="joystick-coop-p1" class="coop-joystick-zone left">
+            <div class="joystick-label p1-label">ИГРОК 1</div>
+            <div id="joystick-coop-p1-base" class="coop-joy-base p1-base">
+                <div id="joystick-coop-p1-knob" class="coop-joy-knob p1-knob"></div>
+            </div>
+        </div>
+        <div id="joystick-coop-p2" class="coop-joystick-zone right">
+            <div class="joystick-label p2-label">ИГРОК 2</div>
+            <div id="joystick-coop-p2-base" class="coop-joy-base p2-base">
+                <div id="joystick-coop-p2-knob" class="coop-joy-knob p2-knob"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Оверлей принудительного поворота устройства в горизонтальный режим для Co-op -->
+    <div id="rotate-device-overlay" style="display: none;">
+        <div class="rotate-content">
+            <div class="rotate-icon-anim">
+                <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect>
+                    <line x1="12" y1="18" x2="12.01" y2="18"></line>
+                </svg>
+            </div>
+            <h2>РЕЖИМ НА ДВОИХ</h2>
+            <p>Поверните устройство горизонтально для игры со сплит-скрином и двумя джойстиками!</p>
         </div>
     </div>
 
