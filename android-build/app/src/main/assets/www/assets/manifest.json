@@ -1,0 +1,32 @@
+{
+  "audio": {
+    "bgm_boss": "assets/audio/bgm_boss.mp3",
+    "bgm_main": "assets/audio/bgm_main.mp3",
+    "bgm_menu": "assets/audio/bgm_menu.mp3",
+    "sfx_bomb": "assets/audio/sfx_bomb.mp3",
+    "sfx_boss": "assets/audio/sfx_boss.mp3",
+    "sfx_chest": "assets/audio/sfx_chest.mp3",
+    "sfx_coin": "assets/audio/sfx_coin.mp3",
+    "sfx_death": "assets/audio/sfx_death.mp3",
+    "sfx_freeze": "assets/audio/sfx_freeze.mp3",
+    "sfx_gem": "assets/audio/sfx_gem.mp3",
+    "sfx_hit": "assets/audio/sfx_hit.mp3",
+    "sfx_jackpot": "assets/audio/sfx_jackpot.mp3",
+    "sfx_levelup": "assets/audio/sfx_levelup.mp3",
+    "sfx_rage": "assets/audio/sfx_rage.mp3",
+    "sfx_shoot": "assets/audio/sfx_shoot.mp3",
+    "sfx_slash": "assets/audio/sfx_slash.mp3"
+  },
+  "sprites": {
+    "hero_archer": "assets/sprites/heroes/hero_archer.jpg",
+    "hero_knight": "assets/sprites/heroes/hero_knight.jpg",
+    "hero_mage": "assets/sprites/heroes/hero_mage.jpg",
+    "hero_necromancer": "assets/sprites/heroes/hero_necromancer.jpg",
+    "hero_ninja": "assets/sprites/heroes/hero_ninja.jpg",
+    "menu_bg": "assets/sprites/environment/menu_bg.jpg",
+    "ui_avatar": "assets/sprites/environment/ui_avatar.jpg",
+    "ui_chest_gold": "assets/sprites/environment/ui_chest_gold.jpg",
+    "ui_logo_crest": "assets/sprites/environment/ui_logo_crest.jpg",
+    "ui_podium": "assets/sprites/environment/ui_podium.jpg"
+  }
+}

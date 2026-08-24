@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>10 Minutes Survivor: Hero Arena</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><circle cx='12' cy='12' r='10' fill='%23ffd166'/></svg>">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@600;700;800&family=Montserrat:wght@600;700;800;900&family=Russo+One&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <!-- Phaser 3 CDN -->
+    <script src="phaser.min.js"></script>
+    <!-- Yandex Games SDK (Подключается в среде Яндекса) -->
+    <script>
+        if (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1' && window.location.protocol !== 'file:') {
+            const s = document.createElement('script');
+            s.src = 'https://yandex.ru/games/sdk/v2';
+            document.head.appendChild(s);
+        }
+    </script>
+</head>
+<body>
+    <div id="game-container"></div>
+    
+    <!-- Виртуальный джойстик для одиночной игры на смартфонах -->
+    <div id="joystick-zone">
+        <div id="joystick-base">
+            <div id="joystick-knob"></div>
+        </div>
+    </div>
+
+    <!-- Виртуальные джойстики для Co-op режима (Игрок 1 и Игрок 2) -->
+    <div id="joystick-coop-container" style="display: none;">
+        <div id="joystick-coop-p1" class="coop-joystick-zone left">
+            <div class="joystick-label p1-label">ИГРОК 1</div>
+            <div id="joystick-coop-p1-base" class="coop-joy-base p1-base">
+                <div id="joystick-coop-p1-knob" class="coop-joy-knob p1-knob"></div>
+            </div>
+        </div>
+        <div id="joystick-coop-p2" class="coop-joystick-zone right">
+            <div class="joystick-label p2-label">ИГРОК 2</div>
+            <div id="joystick-coop-p2-base" class="coop-joy-base p2-base">
+                <div id="joystick-coop-p2-knob" class="coop-joy-knob p2-knob"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Оверлей принудительного поворота устройства в горизонтальный режим для Co-op -->
+    <div id="rotate-device-overlay" style="display: none;">
+        <div class="rotate-content">
+            <div class="rotate-icon-anim">
+                <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect>
+                    <line x1="12" y1="18" x2="12.01" y2="18"></line>
+                </svg>
+            </div>
+            <h2>РЕЖИМ НА ДВОИХ</h2>
+            <p>Поверните устройство горизонтально для игры со сплит-скрином и двумя джойстиками!</p>
+        </div>
+    </div>
+
+    <!-- Загрузка скриптов игры -->
+    <script src="src/config.js"></script>
+    <script src="src/audio-synth.js"></script>
+    <script src="src/texture-generator.js"></script>
+    <script src="src/yandex-sdk.js"></script>
+    
+    <script src="src/systems/SaveManager.js"></script>
+    <script src="src/entities/DropItem.js"></script>
+    <script src="src/entities/Projectile.js"></script>
+    <script src="src/entities/Enemy.js"></script>
+    <script src="src/entities/Player.js"></script>
+    <script src="src/entities/PoolManager.js"></script>
+    
+    <script src="src/systems/WeaponSystem.js"></script>
+    <script src="src/systems/WaveSpawner.js"></script>
+    <script src="src/systems/UpgradeManager.js"></script>
+    <script src="src/systems/QuestManager.js"></script>
+    
+    <script src="src/scenes/BootScene.js"></script>
+    <script src="src/scenes/MenuScene.js"></script>
+    <script src="src/scenes/GameScene.js"></script>
+    <script src="src/scenes/PauseScene.js"></script>
+    <script src="src/scenes/UpgradeScene.js"></script>
+    <script src="src/scenes/GameOverScene.js"></script>
+    <script src="src/scenes/CoopGameScene.js"></script>
+    
+    <script src="src/main.js"></script>
+</body>
+</html>
