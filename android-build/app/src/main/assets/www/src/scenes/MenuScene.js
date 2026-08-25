@@ -882,8 +882,8 @@ class MenuScene extends Phaser.Scene {
                 battleBtn.on('pointerdown', () => {
                     window.SaveManager.data.selectedHero = currentHeroId;
                     window.SaveManager.save();
-                    this.closeCurrentModal();
-                    this.startBattleTransition('GameScene', { heroId: currentHeroId, hero: currentHeroId, mapId: window.SaveManager.data.selectedMap || 'dark_castle' });
+                    window.Sound.playShoot();
+                    this.openMapSelectModal(currentHeroId);
                 });
 
                 cardGroup.add(battleBtn);
@@ -1671,8 +1671,8 @@ class MenuScene extends Phaser.Scene {
         });
     }
 
-    // --- МОДАЛЬНОЕ ОКНО ВЫБОРА КАРТЫ (АРЕНЫ) ---
-    openMapSelectModal() {
+    // --- МОДАЛЬНОЕ ОКНО ВЫБОРА КАРТЫ (СВАЙПЕР / КАРУСЕЛЬ) ---
+    openMapSelectModal(selectedHeroId) {
         this.closeCurrentModal();
         const { width, height } = this.scale;
         const modalGroup = this.add.group();
@@ -1681,192 +1681,333 @@ class MenuScene extends Phaser.Scene {
         const isPortrait = height > width;
         const isCompact = !isPortrait && height < 520;
 
+        const currentHeroId = selectedHeroId || window.SaveManager.data.selectedHero || 'knight';
+        const heroCfg = CONFIG.HEROES[currentHeroId] || CONFIG.HEROES.knight;
+
         const backdrop = this.add.rectangle(width / 2, height / 2, width, height, 0x030712, 0.94).setInteractive().setDepth(1000);
         backdrop.on('pointerdown', () => this.closeCurrentModal());
         modalGroup.add(backdrop);
 
-        const modalW = isPortrait ? Math.min(width - 16, 400) : (isCompact ? Math.min(width - 16, 820) : Math.min(width - 40, 960));
+        const modalW = isPortrait ? Math.min(width - 16, 400) : (isCompact ? Math.min(width - 16, 820) : Math.min(width - 40, 940));
         const modalH = isPortrait ? Math.min(height - 16, 680) : (isCompact ? Math.min(height - 16, 370) : Math.min(height - 20, 560));
 
         const modalBg = this.add.rectangle(width / 2, height / 2, modalW, modalH, 0x0b1120, 0.96).setInteractive().setDepth(1001);
         modalBg.setStrokeStyle(2, 0x0ea5e9);
         modalGroup.add(modalBg);
 
-        const title = this.add.text(width / 2, height / 2 - modalH / 2 + (isCompact ? 18 : 28), 'ВЫБОР КАРТЫ (АРЕНЫ)', {
-            fontFamily: CONFIG.FONTS.TITLE, fontSize: isCompact ? '14px' : (isPortrait ? '16px' : '22px'), fontStyle: 'bold', color: '#38bdf8', letterSpacing: 1.5
+        const topHeaderY = height / 2 - modalH / 2 + (isCompact ? 18 : 28);
+        const headerLineY = height / 2 - modalH / 2 + (isCompact ? 36 : 52);
+
+        const headerLine = this.add.rectangle(width / 2, headerLineY, modalW - 40, 1, 0x334155).setDepth(1002);
+        modalGroup.add(headerLine);
+
+        // Кнопка назад к выбору героев
+        const backBtn = this.add.text(width / 2 - modalW / 2 + (isCompact ? 16 : 20), topHeaderY, isPortrait ? '‹ ГЕРОИ' : '‹ К ГЕРОЯМ', {
+            fontFamily: CONFIG.FONTS.TITLE, fontSize: isCompact ? '11px' : (isPortrait ? '11px' : '13px'), fontStyle: 'bold', color: '#ffd166'
+        }).setOrigin(0, 0.5).setInteractive({ useHandCursor: true }).setDepth(1003);
+        backBtn.on('pointerdown', () => this.openHeroSelectModal());
+        modalGroup.add(backBtn);
+
+        // Заголовок модального окна
+        const title = this.add.text(width / 2, topHeaderY, isPortrait ? 'ВЫБОР АРЕНЫ' : 'ВЫБОР АРЕНЫ БИТВЫ', {
+            fontFamily: CONFIG.FONTS.TITLE, fontSize: isCompact ? '14px' : (isPortrait ? '15px' : '20px'), fontStyle: 'bold', color: '#38bdf8', letterSpacing: 1.5
         }).setOrigin(0.5).setDepth(1002);
         modalGroup.add(title);
 
-        const headerLine = this.add.rectangle(width / 2, height / 2 - modalH / 2 + (isCompact ? 36 : 52), modalW - 40, 1, 0x334155).setDepth(1002);
-        modalGroup.add(headerLine);
-
-        const xBtn = this.add.image(width / 2 + modalW / 2 - (isCompact ? 20 : 28), height / 2 - modalH / 2 + (isCompact ? 18 : 28), 'btn_close_circle').setDisplaySize(isCompact ? 24 : 32, isCompact ? 24 : 32).setInteractive({ useHandCursor: true }).setDepth(1003);
+        // Кнопка закрытия окна
+        const xBtn = this.add.image(width / 2 + modalW / 2 - (isCompact ? 20 : 26), topHeaderY, 'btn_close_circle').setDisplaySize(isCompact ? 24 : 30, isCompact ? 24 : 30).setInteractive({ useHandCursor: true }).setDepth(1003);
         xBtn.on('pointerdown', () => this.closeCurrentModal());
         modalGroup.add(xBtn);
 
         const mapList = ['dark_castle', 'cursed_forest', 'infernal_abyss', 'frozen_citadel'];
-        const cardGroup = this.add.group();
-        this.mapCardGroup = cardGroup;
+        let currentMapIdx = mapList.indexOf(window.SaveManager.data.selectedMap || 'dark_castle');
+        if (currentMapIdx < 0) currentMapIdx = 0;
 
-        const renderMapCards = () => {
-            cardGroup.clear(true, true);
-            const currentSelectedMap = window.SaveManager.data.selectedMap || 'dark_castle';
+        const swiperGroup = this.add.group();
+        this.mapCardGroup = swiperGroup;
 
-            const cardW = isPortrait ? (modalW - 24) : ((modalW - 40) / 4 - (isCompact ? 6 : 12));
-            const cardH = isPortrait ? Math.min(130, (modalH - 90) / 4 - 8) : (isCompact ? modalH - 55 : 420);
+        // Метод отрисовки текущей карты и слайдера
+        const renderSwiperSlide = () => {
+            swiperGroup.clear(true, true);
+            const mId = mapList[currentMapIdx];
+            const mapCfg = CONFIG.MAPS[mId];
+            if (!mapCfg) return;
 
-            mapList.forEach((mId, idx) => {
-                const mapCfg = CONFIG.MAPS[mId];
-                if (!mapCfg) return;
+            const isUnlocked = window.SaveManager.isMapUnlocked(mId);
+            const recordSec = window.SaveManager.getMapRecord(mId);
+            const mins = Math.floor(recordSec / 60);
+            const secs = recordSec % 60;
+            const recordStr = recordSec >= 600 ? 'ПОБЕДА (10:00)' : `РЕКОРД: ${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
 
-                const isUnlocked = window.SaveManager.isMapUnlocked(mId);
-                const isSelected = currentSelectedMap === mId;
-                const recordSec = window.SaveManager.getMapRecord(mId);
-                const mins = Math.floor(recordSec / 60);
-                const secs = recordSec % 60;
-                const recordStr = recordSec >= 600 ? 'ПОБЕДА (10:00)' : `РЕКОРД: ${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+            // Цветовая тема арены
+            const themeColors = {
+                dark_castle: { hex: '#38bdf8', color: 0x38bdf8, border: 0x0284c7, bg: 0x0a1628 },
+                cursed_forest: { hex: '#34d399', color: 0x34d399, border: 0x059669, bg: 0x062319 },
+                infernal_abyss: { hex: '#f87171', color: 0xf87171, border: 0xdc2626, bg: 0x260a0a },
+                frozen_citadel: { hex: '#38bdf8', color: 0x38bdf8, border: 0x0284c7, bg: 0x0a1d33 }
+            };
+            const theme = themeColors[mId] || themeColors.dark_castle;
 
-                let cx, cy;
-                if (isPortrait) {
-                    const stepY = (modalH - 80) / 4;
-                    cx = width / 2;
-                    cy = height / 2 - modalH / 2 + 55 + (stepY * idx) + (cardH / 2);
-                } else {
-                    const totalCardsW = (cardW + (isCompact ? 8 : 16)) * 4 - (isCompact ? 8 : 16);
-                    const startX = width / 2 - totalCardsW / 2 + cardW / 2;
-                    cx = startX + (idx * (cardW + (isCompact ? 8 : 16)));
-                    cy = height / 2 + (isCompact ? 16 : 25);
-                }
+            // Контейнер карточки арены
+            const cardW = isPortrait ? (modalW - 24) : (isCompact ? (modalW - 130) : (modalW - 160));
+            const cardH = isPortrait ? (modalH - 180) : (isCompact ? (modalH - 95) : 375);
+            const cardCenterY = isPortrait ? (height / 2 - 20) : (height / 2 - 12);
 
-                // Фоновая панель карточки
-                const cardBg = this.add.rectangle(cx, cy, cardW, cardH, isSelected ? 0x0c2547 : (isUnlocked ? 0x0f172a : 0x080c16), 0.95)
-                    .setInteractive({ useHandCursor: isUnlocked }).setDepth(1002);
-                cardBg.setStrokeStyle(isSelected ? 2.5 : 1, isSelected ? 0x38bdf8 : (isUnlocked ? 0x334155 : 0x1e293b));
-                cardGroup.add(cardBg);
+            // Основной фрейм слайда
+            const slideBg = this.add.rectangle(width / 2, cardCenterY, cardW, cardH, theme.bg, 0.96).setDepth(1002);
+            slideBg.setStrokeStyle(2, isUnlocked ? theme.border : 0x334155);
+            swiperGroup.add(slideBg);
 
-                if (isUnlocked) {
-                    cardBg.on('pointerdown', () => {
-                        window.SaveManager.data.selectedMap = mId;
-                        window.SaveManager.save();
-                        window.Sound.playShoot();
-                        renderMapCards();
-                    });
-                }
-
-                if (!isPortrait) {
-                    // Горизонтальный вид карточки
-                    const previewH = isCompact ? 68 : 105;
-                    const previewW = cardW - 20;
-                    const preview = this.add.image(cx, cy - cardH / 2 + (isCompact ? 42 : 65), mapCfg.icon).setDisplaySize(previewW, previewH).setDepth(1003);
-                    cardGroup.add(preview);
-                    if (!isUnlocked) preview.setTint(0x334155);
-
-                    // Название карты
-                    const mTitle = this.add.text(cx, cy - cardH / 2 + (isCompact ? 88 : 130), mapCfg.name[lang], {
-                        fontFamily: CONFIG.FONTS.TITLE, fontSize: isCompact ? '12px' : '15px', fontStyle: 'bold', color: isSelected ? '#38bdf8' : (isUnlocked ? '#ffffff' : '#64748b')
-                    }).setOrigin(0.5).setDepth(1003);
-                    cardGroup.add(mTitle);
-
-                    // Описание
-                    const descY = cy - cardH / 2 + (isCompact ? 116 : 170);
-                    const mDesc = this.add.text(cx, descY, mapCfg.desc[lang], {
-                        fontFamily: CONFIG.FONTS.BODY, fontSize: isCompact ? '9px' : '11px', color: '#94a3b8', align: 'center', lineSpacing: 2, wordWrap: { width: cardW - 14 }
-                    }).setOrigin(0.5).setDepth(1003);
-                    cardGroup.add(mDesc);
-
-                    // Рекорд
-                    const recY = cy + cardH / 2 - (isCompact ? 40 : 55);
-                    const recText = this.add.text(cx, recY, recordStr, {
-                        fontFamily: CONFIG.FONTS.MONO, fontSize: isCompact ? '10px' : '12px', fontStyle: 'bold', color: recordSec > 0 ? '#ffd166' : '#64748b'
-                    }).setOrigin(0.5).setDepth(1003);
-                    cardGroup.add(recText);
-
-                    // Кнопка действия
-                    const btnY = cy + cardH / 2 - (isCompact ? 18 : 25);
-                    const btnW = cardW - (isCompact ? 16 : 24);
-                    const btnH = isCompact ? 24 : 34;
-
-                    if (isUnlocked) {
-                        const selBtn = this.add.rectangle(cx, btnY, btnW, btnH, isSelected ? 0x0284c7 : 0x1e293b).setInteractive({ useHandCursor: true }).setDepth(1003);
-                        selBtn.setStrokeStyle(1.5, isSelected ? 0x38bdf8 : 0x475569);
-                        cardGroup.add(selBtn);
-
-                        const selText = this.add.text(cx, btnY, isSelected ? 'ВЫБРАНО' : 'ВЫБРАТЬ', {
-                            fontFamily: CONFIG.FONTS.TITLE, fontSize: isCompact ? '10px' : '13px', fontStyle: 'bold', color: '#ffffff'
-                        }).setOrigin(0.5).setDepth(1004);
-                        cardGroup.add(selText);
-
-                        selBtn.on('pointerdown', () => {
-                            window.SaveManager.data.selectedMap = mId;
-                            window.SaveManager.save();
-                            window.Sound.playShoot();
-                            renderMapCards();
-                        });
-                    } else {
-                        const lockBox = this.add.rectangle(cx, btnY, btnW, btnH, 0x111827).setDepth(1003);
-                        lockBox.setStrokeStyle(1, 0x374151);
-                        cardGroup.add(lockBox);
-
-                        const lockText = this.add.text(cx, btnY, isCompact ? '[ ВЫЖИВИТЕ 5 МИН ]' : '[ ЗАКРЫТО ]\nВЫЖИВИТЕ 5 МИН', {
-                            fontFamily: CONFIG.FONTS.UI, fontSize: isCompact ? '9px' : '11px', fontStyle: 'bold', color: '#ef4444', align: 'center', lineSpacing: 1
-                        }).setOrigin(0.5).setDepth(1004);
-                        cardGroup.add(lockText);
-                    }
-                } else {
-                    // Вертикальный компактный вид в Portrait
-                    const preview = this.add.image(cx - cardW / 2 + 50, cy, mapCfg.icon).setDisplaySize(72, 48).setDepth(1003);
-                    cardGroup.add(preview);
-                    if (!isUnlocked) preview.setTint(0x334155);
-
-                    const titleX = cx - cardW / 2 + 96;
-                    const mTitle = this.add.text(titleX, cy - 30, mapCfg.name[lang], {
-                        fontFamily: CONFIG.FONTS.TITLE, fontSize: '13px', fontStyle: 'bold', color: isSelected ? '#38bdf8' : (isUnlocked ? '#ffffff' : '#64748b')
-                    }).setDepth(1003);
-                    cardGroup.add(mTitle);
-
-                    const mDesc = this.add.text(titleX, cy - 10, mapCfg.desc[lang], {
-                        fontFamily: CONFIG.FONTS.BODY, fontSize: '9px', color: '#94a3b8', lineSpacing: 1, wordWrap: { width: cardW - 180 }
-                    }).setDepth(1003);
-                    cardGroup.add(mDesc);
-
-                    const recText = this.add.text(titleX, cy + 24, recordStr, {
-                        fontFamily: CONFIG.FONTS.MONO, fontSize: '10px', fontStyle: 'bold', color: recordSec > 0 ? '#ffd166' : '#64748b'
-                    }).setDepth(1003);
-                    cardGroup.add(recText);
-
-                    // Кнопка / статус справа
-                    const btnX = cx + cardW / 2 - 42;
-                    if (isUnlocked) {
-                        const selBtn = this.add.rectangle(btnX, cy, 68, 28, isSelected ? 0x0284c7 : 0x1e293b).setInteractive({ useHandCursor: true }).setDepth(1003);
-                        selBtn.setStrokeStyle(1, isSelected ? 0x38bdf8 : 0x475569);
-                        cardGroup.add(selBtn);
-
-                        const selText = this.add.text(btnX, cy, isSelected ? 'ВЫБРАНО' : 'ВЫБРАТЬ', {
-                            fontFamily: CONFIG.FONTS.TITLE, fontSize: '9px', fontStyle: 'bold', color: '#ffffff'
-                        }).setOrigin(0.5).setDepth(1004);
-                        cardGroup.add(selText);
-
-                        selBtn.on('pointerdown', () => {
-                            window.SaveManager.data.selectedMap = mId;
-                            window.SaveManager.save();
-                            window.Sound.playShoot();
-                            renderMapCards();
-                        });
-                    } else {
-                        const lockBox = this.add.rectangle(btnX, cy, 68, 28, 0x111827).setDepth(1003);
-                        lockBox.setStrokeStyle(1, 0xef4444);
-                        cardGroup.add(lockBox);
-
-                        const lockText = this.add.text(btnX, cy, 'ЗАКРЫТО', {
-                            fontFamily: CONFIG.FONTS.UI, fontSize: '9px', fontStyle: 'bold', color: '#ef4444'
-                        }).setOrigin(0.5).setDepth(1004);
-                        cardGroup.add(lockText);
-                    }
+            // --- ОБРАБОТКА СВАЙПА / TOUCH DRAG ---
+            let dragStartX = 0;
+            slideBg.setInteractive({ draggable: true, useHandCursor: true });
+            slideBg.on('pointerdown', (pointer) => {
+                dragStartX = pointer.x;
+            });
+            slideBg.on('pointerup', (pointer) => {
+                const dx = pointer.x - dragStartX;
+                if (dx < -35) {
+                    currentMapIdx = (currentMapIdx + 1) % mapList.length;
+                    window.Sound.playShoot();
+                    renderSwiperSlide();
+                } else if (dx > 35) {
+                    currentMapIdx = (currentMapIdx - 1 + mapList.length) % mapList.length;
+                    window.Sound.playShoot();
+                    renderSwiperSlide();
                 }
             });
+
+            let previewMidY = cardCenterY;
+
+            // Наполнение слайда
+            if (isPortrait) {
+                // === ВЕРТИКАЛЬНАЯ ВЕРСТКА СЛАЙДА (ПОРТРЕТ) ===
+                let curY = cardCenterY - cardH / 2 + 18;
+
+                // 1. Бейдж с выбранным героем
+                const heroBadgeBg = this.add.rectangle(width / 2, curY, cardW - 32, 26, 0x1e293b, 0.9).setDepth(1003);
+                heroBadgeBg.setStrokeStyle(1, 0xd97706);
+                swiperGroup.add(heroBadgeBg);
+
+                const heroBadgeTxt = this.add.text(width / 2, curY, `⚔️ ГЕРОЙ: ${heroCfg.name[lang].toUpperCase()}`, {
+                    fontFamily: CONFIG.FONTS.UI, fontSize: '11px', fontStyle: 'bold', color: '#ffd166'
+                }).setOrigin(0.5).setDepth(1004);
+                swiperGroup.add(heroBadgeTxt);
+
+                curY += 28;
+
+                // 2. Превью карты (Арт)
+                const prevW = cardW - 32;
+                const prevH = Math.min(130, cardH * 0.32);
+                previewMidY = curY + prevH / 2;
+                const prevImg = this.add.image(width / 2, previewMidY, mapCfg.icon).setDisplaySize(prevW, prevH).setDepth(1003);
+                if (!isUnlocked) prevImg.setTint(0x334155);
+                swiperGroup.add(prevImg);
+
+                const prevBorder = this.add.rectangle(width / 2, previewMidY, prevW, prevH).setDepth(1004);
+                prevBorder.setStrokeStyle(1.5, theme.border);
+                swiperGroup.add(prevBorder);
+
+                curY += prevH + 16;
+
+                // 3. Название арены
+                const mapTitle = this.add.text(width / 2, curY, mapCfg.name[lang].toUpperCase(), {
+                    fontFamily: CONFIG.FONTS.TITLE, fontSize: '18px', fontStyle: 'bold', color: theme.hex, letterSpacing: 1
+                }).setOrigin(0.5).setDepth(1003);
+                swiperGroup.add(mapTitle);
+
+                curY += 24;
+
+                // 4. Плашки: Сложность и Бонус
+                const badgeW = (cardW - 38) / 2;
+                const diffBg = this.add.rectangle(width / 2 - badgeW / 2 - 4, curY, badgeW, 24, 0x1e293b, 0.9).setDepth(1003);
+                diffBg.setStrokeStyle(1, 0x334155);
+                swiperGroup.add(diffBg);
+
+                const stars = ['⭐', '⭐⭐', '⭐⭐⭐', '⭐⭐⭐⭐'][currentMapIdx] || '⭐';
+                const diffTxt = this.add.text(width / 2 - badgeW / 2 - 4, curY, `СЛОЖНОСТЬ: ${stars}`, {
+                    fontFamily: CONFIG.FONTS.UI, fontSize: '9px', fontStyle: 'bold', color: '#facc15'
+                }).setOrigin(0.5).setDepth(1004);
+                swiperGroup.add(diffTxt);
+
+                const bonusBg = this.add.rectangle(width / 2 + badgeW / 2 + 4, curY, badgeW, 24, 0x1e293b, 0.9).setDepth(1003);
+                bonusBg.setStrokeStyle(1, 0x334155);
+                swiperGroup.add(bonusBg);
+
+                const bonusLabels = ['+0% БОНУС', '+15% ЗОЛОТО', '+20% ЗОЛОТО', '+25% ОПЫТ'];
+                const bonusTxt = this.add.text(width / 2 + badgeW / 2 + 4, curY, `БОНУС: ${bonusLabels[currentMapIdx]}`, {
+                    fontFamily: CONFIG.FONTS.UI, fontSize: '9px', fontStyle: 'bold', color: '#38bdf8'
+                }).setOrigin(0.5).setDepth(1004);
+                swiperGroup.add(bonusTxt);
+
+                curY += 28;
+
+                // 5. Описание арены
+                const mapDesc = this.add.text(width / 2, curY, mapCfg.desc[lang], {
+                    fontFamily: CONFIG.FONTS.BODY, fontSize: '10.5px', color: '#cbd5e1', align: 'center', lineSpacing: 2, wordWrap: { width: cardW - 32 }
+                }).setOrigin(0.5, 0).setDepth(1003);
+                swiperGroup.add(mapDesc);
+
+                // 6. Рекорд выживания
+                const recY = cardCenterY + cardH / 2 - 20;
+                const recTxt = this.add.text(width / 2, recY, `🏆 ${recordStr}`, {
+                    fontFamily: CONFIG.FONTS.MONO, fontSize: '11px', fontStyle: 'bold', color: recordSec > 0 ? '#ffd166' : '#64748b'
+                }).setOrigin(0.5).setDepth(1003);
+                swiperGroup.add(recTxt);
+            } else {
+                // === ГОРИЗОНТАЛЬНАЯ ВЕРСТКА СЛАЙДА (ЛАНДШАФТ) ===
+                const leftX = width / 2 - cardW / 2 + (isCompact ? 110 : 160);
+                const rightX = width / 2 + (isCompact ? 70 : 110);
+                const prevW = isCompact ? 190 : 280;
+                const prevH = isCompact ? 130 : 180;
+
+                // 1. Превью карты слева
+                const prevImg = this.add.image(leftX, cardCenterY - (isCompact ? 10 : 15), mapCfg.icon).setDisplaySize(prevW, prevH).setDepth(1003);
+                if (!isUnlocked) prevImg.setTint(0x334155);
+                swiperGroup.add(prevImg);
+
+                const prevBorder = this.add.rectangle(leftX, cardCenterY - (isCompact ? 10 : 15), prevW, prevH).setDepth(1004);
+                prevBorder.setStrokeStyle(2, theme.border);
+                swiperGroup.add(prevBorder);
+
+                // Рекорд под превью слева
+                const recTxt = this.add.text(leftX, cardCenterY + prevH / 2 + (isCompact ? 6 : 10), `🏆 ${recordStr}`, {
+                    fontFamily: CONFIG.FONTS.MONO, fontSize: isCompact ? '10px' : '12px', fontStyle: 'bold', color: recordSec > 0 ? '#ffd166' : '#64748b'
+                }).setOrigin(0.5).setDepth(1003);
+                swiperGroup.add(recTxt);
+
+                // 2. Детали и описание справа
+                let curRightY = cardCenterY - cardH / 2 + (isCompact ? 20 : 34);
+
+                const heroBadge = this.add.text(rightX, curRightY, `⚔️ ГЕРОЙ: ${heroCfg.name[lang].toUpperCase()}`, {
+                    fontFamily: CONFIG.FONTS.UI, fontSize: isCompact ? '10px' : '12px', fontStyle: 'bold', color: '#ffd166'
+                }).setOrigin(0.5).setDepth(1003);
+                swiperGroup.add(heroBadge);
+
+                curRightY += isCompact ? 24 : 32;
+
+                const mapTitle = this.add.text(rightX, curRightY, mapCfg.name[lang].toUpperCase(), {
+                    fontFamily: CONFIG.FONTS.TITLE, fontSize: isCompact ? '16px' : '22px', fontStyle: 'bold', color: theme.hex, letterSpacing: 1.5
+                }).setOrigin(0.5).setDepth(1003);
+                swiperGroup.add(mapTitle);
+
+                curRightY += isCompact ? 26 : 34;
+
+                // Плашки: Сложность и Бонус
+                const stars = ['⭐', '⭐⭐', '⭐⭐⭐', '⭐⭐⭐⭐'][currentMapIdx] || '⭐';
+                const bonusLabels = ['+0% БОНУС', '+15% ЗОЛОТО', '+20% ЗОЛОТО', '+25% ОПЫТ'];
+
+                const statsPill = this.add.text(rightX, curRightY, `СЛОЖНОСТЬ: ${stars}   •   ${bonusLabels[currentMapIdx]}`, {
+                    fontFamily: CONFIG.FONTS.UI, fontSize: isCompact ? '10px' : '12px', fontStyle: 'bold', color: '#38bdf8'
+                }).setOrigin(0.5).setDepth(1003);
+                swiperGroup.add(statsPill);
+
+                curRightY += isCompact ? 26 : 34;
+
+                const rightWrapW = isCompact ? (cardW / 2 - 20) : (cardW / 2 - 30);
+                const mapDesc = this.add.text(rightX, curRightY, mapCfg.desc[lang], {
+                    fontFamily: CONFIG.FONTS.BODY, fontSize: isCompact ? '10px' : '12px', color: '#cbd5e1', align: 'center', lineSpacing: 3, wordWrap: { width: rightWrapW }
+                }).setOrigin(0.5, 0).setDepth(1003);
+                swiperGroup.add(mapDesc);
+            }
+
+            // --- БОКОВЫЕ СТРЕЛКИ НАВИГАЦИИ (‹ и ›) ---
+            const arrowRadius = isPortrait ? 18 : (isCompact ? 16 : 22);
+            const arrowCenterY = isPortrait ? previewMidY : cardCenterY;
+            const leftArrowX = isPortrait ? (width / 2 - cardW / 2 + 18) : (width / 2 - cardW / 2 - (isCompact ? 24 : 36));
+            const rightArrowX = isPortrait ? (width / 2 + cardW / 2 - 18) : (width / 2 + cardW / 2 + (isCompact ? 24 : 36));
+
+            // Левая стрелка
+            const leftBtn = this.add.circle(leftArrowX, arrowCenterY, arrowRadius, 0x0f172a, 0.92).setInteractive({ useHandCursor: true }).setDepth(1005);
+            leftBtn.setStrokeStyle(1.5, 0x38bdf8);
+            const leftTxt = this.add.text(leftArrowX, arrowCenterY, '‹', {
+                fontFamily: CONFIG.FONTS.TITLE, fontSize: isCompact ? '20px' : '24px', fontStyle: 'bold', color: '#ffffff'
+            }).setOrigin(0.5).setDepth(1006);
+
+            leftBtn.on('pointerover', () => leftBtn.setFillStyle(0x0284c7));
+            leftBtn.on('pointerout', () => leftBtn.setFillStyle(0x0f172a));
+            leftBtn.on('pointerdown', () => {
+                currentMapIdx = (currentMapIdx - 1 + mapList.length) % mapList.length;
+                window.Sound.playShoot();
+                renderSwiperSlide();
+            });
+            swiperGroup.add(leftBtn);
+            swiperGroup.add(leftTxt);
+
+            // Правая стрелка
+            const rightBtn = this.add.circle(rightArrowX, arrowCenterY, arrowRadius, 0x0f172a, 0.92).setInteractive({ useHandCursor: true }).setDepth(1005);
+            rightBtn.setStrokeStyle(1.5, 0x38bdf8);
+            const rightTxt = this.add.text(rightArrowX, arrowCenterY, '›', {
+                fontFamily: CONFIG.FONTS.TITLE, fontSize: isCompact ? '20px' : '24px', fontStyle: 'bold', color: '#ffffff'
+            }).setOrigin(0.5).setDepth(1006);
+
+            rightBtn.on('pointerover', () => rightBtn.setFillStyle(0x0284c7));
+            rightBtn.on('pointerout', () => rightBtn.setFillStyle(0x0f172a));
+            rightBtn.on('pointerdown', () => {
+                currentMapIdx = (currentMapIdx + 1) % mapList.length;
+                window.Sound.playShoot();
+                renderSwiperSlide();
+            });
+            swiperGroup.add(rightBtn);
+            swiperGroup.add(rightTxt);
+
+            // --- ТОЧКИ ПАГИНАЦИИ (PAGINATION DOTS) ---
+            const dotsY = cardCenterY + cardH / 2 + (isCompact ? 14 : 20);
+            const dotSpacing = 16;
+            const totalDotsW = (mapList.length - 1) * dotSpacing;
+            const startDotX = width / 2 - totalDotsW / 2;
+
+            mapList.forEach((_, dIdx) => {
+                const dx = startDotX + (dIdx * dotSpacing);
+                const isDotActive = dIdx === currentMapIdx;
+                const dotW = isDotActive ? 22 : 8;
+                const dotH = 6;
+                const dot = this.add.rectangle(dx, dotsY, dotW, dotH, isDotActive ? 0x38bdf8 : 0x334155).setInteractive({ useHandCursor: true }).setDepth(1004);
+                dot.on('pointerdown', () => {
+                    if (currentMapIdx !== dIdx) {
+                        currentMapIdx = dIdx;
+                        window.Sound.playShoot();
+                        renderSwiperSlide();
+                    }
+                });
+                swiperGroup.add(dot);
+            });
+
+            // --- ГЛАВНАЯ КНОПКА СТАРТА / СТАТУС БЛОКИРОВКИ ---
+            const bottomActionY = height / 2 + modalH / 2 - (isCompact ? 22 : 32);
+            const actionBtnW = isPortrait ? Math.min(cardW, 300) : (isCompact ? 240 : 320);
+            const actionBtnH = isCompact ? 34 : 46;
+
+            if (isUnlocked) {
+                const battleBtn = this.add.image(width / 2, bottomActionY, 'btn_battle_gold_epic').setDisplaySize(actionBtnW, actionBtnH).setInteractive({ useHandCursor: true }).setDepth(1005);
+                const battleTxt = this.add.text(width / 2, bottomActionY, 'СТАРТ БИТВЫ!', {
+                    fontFamily: CONFIG.FONTS.TITLE, fontSize: isCompact ? '15px' : '19px', fontStyle: 'bold', color: '#ffffff', stroke: '#000000', strokeThickness: 3, letterSpacing: 2
+                }).setOrigin(0.5).setDepth(1006);
+
+                battleBtn.on('pointerdown', () => {
+                    window.SaveManager.data.selectedMap = mId;
+                    window.SaveManager.data.selectedHero = currentHeroId;
+                    window.SaveManager.save();
+                    this.closeCurrentModal();
+                    this.startBattleTransition('GameScene', { heroId: currentHeroId, hero: currentHeroId, mapId: mId });
+                });
+
+                swiperGroup.add(battleBtn);
+                swiperGroup.add(battleTxt);
+            } else {
+                const lockBtn = this.add.rectangle(width / 2, bottomActionY, actionBtnW, actionBtnH, 0x111827, 0.95).setDepth(1005);
+                lockBtn.setStrokeStyle(1.5, 0xef4444);
+                swiperGroup.add(lockBtn);
+
+                const reqName = CONFIG.MAPS[mapCfg.requiredMap] ? CONFIG.MAPS[mapCfg.requiredMap].name[lang] : 'предыдущей арене';
+                const lockTxt = this.add.text(width / 2, bottomActionY, `🔒 ВЫЖИВИТЕ 5 МИН В "${reqName.toUpperCase()}"`, {
+                    fontFamily: CONFIG.FONTS.UI, fontSize: isCompact ? '9px' : '11px', fontStyle: 'bold', color: '#ef4444'
+                }).setOrigin(0.5).setDepth(1006);
+                swiperGroup.add(lockTxt);
+            }
         };
 
-        renderMapCards();
+        renderSwiperSlide();
     }
 }
 
