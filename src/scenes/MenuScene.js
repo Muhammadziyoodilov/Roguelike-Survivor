@@ -90,10 +90,10 @@ class MenuScene extends Phaser.Scene {
 
     createTopBarHeader(width, height, isPortrait, lang) {
         const headerY = isPortrait ? 28 : 34;
-        const iconSize = isPortrait ? 32 : 36;
+        const iconSize = isPortrait ? 30 : 34;
         const leftStartX = isPortrait ? 25 : 45;
 
-        // ЛЕВАЯ ЧАСТЬ: Настройки, Трофеи, Статистика
+        // 1. ЛЕВАЯ ЧАСТЬ: Настройки, Трофеи, Статистика (Светло-серые иконки с мягким ховером)
         const topActions = [
             { icon: 'ui_settings', action: () => this.openSettingsModal() },
             { icon: 'ui_trophy', action: () => this.openAchievementsModal() },
@@ -101,114 +101,126 @@ class MenuScene extends Phaser.Scene {
         ];
 
         topActions.forEach((item, idx) => {
-            const x = leftStartX + (idx * (iconSize + 8));
-            const btn = this.add.rectangle(x, headerY, iconSize, iconSize, 0x0f172a, 0.9).setInteractive({ useHandCursor: true }).setDepth(10);
-            btn.setStrokeStyle(1.5, 0x334155);
-            btn.on('pointerover', () => btn.setStrokeStyle(1.5, 0x818cf8));
-            btn.on('pointerout', () => btn.setStrokeStyle(1.5, 0x334155));
+            const x = leftStartX + (idx * (iconSize + 14));
+            const btn = this.add.rectangle(x, headerY, iconSize, iconSize, 0x0b1120, 0.75).setInteractive({ useHandCursor: true }).setDepth(10);
+            btn.setStrokeStyle(1.2, 0x252b47);
+            btn.on('pointerover', () => { btn.setStrokeStyle(1.5, 0x818cf8); btn.setFillStyle(0x1e1b4b, 0.95); });
+            btn.on('pointerout', () => { btn.setStrokeStyle(1.2, 0x252b47); btn.setFillStyle(0x0b1120, 0.75); });
             btn.on('pointerdown', item.action);
 
-            this.add.image(x, headerY, item.icon).setScale(0.8).setDepth(11);
+            this.add.image(x, headerY, item.icon).setDisplaySize(20, 20).setDepth(11);
         });
 
-        // ПРАВАЯ ЧАСТЬ: Золото, Кристаллы и Профиль PLAYER_01
-        const rightStartX = width - (isPortrait ? 20 : 30);
+        // 2. ПРАВАЯ ЧАСТЬ: Золото, Кристаллы и Профиль PLAYER_01
+        const rightStartX = width - (isPortrait ? 20 : 35);
         const isCompact = !isPortrait && height < 520;
 
         if (!isPortrait && !isCompact) {
-            // ДЕСКТОП: 1. Профиль игрока PLAYER_01
-            const profW = 210;
+            // ДЕСКТОП: Профиль игрока PLAYER_01
+            const profW = 195;
             const profX = rightStartX - profW / 2;
-            const profBg = this.add.rectangle(profX, headerY, profW, 46, 0x0f172a, 0.95).setDepth(10);
-            profBg.setStrokeStyle(1.5, 0x6366f1);
+            const profBg = this.add.rectangle(profX, headerY, profW, 46, 0x0b1120, 0.95).setDepth(10);
+            profBg.setStrokeStyle(1.5, 0x252b47);
 
-            // Аватар в фиолетовом шестиугольнике
-            this.add.image(profX - profW / 2 + 24, headerY, 'ui_avatar_hex').setDisplaySize(38, 38).setDepth(12);
+            // Аватар скрытного рыцаря в светящемся круге
+            const avatarImg = this.textures.exists('ui_avatar_masked') ? 'ui_avatar_masked' : 'ui_avatar';
+            this.add.image(profX - profW / 2 + 24, headerY, avatarImg).setDisplaySize(42, 42).setDepth(12);
 
-            // Бейдж уровня 25 под аватаром
-            const lvlBadge = this.add.rectangle(profX - profW / 2 + 24, headerY + 16, 20, 12, 0x581c87).setDepth(13);
-            lvlBadge.setStrokeStyle(1, 0xc084fc);
+            // Бейдж уровня 25 под аватаром (Темный шестиугольник с фиолетовой каймой)
+            const lvlBadge = this.add.rectangle(profX - profW / 2 + 24, headerY + 16, 20, 13, 0x3b0764).setDepth(13);
+            lvlBadge.setStrokeStyle(1.2, 0xa855f7);
             this.add.text(profX - profW / 2 + 24, headerY + 16, '25', {
-                fontFamily: 'sans-serif', fontSize: '8px', fontStyle: 'bold', color: '#ffffff'
+                fontFamily: CONFIG.FONTS.MONO, fontSize: '8.5px', fontStyle: 'bold', color: '#ffffff'
             }).setOrigin(0.5).setDepth(14);
 
-            this.add.text(profX - 22, headerY - 11, 'PLAYER_01', {
-                fontFamily: "'Rajdhani', sans-serif", fontSize: '15px', fontStyle: 'bold', color: '#ffffff'
+            this.add.text(profX - 18, headerY - 11, 'PLAYER_01', {
+                fontFamily: CONFIG.FONTS.UI, fontSize: '13px', fontStyle: 'bold', color: '#ffffff', letterSpacing: 1
             }).setDepth(11);
 
             // Шкала опыта
-            const xpBarW = 120;
-            const xpBarX = profX - 22 + xpBarW / 2;
-            const xpBarY = headerY + 10;
-            this.add.rectangle(xpBarX, xpBarY, xpBarW, 14, 0x3b0764).setDepth(11);
-            this.add.rectangle(profX - 22, xpBarY, xpBarW * 0.65, 14, 0xa855f7).setOrigin(0, 0.5).setDepth(12);
+            const xpBarW = 110;
+            const xpBarX = profX - 18 + xpBarW / 2;
+            const xpBarY = headerY + 9;
+            this.add.rectangle(xpBarX, xpBarY, xpBarW, 13, 0x1e1b4b).setDepth(11);
+            this.add.rectangle(profX - 18, xpBarY, xpBarW * 0.57, 13, 0x9333ea).setOrigin(0, 0.5).setDepth(12);
             this.add.text(xpBarX, xpBarY, '4 250 / 7 500 XP', {
-                fontFamily: "'Rajdhani', sans-serif", fontSize: '10px', fontStyle: 'bold', color: '#ffffff'
+                fontFamily: CONFIG.FONTS.MONO, fontSize: '8.5px', fontStyle: 'bold', color: '#ffffff'
             }).setOrigin(0.5).setDepth(13);
 
-            // 2. Кристаллы Душ (Gems)
-            const gemsX = profX - profW / 2 - 80;
-            const gemsBg = this.add.rectangle(gemsX, headerY, 115, 36, 0x0f172a, 0.95).setDepth(10);
-            gemsBg.setStrokeStyle(1.5, 0xa855f7);
-            this.add.image(gemsX - 42, headerY, 'ui_gem').setScale(0.85).setDepth(11);
-            this.add.text(gemsX - 20, headerY, '2 860', {
-                fontFamily: "'Rajdhani', sans-serif", fontSize: '17px', fontStyle: 'bold', color: '#e9d5ff'
+            // Кристаллы Душ (Gems Capsule)
+            const gemsX = profX - profW / 2 - 85;
+            const gemsBg = this.add.rectangle(gemsX, headerY, 130, 38, 0x0b1120, 0.95).setInteractive({ useHandCursor: true }).setDepth(10);
+            gemsBg.setStrokeStyle(1.5, 0x252b47);
+            gemsBg.on('pointerdown', () => this.openShopModal());
+            this.add.image(gemsX - 44, headerY, 'ui_gem').setDisplaySize(20, 20).setDepth(11);
+            this.add.text(gemsX - 22, headerY, `${window.SaveManager.data.gems || 2860}`, {
+                fontFamily: CONFIG.FONTS.UI, fontSize: '14px', fontStyle: 'bold', color: '#f5d0fe'
             }).setOrigin(0, 0.5).setDepth(11);
-            this.add.text(gemsX + 44, headerY, '+', {
-                fontFamily: 'sans-serif', fontSize: '15px', fontStyle: 'bold', color: '#c084fc'
-            }).setOrigin(0.5).setDepth(11);
 
-            // 3. Золотые монеты
-            const goldX = gemsX - 135;
-            const goldBg = this.add.rectangle(goldX, headerY, 125, 36, 0x0f172a, 0.95).setDepth(10);
-            goldBg.setStrokeStyle(1.5, 0xf59e0b);
-            this.add.image(goldX - 45, headerY, 'ui_coin').setScale(0.9).setDepth(11);
-            this.goldText = this.add.text(goldX - 22, headerY, `${window.SaveManager.data.gold}`, {
-                fontFamily: "'Rajdhani', sans-serif", fontSize: '17px', fontStyle: 'bold', color: '#ffd166'
+            const gemPlusBtn = this.add.rectangle(gemsX + 46, headerY, 22, 22, 0x1e1b4b, 0.95).setDepth(11);
+            gemPlusBtn.setStrokeStyle(1, 0x6b21a8);
+            this.add.text(gemsX + 46, headerY, '+', {
+                fontFamily: CONFIG.FONTS.UI, fontSize: '13px', fontStyle: 'bold', color: '#c084fc'
+            }).setOrigin(0.5).setDepth(12);
+
+            // Золотые монеты (Gold Capsule)
+            const goldX = gemsX - 145;
+            const goldBg = this.add.rectangle(goldX, headerY, 135, 38, 0x0b1120, 0.95).setInteractive({ useHandCursor: true }).setDepth(10);
+            goldBg.setStrokeStyle(1.5, 0x252b47);
+            goldBg.on('pointerdown', () => this.openShopModal());
+            this.add.image(goldX - 46, headerY, 'ui_coin').setDisplaySize(22, 22).setDepth(11);
+            this.goldText = this.add.text(goldX - 22, headerY, `${window.SaveManager.data.gold || '12 540'}`, {
+                fontFamily: CONFIG.FONTS.UI, fontSize: '14px', fontStyle: 'bold', color: '#ffd166'
             }).setOrigin(0, 0.5).setDepth(11);
-            this.add.text(goldX + 46, headerY, '+', {
-                fontFamily: 'sans-serif', fontSize: '15px', fontStyle: 'bold', color: '#fbbf24'
-            }).setOrigin(0.5).setDepth(11);
+
+            const goldPlusBtn = this.add.rectangle(goldX + 48, headerY, 22, 22, 0x1e1b4b, 0.95).setDepth(11);
+            goldPlusBtn.setStrokeStyle(1, 0x854d0e);
+            this.add.text(goldX + 48, headerY, '+', {
+                fontFamily: CONFIG.FONTS.UI, fontSize: '13px', fontStyle: 'bold', color: '#fbbf24'
+            }).setOrigin(0.5).setDepth(12);
         } else if (isCompact) {
-            // КОМПАКТНЫЙ ЛАНДШАФТ (Смартфоны) - Золото и Кристаллы по центру экрана (x = width / 2)
+            // КОМПАКТНЫЙ ЛАНДШАФТ
             const midX = width / 2;
-            const goldX = midX - 62;
-            const goldBg = this.add.rectangle(goldX, headerY, 110, 30, 0x0f172a, 0.95).setDepth(10);
-            goldBg.setStrokeStyle(1.5, 0xf59e0b);
-            this.add.image(goldX - 38, headerY, 'ui_coin').setScale(0.75).setDepth(11);
-            this.goldText = this.add.text(goldX - 18, headerY, `${window.SaveManager.data.gold}`, {
-                fontFamily: "'Rajdhani', sans-serif", fontSize: '14px', fontStyle: 'bold', color: '#ffd166'
+            const goldX = midX - 65;
+            const goldBg = this.add.rectangle(goldX, headerY, 115, 30, 0x0b1120, 0.95).setInteractive({ useHandCursor: true }).setDepth(10);
+            goldBg.setStrokeStyle(1.2, 0x252b47);
+            goldBg.on('pointerdown', () => this.openShopModal());
+            this.add.image(goldX - 40, headerY, 'ui_coin').setDisplaySize(18, 18).setDepth(11);
+            this.goldText = this.add.text(goldX - 18, headerY, `${window.SaveManager.data.gold || '12 540'}`, {
+                fontFamily: CONFIG.FONTS.UI, fontSize: '13px', fontStyle: 'bold', color: '#ffd166'
             }).setOrigin(0, 0.5).setDepth(11);
 
-            const gemsX = midX + 62;
-            const gemsBg = this.add.rectangle(gemsX, headerY, 105, 30, 0x0f172a, 0.95).setDepth(10);
-            gemsBg.setStrokeStyle(1.5, 0xa855f7);
-            this.add.image(gemsX - 36, headerY, 'ui_gem').setScale(0.7).setDepth(11);
-            this.add.text(gemsX - 16, headerY, '2 860', {
-                fontFamily: "'Rajdhani', sans-serif", fontSize: '14px', fontStyle: 'bold', color: '#e9d5ff'
+            const gemsX = midX + 65;
+            const gemsBg = this.add.rectangle(gemsX, headerY, 110, 30, 0x0b1120, 0.95).setInteractive({ useHandCursor: true }).setDepth(10);
+            gemsBg.setStrokeStyle(1.2, 0x252b47);
+            gemsBg.on('pointerdown', () => this.openShopModal());
+            this.add.image(gemsX - 38, headerY, 'ui_gem').setDisplaySize(16, 16).setDepth(11);
+            this.add.text(gemsX - 16, headerY, `${window.SaveManager.data.gems || 2860}`, {
+                fontFamily: CONFIG.FONTS.UI, fontSize: '13px', fontStyle: 'bold', color: '#e9d5ff'
             }).setOrigin(0, 0.5).setDepth(11);
         } else {
             // ПОРТРЕТНЫЙ РЕЖИМ
             const goldX = rightStartX - 60;
-            const goldBg = this.add.rectangle(goldX, headerY, 115, 34, 0x0f172a, 0.95).setDepth(10);
-            goldBg.setStrokeStyle(1.5, 0xf59e0b);
-            this.add.image(goldX - 40, headerY, 'ui_coin').setScale(0.8).setDepth(11);
-            this.goldText = this.add.text(goldX - 20, headerY, `${window.SaveManager.data.gold}`, {
-                fontFamily: "'Rajdhani', sans-serif", fontSize: '16px', fontStyle: 'bold', color: '#ffd166'
+            const goldBg = this.add.rectangle(goldX, headerY, 115, 34, 0x0b1120, 0.95).setInteractive({ useHandCursor: true }).setDepth(10);
+            goldBg.setStrokeStyle(1.2, 0x252b47);
+            goldBg.on('pointerdown', () => this.openShopModal());
+            this.add.image(goldX - 40, headerY, 'ui_coin').setDisplaySize(18, 18).setDepth(11);
+            this.goldText = this.add.text(goldX - 20, headerY, `${window.SaveManager.data.gold || '12 540'}`, {
+                fontFamily: CONFIG.FONTS.UI, fontSize: '14px', fontStyle: 'bold', color: '#ffd166'
             }).setOrigin(0, 0.5).setDepth(11);
         }
     }
 
     createLandscapeLayout(width, height, lang) {
         const isCompact = height < 520;
-        const leftColX = isCompact ? Math.min(180, width * 0.22) : Math.min(260, width * 0.20);
-        const leftTopY = isCompact ? 50 : 115;
+        const leftColX = isCompact ? Math.min(170, width * 0.20) : Math.min(235, width * 0.18);
+        const leftTopY = isCompact ? 48 : 105;
 
-        // 3D Логотип
+        // 1. 3D ЛОГОТИП С НЕОНОВОЙ ЭМБЛЕМОЙ (10 MINUTES SURVIVOR HERO ARENA)
         if (this.textures.exists('ui_logo_crest')) {
-            const logoW = isCompact ? 160 : 270;
-            const logoH = isCompact ? 80 : 135;
-            const logo = this.add.image(leftColX, leftTopY + (isCompact ? 5 : 15), 'ui_logo_crest').setDisplaySize(logoW, logoH).setDepth(10);
+            const logoW = isCompact ? 160 : 255;
+            const logoH = isCompact ? 80 : 125;
+            const logo = this.add.image(leftColX, leftTopY + (isCompact ? 4 : 10), 'ui_logo_crest').setDisplaySize(logoW, logoH).setDepth(10);
             this.tweens.add({
                 targets: logo,
                 y: logo.y - 3,
@@ -219,9 +231,9 @@ class MenuScene extends Phaser.Scene {
             });
         }
 
-        // КНОПКА #1: PLAY (ОДИНОЧНЫЙ РЕЖИМ)
-        const playBtnY = leftTopY + (isCompact ? 68 : 125);
-        const playBtnW = isCompact ? 180 : 270;
+        // 2. ГЛАВНАЯ КНОПКА #1: PLAY (ОДИНОЧНЫЙ РЕЖИМ)
+        const playBtnY = leftTopY + (isCompact ? 68 : 115);
+        const playBtnW = isCompact ? 180 : 265;
         const playBtnH = isCompact ? 46 : 64;
         const playBtn = this.add.image(leftColX, playBtnY, 'btn_play_bg').setDisplaySize(playBtnW, playBtnH).setInteractive({ useHandCursor: true }).setDepth(10);
 
@@ -235,40 +247,39 @@ class MenuScene extends Phaser.Scene {
             ease: 'Sine.easeInOut'
         });
 
-        this.add.image(leftColX - (isCompact ? 68 : 100), playBtnY, 'ui_swords').setScale(isCompact ? 0.7 : 0.95).setDepth(11);
-        this.add.text(leftColX - (isCompact ? 45 : 68), playBtnY - (isCompact ? 9 : 12), 'PLAY', {
+        this.add.image(leftColX - (isCompact ? 65 : 95), playBtnY, 'ui_swords').setDisplaySize(isCompact ? 28 : 38, isCompact ? 28 : 38).setDepth(11);
+        this.add.text(leftColX - (isCompact ? 42 : 62), playBtnY - (isCompact ? 9 : 12), 'PLAY', {
             fontFamily: CONFIG.FONTS.TITLE, fontSize: isCompact ? '16px' : '22px', fontStyle: 'bold', color: '#ffffff', letterSpacing: 2
         }).setOrigin(0, 0.5).setDepth(11);
-        this.add.text(leftColX - (isCompact ? 45 : 68), playBtnY + (isCompact ? 10 : 13), 'ОДИНОЧНЫЙ РЕЖИМ', {
+        this.add.text(leftColX - (isCompact ? 42 : 62), playBtnY + (isCompact ? 10 : 13), 'ОДИНОЧНЫЙ РЕЖИМ', {
             fontFamily: CONFIG.FONTS.UI, fontSize: isCompact ? '9px' : '11px', fontStyle: '700', color: '#e9d5ff', letterSpacing: 1
         }).setOrigin(0, 0.5).setDepth(11);
 
         playBtn.on('pointerdown', () => this.openHeroSelectModal());
 
-        // КНОПКА #2: CO-OP (РЕЖИМ НА ДВОИХ)
-        const coopBtnY = playBtnY + (isCompact ? 50 : 74);
+        // 3. ГЛАВНАЯ КНОПКА #2: CO-OP (РЕЖИМ НА ДВОИХ)
+        const coopBtnY = playBtnY + (isCompact ? 50 : 72);
         const coopBtn = this.add.image(leftColX, coopBtnY, 'btn_coop_bg').setDisplaySize(playBtnW, isCompact ? 42 : 56).setInteractive({ useHandCursor: true }).setDepth(10);
 
-        this.add.image(leftColX - (isCompact ? 68 : 100), coopBtnY, 'ui_coop').setScale(isCompact ? 0.7 : 0.95).setDepth(11);
-        this.add.text(leftColX - (isCompact ? 45 : 68), coopBtnY - (isCompact ? 8 : 10), 'CO-OP', {
+        this.add.image(leftColX - (isCompact ? 65 : 95), coopBtnY, 'ui_coop').setDisplaySize(isCompact ? 26 : 34, isCompact ? 26 : 34).setDepth(11);
+        this.add.text(leftColX - (isCompact ? 42 : 62), coopBtnY - (isCompact ? 8 : 10), 'CO-OP', {
             fontFamily: CONFIG.FONTS.TITLE, fontSize: isCompact ? '15px' : '20px', fontStyle: 'bold', color: '#ffffff', letterSpacing: 2
         }).setOrigin(0, 0.5).setDepth(11);
-        this.add.text(leftColX - (isCompact ? 45 : 68), coopBtnY + (isCompact ? 9 : 12), 'РЕЖИМ НА ДВОИХ', {
+        this.add.text(leftColX - (isCompact ? 42 : 62), coopBtnY + (isCompact ? 9 : 12), 'РЕЖИМ НА ДВОИХ', {
             fontFamily: CONFIG.FONTS.UI, fontSize: isCompact ? '9px' : '11px', fontStyle: '700', color: '#bae6fd', letterSpacing: 1
         }).setOrigin(0, 0.5).setDepth(11);
 
         coopBtn.on('pointerdown', () => this.openCoopModal());
 
-        // Стеклянные кнопки подменю слева
+        // 4. СТЕКЛЯННЫЕ КНОПКИ ПОДМЕНЮ С ЖЕЛЕЗНЫМИ СЕРЫМИ ИКОНКАМИ
         const menuItems = [
-            { iconKey: 'ui_shield', title: 'ВЫБОР ГЕРОЯ', badge: '!', color: 0xef4444, action: () => this.openHeroSelectModal() },
-            { iconKey: 'ui_trophy', title: 'ВЫБОР КАРТЫ', badge: '', color: 0, action: () => this.openMapSelectModal() },
-            { iconKey: 'ui_star', title: 'УЛУЧШЕНИЯ', badge: '', color: 0, action: () => this.openTalentsModal() },
-            { iconKey: 'ui_chest', title: 'КОЛЛЕКЦИЯ', badge: '', color: 0, action: () => this.openEvolutionModal() },
-            { iconKey: 'ui_scroll', title: 'ЗАДАНИЯ', badge: '3', color: 0x0284c7, action: () => this.openAchievementsModal() }
+            { iconKey: 'ui_steel_helmet', title: 'ВЫБОР ГЕРОЯ', badge: '!', color: 0xef4444, action: () => this.openHeroSelectModal() },
+            { iconKey: 'ui_steel_star', title: 'УЛУЧШЕНИЯ', badge: '', color: 0, action: () => this.openTalentsModal() },
+            { iconKey: 'ui_steel_chest', title: 'МАГАЗИН', badge: '', color: 0, action: () => this.openShopModal() },
+            { iconKey: 'ui_steel_scroll', title: 'ЗАДАНИЯ', badge: '3', color: 0x06b6d4, action: () => this.openAchievementsModal() }
         ];
 
-        const subSpacing = isCompact ? 25 : 42;
+        const subSpacing = isCompact ? 26 : 44;
         const subStartY = coopBtnY + (isCompact ? 34 : 54);
 
         menuItems.forEach((item, idx) => {
@@ -278,20 +289,50 @@ class MenuScene extends Phaser.Scene {
             btn.on('pointerout', () => btn.clearTint());
             btn.on('pointerdown', item.action);
 
-            this.add.image(leftColX - (isCompact ? 72 : 110), itemY, item.iconKey).setScale(isCompact ? 0.6 : 0.8).setDepth(11);
-            this.add.text(leftColX - (isCompact ? 54 : 85), itemY, item.title, {
+            this.add.image(leftColX - (isCompact ? 70 : 105), itemY, item.iconKey).setDisplaySize(isCompact ? 18 : 26, isCompact ? 18 : 26).setDepth(11);
+            this.add.text(leftColX - (isCompact ? 50 : 80), itemY, item.title, {
                 fontFamily: CONFIG.FONTS.UI, fontSize: isCompact ? '10px' : '13px', fontStyle: '800', color: '#cbd5e1', letterSpacing: 1
             }).setOrigin(0, 0.5).setDepth(11);
 
             if (item.badge) {
-                this.add.circle(leftColX + (isCompact ? 75 : 115), itemY, isCompact ? 7 : 9, item.color).setDepth(11);
-                this.add.text(leftColX + (isCompact ? 75 : 115), itemY, item.badge, {
+                this.add.circle(leftColX + (isCompact ? 72 : 110), itemY, isCompact ? 7 : 9, item.color).setDepth(11);
+                this.add.text(leftColX + (isCompact ? 72 : 110), itemY, item.badge, {
                     fontFamily: CONFIG.FONTS.MONO, fontSize: isCompact ? '8px' : '10px', fontStyle: 'bold', color: '#ffffff'
                 }).setOrigin(0.5).setDepth(12);
             }
         });
 
+        // 5. НИЖНИЙ ЛЕВЫЙ БЛОК: СОЦСЕТИ (Discord, VK, YouTube)
+        const socialY = subStartY + (menuItems.length * subSpacing) + (isCompact ? 14 : 26);
+        if (height >= 560) {
+            const socials = [
+                { icon: 'ui_discord', link: 'https://discord.gg' },
+                { icon: 'ui_vk', link: 'https://vk.com' },
+                { icon: 'ui_youtube', link: 'https://youtube.com' }
+            ];
 
+            const socialSpacing = 44;
+            const socStartX = leftColX - ((socials.length - 1) * socialSpacing) / 2;
+
+            socials.forEach((soc, idx) => {
+                const sx = socStartX + idx * socialSpacing;
+                const sBtn = this.add.rectangle(sx, socialY, 36, 36, 0x0b1120, 0.95).setInteractive({ useHandCursor: true }).setDepth(10);
+                sBtn.setStrokeStyle(1.2, 0x252b47);
+                sBtn.on('pointerover', () => sBtn.setStrokeStyle(1.5, 0x818cf8));
+                sBtn.on('pointerout', () => sBtn.setStrokeStyle(1.2, 0x252b47));
+                sBtn.on('pointerdown', () => {
+                    window.Sound.playCoin();
+                });
+
+                if (this.textures.exists(soc.icon)) {
+                    this.add.image(sx, socialY, soc.icon).setDisplaySize(24, 24).setDepth(11);
+                }
+            });
+
+            this.add.text(leftColX, socialY + 28, 'ПРИСОЕДИНЯЙСЯ К НАМ!', {
+                fontFamily: CONFIG.FONTS.UI, fontSize: '9.5px', fontStyle: 'bold', color: '#94a3b8', letterSpacing: 1.2
+            }).setOrigin(0.5).setDepth(11);
+        }
 
         // === ПРАВАЯ КОЛОНКА: Виджеты ===
         const rightColX = isCompact ? Math.max(width - 130, width * 0.84) : Math.max(width - 200, width * 0.82);
@@ -301,18 +342,18 @@ class MenuScene extends Phaser.Scene {
     createRightWidgets(rightColX, topY, lang, isCompact, height) {
         const questBoxW = isCompact ? 220 : 280;
 
-        // 1. ВИДЖЕТ ЕЖЕДНЕВНЫХ ЗАДАНИЙ
+        // 1. ВИДЖЕТ ЕЖЕДНЕВНЫХ ЗАДАНИЙ (Daily Quests)
         const questBoxH = isCompact ? 140 : 195;
         const questBoxY = topY + (isCompact ? 40 : 75);
 
-        const qBox = this.add.rectangle(rightColX, questBoxY, questBoxW, questBoxH, 0x0f172a, 0.95).setDepth(10);
-        qBox.setStrokeStyle(1.5, 0x334155);
+        const qBox = this.add.rectangle(rightColX, questBoxY, questBoxW, questBoxH, 0x0b1120, 0.95).setDepth(10);
+        qBox.setStrokeStyle(1.5, 0x252b47);
 
         this.add.text(rightColX - questBoxW / 2 + 12, questBoxY - questBoxH / 2 + (isCompact ? 12 : 16), 'ЕЖЕДНЕВНЫЕ ЗАДАНИЯ', {
             fontFamily: CONFIG.FONTS.UI, fontSize: isCompact ? '11px' : '13px', fontStyle: 'bold', color: '#ffffff', letterSpacing: 1
         }).setOrigin(0, 0.5).setDepth(11);
 
-        this.add.image(rightColX + questBoxW / 2 - 50, questBoxY - questBoxH / 2 + (isCompact ? 12 : 16), 'ui_hourglass').setScale(isCompact ? 0.5 : 0.65).setDepth(11);
+        this.add.image(rightColX + questBoxW / 2 - 68, questBoxY - questBoxH / 2 + (isCompact ? 12 : 16), 'ui_hourglass').setDisplaySize(isCompact ? 14 : 16, isCompact ? 14 : 16).setDepth(11);
         this.add.text(rightColX + questBoxW / 2 - 12, questBoxY - questBoxH / 2 + (isCompact ? 12 : 16), '18:45:12', {
             fontFamily: CONFIG.FONTS.MONO, fontSize: isCompact ? '9px' : '11px', fontStyle: 'bold', color: '#94a3b8'
         }).setOrigin(1, 0.5).setDepth(11);
@@ -331,8 +372,8 @@ class MenuScene extends Phaser.Scene {
 
         questsData.forEach((q, idx) => {
             const rowY = questBoxY - questBoxH / 2 + rowStartOffsetY + (idx * rowStep);
-            const rowBg = this.add.rectangle(rightColX, rowY, questBoxW - 14, isCompact ? 26 : 32, 0x1e293b, 0.85).setDepth(11);
-            rowBg.setStrokeStyle(1, 0x334155);
+            const rowBg = this.add.rectangle(rightColX, rowY, questBoxW - 14, isCompact ? 26 : 32, 0x111827, 0.85).setDepth(11);
+            rowBg.setStrokeStyle(1, 0x1f2937);
 
             this.add.image(rightColX - questBoxW / 2 + 18, rowY, q.badgeKey).setDisplaySize(isCompact ? 18 : 24, isCompact ? 18 : 24).setDepth(12);
 
@@ -342,73 +383,108 @@ class MenuScene extends Phaser.Scene {
 
             const barW = isCompact ? 75 : 105;
             const pct = Math.min(1, q.cur / q.max);
-            this.add.rectangle(rightColX - questBoxW / 2 + 34 + barW / 2, rowY + (isCompact ? 5 : 7), barW, 3, 0x0f172a).setDepth(12);
-            this.add.rectangle(rightColX - questBoxW / 2 + 34, rowY + (isCompact ? 5 : 7), barW * pct, 3, 0x38bdf8).setOrigin(0, 0.5).setDepth(13);
+            this.add.rectangle(rightColX - questBoxW / 2 + 34 + barW / 2, rowY + (isCompact ? 5 : 7), barW, 3, 0x0b1120).setDepth(12);
+            this.add.rectangle(rightColX - questBoxW / 2 + 34, rowY + (isCompact ? 5 : 7), barW * pct, 3, 0x9333ea).setOrigin(0, 0.5).setDepth(13);
 
             this.add.text(rightColX + questBoxW / 2 - 28, rowY, q.reward, {
                 fontFamily: CONFIG.FONTS.MONO, fontSize: isCompact ? '10px' : '12px', fontStyle: 'bold', color: '#ffd166'
             }).setOrigin(1, 0.5).setDepth(12);
-            this.add.image(rightColX + questBoxW / 2 - 16, rowY, 'ui_coin').setScale(isCompact ? 0.5 : 0.65).setDepth(12);
+            this.add.image(rightColX + questBoxW / 2 - 16, rowY, 'ui_coin').setDisplaySize(isCompact ? 14 : 18, isCompact ? 14 : 18).setDepth(12);
         });
 
         // Кнопка ВСЕ ЗАДАНИЯ
-        const allQBtnH = isCompact ? 20 : 24;
-        const allQBtn = this.add.rectangle(rightColX, questBoxY + questBoxH / 2 - (isCompact ? 14 : 18), questBoxW - 20, allQBtnH, 0x1e1b4b, 0.95).setInteractive({ useHandCursor: true }).setDepth(11);
-        allQBtn.setStrokeStyle(1, 0x6366f1);
-        this.add.text(rightColX, questBoxY + questBoxH / 2 - (isCompact ? 14 : 18), 'ВСЕ ЗАДАНИЯ', {
-            fontFamily: CONFIG.FONTS.UI, fontSize: isCompact ? '9px' : '11px', fontStyle: 'bold', color: '#a5b4fc', letterSpacing: 1
+        const allQBtnH = isCompact ? 20 : 26;
+        const allQBtn = this.add.rectangle(rightColX, questBoxY + questBoxH / 2 - (isCompact ? 14 : 20), questBoxW - 24, allQBtnH, 0x1e1b4b, 0.95).setInteractive({ useHandCursor: true }).setDepth(11);
+        allQBtn.setStrokeStyle(1, 0x4338ca);
+        this.add.text(rightColX, questBoxY + questBoxH / 2 - (isCompact ? 14 : 20), 'ВСЕ ЗАДАНИЯ', {
+            fontFamily: CONFIG.FONTS.UI, fontSize: isCompact ? '9px' : '11px', fontStyle: 'bold', color: '#c7d2fe', letterSpacing: 1
         }).setOrigin(0.5).setDepth(12);
         allQBtn.on('pointerdown', () => this.openAchievementsModal());
 
         // 2. ВИДЖЕТ СЕЗОНА (БОЕВОЙ ПРОПУСК)
-        const seasonY = questBoxY + questBoxH / 2 + (isCompact ? 36 : 55);
-        const sBoxH = isCompact ? 50 : 76;
-        const sBox = this.add.rectangle(rightColX, seasonY, questBoxW, sBoxH, 0x0f172a, 0.95).setDepth(10);
-        sBox.setStrokeStyle(1.5, 0x6366f1);
+        const seasonY = questBoxY + questBoxH / 2 + (isCompact ? 36 : 58);
+        const sBoxH = isCompact ? 50 : 78;
+        const sBox = this.add.rectangle(rightColX, seasonY, questBoxW, sBoxH, 0x0b1120, 0.95).setDepth(10);
+        sBox.setStrokeStyle(1.5, 0x252b47);
 
         this.add.text(rightColX - questBoxW / 2 + 12, seasonY - (isCompact ? 14 : 24), 'СЕЗОН 1: ТЬМА НАСТУПАЕТ', {
             fontFamily: CONFIG.FONTS.UI, fontSize: isCompact ? '9px' : '12px', fontStyle: 'bold', color: '#ffffff'
         }).setOrigin(0, 0.5).setDepth(11);
 
-        this.add.text(rightColX + questBoxW / 2 - 12, seasonY - (isCompact ? 14 : 24), '24 Д', {
+        this.add.text(rightColX + questBoxW / 2 - 12, seasonY - (isCompact ? 14 : 24), '24 Д 18 Ч', {
             fontFamily: CONFIG.FONTS.MONO, fontSize: isCompact ? '9px' : '10px', fontStyle: 'bold', color: '#94a3b8'
         }).setOrigin(1, 0.5).setDepth(11);
 
-        const bpW = isCompact ? 80 : 100;
-        this.add.rectangle(rightColX - 10, seasonY + (isCompact ? 8 : 8), bpW, 6, 0x1e1b4b).setDepth(11);
-        this.add.rectangle(rightColX - 10 - bpW / 2, seasonY + (isCompact ? 8 : 8), bpW * 0.65, 6, 0xa855f7).setOrigin(0, 0.5).setDepth(12);
+        // Иконка сезона слева
+        if (this.textures.exists('ui_season_crest')) {
+            this.add.image(rightColX - questBoxW / 2 + 22, seasonY + 6, 'ui_season_crest').setDisplaySize(24, 24).setDepth(12);
+        }
 
-        const bpBtn = this.add.rectangle(rightColX + questBoxW / 2 - 28, seasonY + 8, isCompact ? 44 : 56, isCompact ? 18 : 24, 0x7c3aed).setInteractive({ useHandCursor: true }).setDepth(11);
-        this.add.text(rightColX + questBoxW / 2 - 28, seasonY + 8, 'БОНУС', {
-            fontFamily: CONFIG.FONTS.UI, fontSize: isCompact ? '8px' : '10px', fontStyle: 'bold', color: '#ffffff'
+        // Бейдж Уровня 15
+        const lvl15Badge = this.add.rectangle(rightColX - 70, seasonY + 6, 18, 16, 0x1e1b4b).setDepth(11);
+        lvl15Badge.setStrokeStyle(1, 0x6b21a8);
+        this.add.text(rightColX - 70, seasonY + 6, '15', {
+            fontFamily: CONFIG.FONTS.MONO, fontSize: '8px', fontStyle: 'bold', color: '#c084fc'
+        }).setOrigin(0.5).setDepth(12);
+
+        // Прогресс-бар
+        const bpW = isCompact ? 55 : 68;
+        this.add.rectangle(rightColX - 22, seasonY + 6, bpW, 6, 0x1e1b4b).setDepth(11);
+        this.add.rectangle(rightColX - 22 - bpW / 2, seasonY + 6, bpW * 0.65, 6, 0xa855f7).setOrigin(0, 0.5).setDepth(12);
+        this.add.text(rightColX - 22, seasonY + 6, '650/1000', {
+            fontFamily: CONFIG.FONTS.MONO, fontSize: '7px', fontStyle: 'bold', color: '#ffffff'
+        }).setOrigin(0.5).setDepth(13);
+
+        // Бейдж Уровня 16
+        const lvl16Badge = this.add.rectangle(rightColX + 24, seasonY + 6, 18, 16, 0x1e1b4b).setDepth(11);
+        lvl16Badge.setStrokeStyle(1, 0x6b21a8);
+        this.add.text(rightColX + 24, seasonY + 6, '16', {
+            fontFamily: CONFIG.FONTS.MONO, fontSize: '8px', fontStyle: 'bold', color: '#94a3b8'
+        }).setOrigin(0.5).setDepth(12);
+
+        // Кнопка БОЕВОЙ ПРОПУСК
+        const bpBtn = this.add.rectangle(rightColX + questBoxW / 2 - 38, seasonY + 6, isCompact ? 54 : 64, isCompact ? 18 : 22, 0x6b21a8).setInteractive({ useHandCursor: true }).setDepth(11);
+        bpBtn.setStrokeStyle(1, 0xa855f7);
+        this.add.text(rightColX + questBoxW / 2 - 38, seasonY + 6, 'ПРОПУСК', {
+            fontFamily: CONFIG.FONTS.UI, fontSize: isCompact ? '7.5px' : '8.5px', fontStyle: 'bold', color: '#ffffff'
         }).setOrigin(0.5).setDepth(12);
         bpBtn.on('pointerdown', () => this.openAchievementsModal());
 
-        // 3. ВИДЖЕТ НОВОСТЕЙ (показываем только на экранах высотой >= 520px)
+        // 3. ВИДЖЕТ НОВОСТЕЙ (РЕЖИМ НА ДВОИХ УЖЕ ДОСТУПЕН!)
         if (height >= 520) {
-            const newsY = seasonY + 88;
-            const newsBox = this.add.rectangle(rightColX, newsY, questBoxW, 84, 0x0f172a, 0.95).setDepth(10);
-            newsBox.setStrokeStyle(1.5, 0x334155);
+            const newsY = seasonY + 86;
+            const newsBox = this.add.rectangle(rightColX, newsY, questBoxW, 82, 0x0b1120, 0.95).setDepth(10);
+            newsBox.setStrokeStyle(1.5, 0x252b47);
 
-            this.add.text(rightColX - questBoxW / 2 + 15, newsY - 26, 'НОВОСТИ', {
-                fontFamily: CONFIG.FONTS.UI, fontSize: '11px', fontStyle: 'bold', color: '#94a3b8'
-            }).setOrigin(0, 0.5).setDepth(11);
+            if (this.textures.exists('ui_news_banner')) {
+                this.add.image(rightColX, newsY, 'ui_news_banner').setDisplaySize(questBoxW - 8, 74).setDepth(11);
+            } else {
+                this.add.text(rightColX - questBoxW / 2 + 15, newsY - 24, 'НОВОСТИ', {
+                    fontFamily: CONFIG.FONTS.UI, fontSize: '11px', fontStyle: 'bold', color: '#94a3b8'
+                }).setOrigin(0, 0.5).setDepth(11);
 
-            this.add.text(rightColX - questBoxW / 2 + 15, newsY - 6, 'РЕЖИМ НА ДВОИХ', {
-                fontFamily: CONFIG.FONTS.TITLE, fontSize: '13px', fontStyle: 'bold', color: '#38bdf8'
-            }).setOrigin(0, 0.5).setDepth(11);
+                this.add.text(rightColX - questBoxW / 2 + 15, newsY - 4, 'РЕЖИМ НА ДВОИХ', {
+                    fontFamily: CONFIG.FONTS.TITLE, fontSize: '13px', fontStyle: 'bold', color: '#38bdf8'
+                }).setOrigin(0, 0.5).setDepth(11);
 
-            this.add.text(rightColX - questBoxW / 2 + 15, newsY + 20, 'УЖЕ ДОСТУПЕН!', {
-                fontFamily: CONFIG.FONTS.UI, fontSize: '10px', fontStyle: 'bold', color: '#94a3b8'
-            }).setOrigin(0, 0.5).setDepth(11);
+                this.add.text(rightColX - questBoxW / 2 + 15, newsY + 18, 'УЖЕ ДОСТУПЕН!', {
+                    fontFamily: CONFIG.FONTS.UI, fontSize: '10px', fontStyle: 'bold', color: '#e2e8f0'
+                }).setOrigin(0, 0.5).setDepth(11);
 
-            this.add.image(rightColX + questBoxW / 2 - 40, newsY, 'ui_coop').setDisplaySize(44, 44).setDepth(11);
+                this.add.image(rightColX + questBoxW / 2 - 35, newsY, 'ui_coop').setDisplaySize(38, 38).setDepth(11);
+            }
+
+            // 4 точки карусели внизу
+            for (let i = 0; i < 4; i++) {
+                const dotX = rightColX - 18 + (i * 12);
+                this.add.circle(dotX, newsY + 34, 2.5, i === 0 ? 0xa855f7 : 0x334155).setDepth(12);
+            }
         }
     }
 
     createBottomTabBar(width, height, isPortrait, lang) {
         const isCompact = !isPortrait && height < 520;
-        const barY = height - (isCompact ? 25 : (isPortrait ? 35 : 45));
+        const barY = height - (isCompact ? 25 : (isPortrait ? 35 : 46));
         const tabs = [
             { iconKey: 'ui_chest_gold', title: isCompact ? 'СУНДУК' : 'БЕСПЛАТНЫЙ\nСУНДУК', badge: '1', action: () => this.claimFreeChest() },
             { iconKey: 'ui_3d_gem_card', title: 'УСИЛЕНИЯ', badge: '', action: () => this.openTalentsModal() },
@@ -416,18 +492,19 @@ class MenuScene extends Phaser.Scene {
             { iconKey: 'ui_3d_shield_card', title: isCompact ? 'ЛИДЕРЫ' : 'ТАБЛИЦЫ\nЛИДЕРОВ', badge: '', action: () => this.openLeaderboardModal() }
         ];
 
-        const tabSpacing = isPortrait ? Math.min(85, (width - 40) / 4) : (isCompact ? 100 : 135);
+        const tabSpacing = isPortrait ? Math.min(85, (width - 40) / 4) : (isCompact ? 95 : 125);
         const totalW = tabSpacing * (tabs.length - 1);
         const startX = width / 2 - totalW / 2;
 
         tabs.forEach((tab, idx) => {
             const tx = startX + (idx * tabSpacing);
-            const btnW = isPortrait ? 75 : (isCompact ? 90 : 115);
+            const btnW = isPortrait ? 75 : (isCompact ? 86 : 110);
             const btnH = isPortrait ? 44 : (isCompact ? 36 : 52);
 
-            const tabBg = this.add.image(tx, barY, 'card_tab_glass').setDisplaySize(btnW, btnH).setInteractive({ useHandCursor: true }).setDepth(10);
-            tabBg.on('pointerover', () => tabBg.setTint(0xc4b5fd));
-            tabBg.on('pointerout', () => tabBg.clearTint());
+            const tabBg = this.add.rectangle(tx, barY, btnW, btnH, 0x0b1120, 0.95).setInteractive({ useHandCursor: true }).setDepth(10);
+            tabBg.setStrokeStyle(1.5, 0x252b47);
+            tabBg.on('pointerover', () => { tabBg.setStrokeStyle(1.5, 0x818cf8); tabBg.setFillStyle(0x1e1b4b, 0.98); });
+            tabBg.on('pointerout', () => { tabBg.setStrokeStyle(1.5, 0x252b47); tabBg.setFillStyle(0x0b1120, 0.95); });
             tabBg.on('pointerdown', tab.action);
 
             this.add.image(tx, barY - (isCompact ? 6 : (isPortrait ? 6 : 10)), tab.iconKey).setDisplaySize(isCompact ? 20 : 28, isCompact ? 20 : 28).setDepth(11);
@@ -831,7 +908,133 @@ class MenuScene extends Phaser.Scene {
         renderHeroCards();
     }
 
-    // --- МОДАЛЬНОЕ ОКНО ТАЛАНТОВ (ТАЛАНТЫ И УСИЛЕНИЯ) ---
+    // --- МОДАЛЬНОЕ ОКНО МАГАЗИНА ---
+    openShopModal() {
+        this.closeCurrentModal();
+        const { width, height } = this.scale;
+        const modalGroup = this.add.group();
+        this.currentModal = modalGroup;
+        const isPortrait = height > width;
+        const isCompact = !isPortrait && height < 520;
+
+        const backdrop = this.add.rectangle(width / 2, height / 2, width, height, 0x030712, 0.94).setInteractive().setDepth(1000);
+        backdrop.on('pointerdown', () => this.closeCurrentModal());
+        modalGroup.add(backdrop);
+
+        const modalW = isPortrait ? Math.min(width - 20, 420) : (isCompact ? Math.min(width - 20, 780) : Math.min(width - 40, 820));
+        const modalH = isPortrait ? Math.min(height - 20, 620) : (isCompact ? Math.min(height - 20, 360) : Math.min(height - 40, 490));
+
+        const bg = this.add.rectangle(width / 2, height / 2, modalW, modalH, 0x0b1120, 0.98).setDepth(1001);
+        bg.setStrokeStyle(2, 0x252b47);
+        modalGroup.add(bg);
+
+        // Заголовок
+        const titleY = height / 2 - modalH / 2 + (isCompact ? 22 : 30);
+        const title = this.add.text(width / 2, titleY, 'МАГАЗИН СОКРОВИЩ', {
+            fontFamily: CONFIG.FONTS.TITLE, fontSize: isCompact ? '18px' : '22px', fontStyle: 'bold', color: '#ffd166', letterSpacing: 2
+        }).setOrigin(0.5).setDepth(1002);
+        modalGroup.add(title);
+
+        // Кнопка закрытия
+        const closeBtn = this.add.rectangle(width / 2 + modalW / 2 - 28, titleY, 32, 32, 0x1f2937).setInteractive({ useHandCursor: true }).setDepth(1002);
+        closeBtn.setStrokeStyle(1.5, 0xef4444);
+        const closeTxt = this.add.text(width / 2 + modalW / 2 - 28, titleY, '✕', {
+            fontFamily: 'sans-serif', fontSize: '16px', fontStyle: 'bold', color: '#ef4444'
+        }).setOrigin(0.5).setDepth(1003);
+        closeBtn.on('pointerdown', () => this.closeCurrentModal());
+        modalGroup.add(closeBtn);
+        modalGroup.add(closeTxt);
+
+        // Карточки товаров
+        const shopOffers = [
+            {
+                title: 'МЕШОК ЗОЛОТА',
+                icon: 'ui_coin',
+                rewardText: '+500 ЗОЛОТА',
+                btnText: 'БЕСПЛАТНО',
+                action: () => {
+                    window.SaveManager.addGold(500);
+                    if (this.goldText) this.goldText.setText(`${window.SaveManager.data.gold}`);
+                    window.Sound.playCoin();
+                    this.closeCurrentModal();
+                }
+            },
+            {
+                title: 'СУНДУК ДУШ',
+                icon: 'ui_gem',
+                rewardText: '+150 КРИСТАЛЛОВ',
+                btnText: 'БЕСПЛАТНО',
+                action: () => {
+                    window.SaveManager.data.gems = (window.SaveManager.data.gems || 2860) + 150;
+                    window.SaveManager.save();
+                    window.Sound.playCoin();
+                    this.closeCurrentModal();
+                    this.scene.restart();
+                }
+            },
+            {
+                title: 'ЛЕГЕНДАРНЫЙ НАБОР',
+                icon: 'ui_chest_gold',
+                rewardText: '+2000 ЗОЛОТА + 300 КРИСТАЛЛОВ',
+                btnText: 'ЗАБРАТЬ',
+                action: () => {
+                    window.SaveManager.addGold(2000);
+                    window.SaveManager.data.gems = (window.SaveManager.data.gems || 2860) + 300;
+                    window.SaveManager.save();
+                    if (this.goldText) this.goldText.setText(`${window.SaveManager.data.gold}`);
+                    window.Sound.playJackpot();
+                    this.closeCurrentModal();
+                    this.scene.restart();
+                }
+            }
+        ];
+
+        const cardW = isPortrait ? modalW - 40 : (isCompact ? 220 : 230);
+        const cardH = isPortrait ? 130 : (isCompact ? 220 : 280);
+        const cardSpacing = isPortrait ? 145 : (isCompact ? 235 : 250);
+        const startCardX = isPortrait ? width / 2 : width / 2 - ((shopOffers.length - 1) * cardSpacing) / 2;
+        const startCardY = isPortrait ? titleY + 90 : height / 2 + 15;
+
+        shopOffers.forEach((offer, idx) => {
+            const cx = isPortrait ? width / 2 : startCardX + idx * cardSpacing;
+            const cy = isPortrait ? startCardY + idx * cardSpacing : startCardY;
+
+            const cardBg = this.add.rectangle(cx, cy, cardW, cardH, 0x111827, 0.95).setDepth(1002);
+            cardBg.setStrokeStyle(1.5, 0x252b47);
+            modalGroup.add(cardBg);
+
+            const iconY = cy - (isPortrait ? 20 : 55);
+            const icon = this.add.image(cx, iconY, offer.icon).setDisplaySize(isPortrait ? 38 : 56, isPortrait ? 38 : 56).setDepth(1003);
+            modalGroup.add(icon);
+
+            const itemTitle = this.add.text(cx, cy - (isPortrait ? 20 : 5), offer.title, {
+                fontFamily: CONFIG.FONTS.TITLE, fontSize: isPortrait ? '13px' : '14px', fontStyle: 'bold', color: '#ffffff'
+            }).setOrigin(isPortrait ? 0 : 0.5, 0.5).setDepth(1003);
+            if (isPortrait) itemTitle.setPosition(cx - cardW / 2 + 65, cy - 25);
+            modalGroup.add(itemTitle);
+
+            const rewardTxt = this.add.text(cx, cy + (isPortrait ? 0 : 25), offer.rewardText, {
+                fontFamily: CONFIG.FONTS.UI, fontSize: isPortrait ? '11px' : '12px', fontStyle: 'bold', color: '#ffd166'
+            }).setOrigin(isPortrait ? 0 : 0.5, 0.5).setDepth(1003);
+            if (isPortrait) rewardTxt.setPosition(cx - cardW / 2 + 65, cy - 5);
+            modalGroup.add(rewardTxt);
+
+            const btnY = cy + (isPortrait ? 28 : (isCompact ? 75 : 95));
+            const btnW = isPortrait ? cardW - 30 : 160;
+            const btn = this.add.rectangle(cx, btnY, btnW, 36, 0x7c3aed).setInteractive({ useHandCursor: true }).setDepth(1003);
+            btn.setStrokeStyle(1.5, 0xa855f7);
+            btn.on('pointerover', () => btn.setFillStyle(0x9333ea));
+            btn.on('pointerout', () => btn.setFillStyle(0x7c3aed));
+            btn.on('pointerdown', offer.action);
+            modalGroup.add(btn);
+
+            const btnTxt = this.add.text(cx, btnY, offer.btnText, {
+                fontFamily: CONFIG.FONTS.UI, fontSize: '12px', fontStyle: 'bold', color: '#ffffff', letterSpacing: 1
+            }).setOrigin(0.5).setDepth(1004);
+            modalGroup.add(btnTxt);
+        });
+    }
+
     // --- МОДАЛЬНОЕ ОКНО ТАЛАНТОВ И УСИЛЕНИЙ ---
     openTalentsModal() {
         this.closeCurrentModal();

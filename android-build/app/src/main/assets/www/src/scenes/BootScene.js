@@ -50,6 +50,18 @@ class BootScene extends Phaser.Scene {
         this.load.image('ui_logo_crest', 'assets/sprites/environment/ui_logo_crest.jpg');
         this.load.image('ui_avatar', 'assets/sprites/environment/ui_avatar.jpg');
         this.load.image('ui_chest_gold', 'assets/sprites/environment/ui_chest_gold.jpg');
+
+        // --- 3. ВЫСОКОКАЧЕСТВЕННЫЕ ИКОНКИ И ЭЛЕМЕНТЫ МЕНЮ ---
+        this.load.image('ui_steel_helmet', 'assets/sprites/ui/ui_steel_helmet.png');
+        this.load.image('ui_steel_star', 'assets/sprites/ui/ui_steel_star.png');
+        this.load.image('ui_steel_chest', 'assets/sprites/ui/ui_steel_chest.png');
+        this.load.image('ui_steel_scroll', 'assets/sprites/ui/ui_steel_scroll.png');
+        this.load.image('ui_avatar_masked', 'assets/sprites/ui/ui_avatar_masked.png');
+        this.load.image('ui_discord', 'assets/sprites/ui/ui_discord.png');
+        this.load.image('ui_vk', 'assets/sprites/ui/ui_vk.png');
+        this.load.image('ui_youtube', 'assets/sprites/ui/ui_youtube.png');
+        this.load.image('ui_season_crest', 'assets/sprites/ui/ui_season_crest.png');
+        this.load.image('ui_news_banner', 'assets/sprites/ui/ui_news_banner.png');
     }
 
     async create() {
