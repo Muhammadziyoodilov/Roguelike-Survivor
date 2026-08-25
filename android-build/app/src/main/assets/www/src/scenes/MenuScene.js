@@ -361,29 +361,32 @@ class MenuScene extends Phaser.Scene {
         this.createRightWidgets(rightColX, leftTopY, lang, isCompact, height);
     }
 
-    createRightWidgets(rightColX, topY, lang, isCompact, height) {
-        const questBoxW = isCompact ? 220 : 310;
+        createRightWidgets(rightColX, topY, lang, isCompact, height) {
+        const questBoxW = isCompact ? 240 : 315;
 
         // 1. ВИДЖЕТ ЕЖЕДНЕВНЫХ ЗАДАНИЙ (Daily Quests)
-        const questBoxH = isCompact ? 140 : 215;
-        const questBoxY = topY + (isCompact ? 40 : 85);
+        const questBoxH = isCompact ? 160 : 235;
+        const questBoxY = topY + (isCompact ? 46 : 95);
 
-        if (this.textures.exists('panel_chamfer_quest')) {
-            this.add.image(rightColX, questBoxY, 'panel_chamfer_quest').setDisplaySize(questBoxW, questBoxH).setDepth(10);
-        } else {
-            const qBox = this.add.rectangle(rightColX, questBoxY, questBoxW, questBoxH, 0x0b1120, 0.95).setDepth(10);
-            qBox.setStrokeStyle(1.5, 0x252b47);
-        }
+        // Каркас панели заданий
+        const qBox = this.add.rectangle(rightColX, questBoxY, questBoxW, questBoxH, 0x0b1120, 0.95).setDepth(10);
+        qBox.setStrokeStyle(1.5, 0x252b47);
 
-        this.add.text(rightColX - questBoxW / 2 + 14, questBoxY - questBoxH / 2 + (isCompact ? 12 : 16), 'ЕЖЕДНЕВНЫЕ ЗАДАНИЯ', {
-            fontFamily: CONFIG.FONTS.TITLE, fontSize: isCompact ? '11px' : '12.5px', fontStyle: 'bold', color: '#ffffff', letterSpacing: 1
+        // Шапка панели заданий с аккуратными отступами
+        const headerY = questBoxY - questBoxH / 2 + (isCompact ? 14 : 18);
+        this.add.text(rightColX - questBoxW / 2 + 16, headerY, 'ЕЖЕДНЕВНЫЕ ЗАДАНИЯ', {
+            fontFamily: CONFIG.FONTS.TITLE, fontSize: isCompact ? '10.5px' : '12px', fontStyle: 'bold', color: '#ffffff', letterSpacing: 1.2
         }).setOrigin(0, 0.5).setDepth(11);
 
-        this.add.image(rightColX + questBoxW / 2 - 72, questBoxY - questBoxH / 2 + (isCompact ? 12 : 16), 'ui_hourglass').setDisplaySize(isCompact ? 14 : 16, isCompact ? 14 : 16).setDepth(11);
-        this.add.text(rightColX + questBoxW / 2 - 14, questBoxY - questBoxH / 2 + (isCompact ? 12 : 16), '18:45:12', {
+        // Таймер с иконкой песочных часов справа
+        const timerTxt = this.add.text(rightColX + questBoxW / 2 - 16, headerY, '18:45:12', {
             fontFamily: CONFIG.FONTS.MONO, fontSize: isCompact ? '9px' : '11px', fontStyle: 'bold', color: '#94a3b8'
         }).setOrigin(1, 0.5).setDepth(11);
 
+        const hgX = rightColX + questBoxW / 2 - 16 - timerTxt.width - (isCompact ? 10 : 14);
+        this.add.image(hgX, headerY, 'ui_hourglass').setDisplaySize(isCompact ? 13 : 16, isCompact ? 13 : 16).setDepth(11);
+
+        // Данные квестов
         const questsData = isCompact ? [
             { badgeKey: 'ui_badge_skull', title: 'Убейте 2000 врагов', cur: 1250, max: 2000, reward: '200' },
             { badgeKey: 'ui_badge_chest', title: 'Откройте 3 сундука', cur: 1, max: 3, reward: '100' }
@@ -393,114 +396,128 @@ class MenuScene extends Phaser.Scene {
             { badgeKey: 'ui_badge_xp', title: 'Выживите в 2 матчах', cur: 1, max: 2, reward: '150' }
         ];
 
-        const rowStep = isCompact ? 32 : 40;
-        const rowStartOffsetY = isCompact ? 36 : 48;
+        const rowStep = isCompact ? 36 : 46;
+        const rowH = isCompact ? 30 : 38;
+        const rowStartOffsetY = isCompact ? 40 : 50;
 
         questsData.forEach((q, idx) => {
             const rowY = questBoxY - questBoxH / 2 + rowStartOffsetY + (idx * rowStep);
-            const rowBg = this.add.rectangle(rightColX, rowY, questBoxW - 18, isCompact ? 26 : 34, 0x111827, 0.85).setDepth(11);
+            
+            // Фон строки с отступами по краям
+            const rowBg = this.add.rectangle(rightColX, rowY, questBoxW - 24, rowH, 0x111827, 0.9).setDepth(11);
             rowBg.setStrokeStyle(1, 0x1f2937);
 
-            this.add.image(rightColX - questBoxW / 2 + 20, rowY, q.badgeKey).setDisplaySize(isCompact ? 18 : 24, isCompact ? 18 : 24).setDepth(12);
+            // Иконка квеста
+            this.add.image(rightColX - questBoxW / 2 + 24, rowY, q.badgeKey).setDisplaySize(isCompact ? 18 : 22, isCompact ? 18 : 22).setDepth(12);
 
-            this.add.text(rightColX - questBoxW / 2 + 36, rowY - (isCompact ? 5 : 6), q.title, {
-                fontFamily: CONFIG.FONTS.BODY, fontSize: isCompact ? '9px' : '11px', fontStyle: 'bold', color: '#ffffff'
+            // Название задания (выше)
+            this.add.text(rightColX - questBoxW / 2 + 42, rowY - (isCompact ? 6 : 7), q.title, {
+                fontFamily: CONFIG.FONTS.BODY, fontSize: isCompact ? '9px' : '10.5px', fontStyle: 'bold', color: '#ffffff'
             }).setOrigin(0, 0.5).setDepth(12);
 
-            const barW = isCompact ? 75 : 110;
+            // Прогресс-бар (ниже с отступом)
+            const barW = isCompact ? 80 : 115;
+            const barH = isCompact ? 3.5 : 4.5;
             const pct = Math.min(1, q.cur / q.max);
-            this.add.rectangle(rightColX - questBoxW / 2 + 36 + barW / 2, rowY + (isCompact ? 5 : 7), barW, 3.5, 0x0b1120).setDepth(12);
-            this.add.rectangle(rightColX - questBoxW / 2 + 36, rowY + (isCompact ? 5 : 7), barW * pct, 3.5, 0x9333ea).setOrigin(0, 0.5).setDepth(13);
+            const barX = rightColX - questBoxW / 2 + 42;
+            const barY = rowY + (isCompact ? 6 : 8);
 
-            this.add.text(rightColX + questBoxW / 2 - 32, rowY, q.reward, {
+            this.add.rectangle(barX + barW / 2, barY, barW, barH, 0x0b1120).setDepth(12);
+            this.add.rectangle(barX, barY, barW * pct, barH, 0x9333ea).setOrigin(0, 0.5).setDepth(13);
+
+            // Награда и монетка справа
+            this.add.text(rightColX + questBoxW / 2 - 38, rowY, q.reward, {
                 fontFamily: CONFIG.FONTS.MONO, fontSize: isCompact ? '10px' : '12px', fontStyle: 'bold', color: '#ffd166'
             }).setOrigin(1, 0.5).setDepth(12);
-            this.add.image(rightColX + questBoxW / 2 - 18, rowY, 'ui_coin').setDisplaySize(isCompact ? 14 : 18, isCompact ? 14 : 18).setDepth(12);
+            this.add.image(rightColX + questBoxW / 2 - 24, rowY, 'ui_coin').setDisplaySize(isCompact ? 15 : 18, isCompact ? 15 : 18).setDepth(12);
         });
 
-        // Кнопка ВСЕ ЗАДАНИЯ
-        const allQBtnH = isCompact ? 20 : 28;
-        const allQBtnY = questBoxY + questBoxH / 2 - (isCompact ? 14 : 20);
-        if (this.textures.exists('btn_all_quests')) {
-            this.add.image(rightColX, allQBtnY, 'btn_all_quests').setDisplaySize(questBoxW - 24, allQBtnH).setInteractive({ useHandCursor: true }).setDepth(11).on('pointerdown', () => this.openAchievementsModal());
-        } else {
-            const allQBtn = this.add.rectangle(rightColX, allQBtnY, questBoxW - 24, allQBtnH, 0x1e1b4b, 0.95).setInteractive({ useHandCursor: true }).setDepth(11);
-            allQBtn.setStrokeStyle(1, 0x4338ca);
-            allQBtn.on('pointerdown', () => this.openAchievementsModal());
-        }
+        // Кнопка ВСЕ ЗАДАНИЯ с комфортным нижним отступом
+        const allQBtnH = isCompact ? 22 : 30;
+        const allQBtnY = questBoxY + questBoxH / 2 - (isCompact ? 16 : 22);
+        const allQBtn = this.add.rectangle(rightColX, allQBtnY, questBoxW - 24, allQBtnH, 0x1e1b4b, 0.95).setInteractive({ useHandCursor: true }).setDepth(11);
+        allQBtn.setStrokeStyle(1.2, 0x4338ca);
+        allQBtn.on('pointerover', () => { allQBtn.setFillStyle(0x312e81); allQBtn.setStrokeStyle(1.5, 0x6366f1); });
+        allQBtn.on('pointerout', () => { allQBtn.setFillStyle(0x1e1b4b); allQBtn.setStrokeStyle(1.2, 0x4338ca); });
+        allQBtn.on('pointerdown', () => {
+            if (window.MapSwiperModal && window.MapSwiperModal.isOpen()) return;
+            if (this.currentModal) return;
+            this.openAchievementsModal();
+        });
+
         this.add.text(rightColX, allQBtnY, 'ВСЕ ЗАДАНИЯ', {
             fontFamily: CONFIG.FONTS.TITLE, fontSize: isCompact ? '9px' : '11px', fontStyle: 'bold', color: '#c7d2fe', letterSpacing: 1.2
         }).setOrigin(0.5).setDepth(12);
 
-        // 2. ВИДЖЕТ СЕЗОНА (БОЕВОЙ ПРОПУСК)
-        const seasonY = questBoxY + questBoxH / 2 + (isCompact ? 36 : 64);
-        const sBoxH = isCompact ? 50 : 105;
-        if (this.textures.exists('panel_chamfer_season')) {
-            this.add.image(rightColX, seasonY, 'panel_chamfer_season').setDisplaySize(questBoxW, sBoxH).setDepth(10);
-        } else {
-            const sBox = this.add.rectangle(rightColX, seasonY, questBoxW, sBoxH, 0x0b1120, 0.95).setDepth(10);
-            sBox.setStrokeStyle(1.5, 0x252b47);
-        }
+        // 2. ВИДЖЕТ СЕЗОНА (БОЕВОЙ ПРОПУСК) - Отступ от верхнего блока
+        const seasonGap = isCompact ? 38 : 78;
+        const seasonY = questBoxY + questBoxH / 2 + seasonGap;
+        const sBoxH = isCompact ? 60 : 115;
 
-        this.add.text(rightColX - questBoxW / 2 + 14, seasonY - (isCompact ? 14 : 32), 'СЕЗОН 1: ТЬМА НАСТУПАЕТ', {
-            fontFamily: CONFIG.FONTS.TITLE, fontSize: isCompact ? '9px' : '11.5px', fontStyle: 'bold', color: '#ffffff'
+        const sBox = this.add.rectangle(rightColX, seasonY, questBoxW, sBoxH, 0x0b1120, 0.95).setDepth(10);
+        sBox.setStrokeStyle(1.5, 0x252b47);
+
+        // Заголовок сезона и оставшееся время
+        const sHeaderY = seasonY - sBoxH / 2 + (isCompact ? 13 : 18);
+        this.add.text(rightColX - questBoxW / 2 + 16, sHeaderY, 'СЕЗОН 1: ТЬМА НАСТУПАЕТ', {
+            fontFamily: CONFIG.FONTS.TITLE, fontSize: isCompact ? '9px' : '11px', fontStyle: 'bold', color: '#ffffff', letterSpacing: 0.8
         }).setOrigin(0, 0.5).setDepth(11);
 
-        this.add.text(rightColX + questBoxW / 2 - 14, seasonY - (isCompact ? 14 : 32), '24 Д 18 Ч', {
-            fontFamily: CONFIG.FONTS.MONO, fontSize: isCompact ? '9px' : '10px', fontStyle: 'bold', color: '#94a3b8'
+        this.add.text(rightColX + questBoxW / 2 - 16, sHeaderY, '24 Д 18 Ч', {
+            fontFamily: CONFIG.FONTS.MONO, fontSize: isCompact ? '8.5px' : '10px', fontStyle: 'bold', color: '#94a3b8'
         }).setOrigin(1, 0.5).setDepth(11);
 
-        // Иконка сезона слева
+        // Средняя линия прогресса боевого пропуска
+        const bpMidY = seasonY - (isCompact ? 2 : 5);
+
+        // Иконка сезона
         if (this.textures.exists('ui_season_crest')) {
-            this.add.image(rightColX - questBoxW / 2 + 24, seasonY - 2, 'ui_season_crest').setDisplaySize(26, 26).setDepth(12);
+            this.add.image(rightColX - questBoxW / 2 + 24, bpMidY, 'ui_season_crest').setDisplaySize(24, 24).setDepth(12);
         }
 
-        // Бейдж Уровня 15
-        if (this.textures.exists('ui_badge_oct')) {
-            this.add.image(rightColX - 80, seasonY - 2, 'ui_badge_oct').setDisplaySize(22, 20).setDepth(11);
-        } else {
-            const lvl15Badge = this.add.rectangle(rightColX - 80, seasonY - 2, 20, 18, 0x1e1b4b).setDepth(11);
-            lvl15Badge.setStrokeStyle(1, 0x6b21a8);
-        }
-        this.add.text(rightColX - 80, seasonY - 2, '15', {
+        // Бейдж Уровня 15 (Слева от прогресс-бара)
+        const lvl15X = rightColX - (isCompact ? 50 : 70);
+        const lvl15Badge = this.add.rectangle(lvl15X, bpMidY, 22, 18, 0x1e1b4b).setDepth(11);
+        lvl15Badge.setStrokeStyle(1.2, 0x6b21a8);
+        this.add.text(lvl15X, bpMidY, '15', {
             fontFamily: CONFIG.FONTS.MONO, fontSize: '8.5px', fontStyle: 'bold', color: '#c084fc'
         }).setOrigin(0.5).setDepth(12);
 
-        // Прогресс-бар
-        const bpW = isCompact ? 60 : 85;
-        this.add.rectangle(rightColX - 15, seasonY - 2, bpW, 14, 0x1e1b4b).setDepth(11);
-        this.add.rectangle(rightColX - 15 - bpW / 2, seasonY - 2, bpW * 0.65, 14, 0xa855f7).setOrigin(0, 0.5).setDepth(12);
-        this.add.text(rightColX - 15, seasonY - 2, '650 / 1000', {
-            fontFamily: CONFIG.FONTS.MONO, fontSize: '7.5px', fontStyle: 'bold', color: '#ffffff'
+        // Прогресс-бар сезона (По центру)
+        const bpW = isCompact ? 75 : 105;
+        const bpBarX = rightColX;
+        this.add.rectangle(bpBarX, bpMidY, bpW, 14, 0x1e1b4b).setDepth(11);
+        this.add.rectangle(bpBarX - bpW / 2, bpMidY, bpW * 0.65, 14, 0xa855f7).setOrigin(0, 0.5).setDepth(12);
+        this.add.text(bpBarX, bpMidY, '650 / 1000', {
+            fontFamily: CONFIG.FONTS.MONO, fontSize: '8px', fontStyle: 'bold', color: '#ffffff'
         }).setOrigin(0.5).setDepth(13);
 
-        // Бейдж Уровня 16
-        if (this.textures.exists('ui_badge_oct')) {
-            this.add.image(rightColX + 50, seasonY - 2, 'ui_badge_oct').setDisplaySize(22, 20).setDepth(11);
-        } else {
-            const lvl16Badge = this.add.rectangle(rightColX + 50, seasonY - 2, 20, 18, 0x1e1b4b).setDepth(11);
-            lvl16Badge.setStrokeStyle(1, 0x6b21a8);
-        }
-        this.add.text(rightColX + 50, seasonY - 2, '16', {
+        // Бейдж Уровня 16 (Справа от прогресс-бара)
+        const lvl16X = rightColX + (isCompact ? 50 : 70);
+        const lvl16Badge = this.add.rectangle(lvl16X, bpMidY, 22, 18, 0x1e1b4b).setDepth(11);
+        lvl16Badge.setStrokeStyle(1.2, 0x6b21a8);
+        this.add.text(lvl16X, bpMidY, '16', {
             fontFamily: CONFIG.FONTS.MONO, fontSize: '8.5px', fontStyle: 'bold', color: '#94a3b8'
         }).setOrigin(0.5).setDepth(12);
 
         // Кнопка БОЕВОЙ ПРОПУСК
-        const bpBtnY = seasonY + 30;
-        if (this.textures.exists('btn_battle_pass')) {
-            this.add.image(rightColX, bpBtnY, 'btn_battle_pass').setDisplaySize(questBoxW - 24, 26).setInteractive({ useHandCursor: true }).setDepth(11).on('pointerdown', () => this.openAchievementsModal());
-        } else {
-            const bpBtn = this.add.rectangle(rightColX, bpBtnY, questBoxW - 24, 26, 0x6b21a8).setInteractive({ useHandCursor: true }).setDepth(11);
-            bpBtn.setStrokeStyle(1, 0xa855f7);
-            bpBtn.on('pointerdown', () => this.openAchievementsModal());
-        }
-        this.add.text(rightColX, bpBtnY, 'БОЕВОЙ ПРОПУСК', {
-            fontFamily: CONFIG.FONTS.TITLE, fontSize: '10.5px', fontStyle: 'bold', color: '#ffffff', letterSpacing: 1
-        }).setOrigin(0.5).setDepth(12);
+        const bpBtnY = seasonY + sBoxH / 2 - (isCompact ? 14 : 20);
+        const bpBtn = this.add.rectangle(rightColX, bpBtnY, questBoxW - 24, isCompact ? 22 : 28, 0x6b21a8, 0.95).setInteractive({ useHandCursor: true }).setDepth(11);
+        bpBtn.setStrokeStyle(1.2, 0xa855f7);
+        bpBtn.on('pointerover', () => { bpBtn.setFillStyle(0x7e22ce); bpBtn.setStrokeStyle(1.5, 0xc084fc); });
+        bpBtn.on('pointerout', () => { bpBtn.setFillStyle(0x6b21a8); bpBtn.setStrokeStyle(1.2, 0xa855f7); });
+        bpBtn.on('pointerdown', () => {
+            if (window.MapSwiperModal && window.MapSwiperModal.isOpen()) return;
+            if (this.currentModal) return;
+            this.openAchievementsModal();
+        });
 
+        this.add.text(rightColX, bpBtnY, 'БОЕВОЙ ПРОПУСК', {
+            fontFamily: CONFIG.FONTS.TITLE, fontSize: isCompact ? '9px' : '10.5px', fontStyle: 'bold', color: '#ffffff', letterSpacing: 1.2
+        }).setOrigin(0.5).setDepth(12);
     }
 
-        createBottomTabBar(width, height, isPortrait, lang) {
+    createBottomTabBar(width, height, isPortrait, lang) {
         const isCompact = !isPortrait && height < 520;
         const barY = height - (isCompact ? 28 : (isPortrait ? 38 : 48));
         const tabs = [
