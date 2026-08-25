@@ -39,6 +39,7 @@ class TextureGenerator {
         this.createIcons();
         this.createUIIcons();
         this.createGlassUIComponents();
+        this.createStatAndModalTextures();
     }
 
     static createCanvas(key, width, height, drawFn) {
@@ -3179,6 +3180,262 @@ class TextureGenerator {
             ctx.stroke();
         });
     }
+    static createStatAndModalTextures() {
+        // 1. Hero Shadow (Тень под ногами героя)
+        this.createCanvas('hero_shadow', 48, 20, (ctx) => {
+            ctx.clearRect(0, 0, 48, 20);
+            const grad = ctx.createRadialGradient(24, 10, 2, 24, 10, 22);
+            grad.addColorStop(0, 'rgba(0, 0, 0, 0.55)');
+            grad.addColorStop(0.6, 'rgba(0, 0, 0, 0.3)');
+            grad.addColorStop(1, 'transparent');
+            ctx.fillStyle = grad;
+            ctx.beginPath();
+            ctx.ellipse(24, 10, 22, 8, 0, 0, Math.PI * 2);
+            ctx.fill();
+        });
+
+        // 2. Hero Pedestal Glow (Светящийся пьедестал витрины героя)
+        this.createCanvas('hero_pedestal_glow', 160, 60, (ctx) => {
+            ctx.clearRect(0, 0, 160, 60);
+
+            // Мягкое неоновое сияние вокруг пьедестала
+            const aura = ctx.createRadialGradient(80, 30, 10, 80, 30, 75);
+            aura.addColorStop(0, 'rgba(56, 189, 248, 0.45)');
+            aura.addColorStop(0.5, 'rgba(168, 85, 247, 0.2)');
+            aura.addColorStop(1, 'transparent');
+            ctx.fillStyle = aura;
+            ctx.beginPath();
+            ctx.ellipse(80, 30, 75, 28, 0, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Нижняя тень каменной плиты
+            ctx.fillStyle = 'rgba(2, 6, 23, 0.85)';
+            ctx.beginPath();
+            ctx.ellipse(80, 38, 65, 18, 0, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Основной диск пьедестала (Обсидиан)
+            const baseGrad = ctx.createLinearGradient(0, 10, 0, 50);
+            baseGrad.addColorStop(0, '#1e293b');
+            baseGrad.addColorStop(0.5, '#0f172a');
+            baseGrad.addColorStop(1, '#020617');
+            ctx.fillStyle = baseGrad;
+            ctx.beginPath();
+            ctx.ellipse(80, 30, 62, 17, 0, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Золотая окантовка пьедестала
+            ctx.strokeStyle = '#ffd166';
+            ctx.lineWidth = 2.5;
+            ctx.stroke();
+
+            // Внутреннее руническое кольцо (Неоновый бирюзовый)
+            ctx.strokeStyle = '#38bdf8';
+            ctx.lineWidth = 1.5;
+            ctx.beginPath();
+            ctx.ellipse(80, 30, 48, 12, 0, 0, Math.PI * 2);
+            ctx.stroke();
+
+            // Рунические точки
+            ctx.fillStyle = '#ffffff';
+            [30, 50, 70, 90, 110, 130].forEach(x => {
+                ctx.beginPath();
+                ctx.arc(x, 30, 1.5, 0, Math.PI * 2);
+                ctx.fill();
+            });
+        });
+
+        // 3. Stat Icon: HP (Красное сердце)
+        this.createCanvas('stat_icon_hp', 32, 32, (ctx) => {
+            ctx.clearRect(0, 0, 32, 32);
+            ctx.fillStyle = 'rgba(239, 68, 68, 0.25)';
+            ctx.beginPath(); ctx.arc(16, 16, 15, 0, Math.PI * 2); ctx.fill();
+
+            const grad = ctx.createRadialGradient(13, 11, 2, 16, 16, 14);
+            grad.addColorStop(0, '#fca5a5');
+            grad.addColorStop(0.4, '#ef4444');
+            grad.addColorStop(1, '#991b1b');
+            ctx.fillStyle = grad;
+            ctx.beginPath();
+            ctx.moveTo(16, 26);
+            ctx.bezierCurveTo(6, 18, 5, 8, 11, 6);
+            ctx.bezierCurveTo(14, 5, 15.5, 7, 16, 9);
+            ctx.bezierCurveTo(16.5, 7, 18, 5, 21, 6);
+            ctx.bezierCurveTo(27, 8, 26, 18, 16, 26);
+            ctx.closePath();
+            ctx.fill();
+            ctx.strokeStyle = '#fecaca';
+            ctx.lineWidth = 1;
+            ctx.stroke();
+        });
+
+        // 4. Stat Icon: Speed / SPD (Золотое крыло / сапог скорости)
+        this.createCanvas('stat_icon_spd', 32, 32, (ctx) => {
+            ctx.clearRect(0, 0, 32, 32);
+            ctx.fillStyle = 'rgba(250, 204, 21, 0.25)';
+            ctx.beginPath(); ctx.arc(16, 16, 15, 0, Math.PI * 2); ctx.fill();
+
+            const grad = ctx.createLinearGradient(6, 6, 26, 26);
+            grad.addColorStop(0, '#fef08a');
+            grad.addColorStop(0.5, '#eab308');
+            grad.addColorStop(1, '#a16207');
+            ctx.fillStyle = grad;
+
+            // Молния / Крыло
+            ctx.beginPath();
+            ctx.moveTo(18, 4);
+            ctx.lineTo(8, 16);
+            ctx.lineTo(15, 16);
+            ctx.lineTo(13, 28);
+            ctx.lineTo(24, 14);
+            ctx.lineTo(17, 14);
+            ctx.closePath();
+            ctx.fill();
+            ctx.strokeStyle = '#ffffff';
+            ctx.lineWidth = 1;
+            ctx.stroke();
+        });
+
+        // 5. Stat Icon: Damage / DMG (Огненный меч)
+        this.createCanvas('stat_icon_dmg', 32, 32, (ctx) => {
+            ctx.clearRect(0, 0, 32, 32);
+            ctx.fillStyle = 'rgba(249, 115, 22, 0.25)';
+            ctx.beginPath(); ctx.arc(16, 16, 15, 0, Math.PI * 2); ctx.fill();
+
+            // Клинок меча
+            ctx.strokeStyle = '#ffffff';
+            ctx.lineWidth = 3;
+            ctx.lineCap = 'round';
+            ctx.beginPath();
+            ctx.moveTo(24, 8); ctx.lineTo(8, 24);
+            ctx.stroke();
+
+            // Огненная плазма
+            ctx.strokeStyle = '#f97316';
+            ctx.lineWidth = 1.5;
+            ctx.beginPath();
+            ctx.moveTo(26, 6); ctx.lineTo(10, 22);
+            ctx.stroke();
+
+            // Гарда
+            ctx.strokeStyle = '#ffd166';
+            ctx.lineWidth = 3.5;
+            ctx.beginPath();
+            ctx.moveTo(14, 18); ctx.lineTo(8, 12);
+            ctx.stroke();
+        });
+
+        // 6. Stat Icon: Crit (Фиолетовая вспышка крита)
+        this.createCanvas('stat_icon_crit', 32, 32, (ctx) => {
+            ctx.clearRect(0, 0, 32, 32);
+            ctx.fillStyle = 'rgba(192, 132, 252, 0.25)';
+            ctx.beginPath(); ctx.arc(16, 16, 15, 0, Math.PI * 2); ctx.fill();
+
+            const grad = ctx.createRadialGradient(16, 16, 2, 16, 16, 14);
+            grad.addColorStop(0, '#ffffff');
+            grad.addColorStop(0.3, '#f5d0fe');
+            grad.addColorStop(0.7, '#c084fc');
+            grad.addColorStop(1, '#7e22ce');
+            ctx.fillStyle = grad;
+
+            ctx.beginPath();
+            for (let i = 0; i < 4; i++) {
+                const a = (i * Math.PI) / 2;
+                const ox = 16 + Math.cos(a) * 13;
+                const oy = 16 + Math.sin(a) * 13;
+                const ix = 16 + Math.cos(a + Math.PI / 4) * 4;
+                const iy = 16 + Math.sin(a + Math.PI / 4) * 4;
+                if (i === 0) ctx.moveTo(ox, oy); else ctx.lineTo(ox, oy);
+                ctx.lineTo(ix, iy);
+            }
+            ctx.closePath();
+            ctx.fill();
+            ctx.strokeStyle = '#ffffff';
+            ctx.lineWidth = 1;
+            ctx.stroke();
+        });
+
+        // 7. Epic Golden Battle CTA Button (btn_battle_gold_epic)
+        this.createCanvas('btn_battle_gold_epic', 280, 50, (ctx) => {
+            ctx.clearRect(0, 0, 280, 50);
+
+            // Изумрудно-золотой богатый градиент
+            const grad = ctx.createLinearGradient(0, 0, 0, 50);
+            grad.addColorStop(0, '#10b981');
+            grad.addColorStop(0.4, '#059669');
+            grad.addColorStop(0.8, '#047857');
+            grad.addColorStop(1, '#064e3b');
+            ctx.fillStyle = grad;
+            ctx.beginPath();
+            ctx.roundRect(2, 2, 276, 46, 12);
+            ctx.fill();
+
+            // Золотая окантовка с двойным свечением
+            ctx.strokeStyle = '#ffd166';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+
+            // Верхний зеркальный глянец
+            const gloss = ctx.createLinearGradient(0, 3, 0, 24);
+            gloss.addColorStop(0, 'rgba(255, 255, 255, 0.45)');
+            gloss.addColorStop(1, 'rgba(255, 255, 255, 0.0)');
+            ctx.fillStyle = gloss;
+            ctx.beginPath();
+            ctx.roundRect(4, 3, 272, 18, [10, 10, 2, 2]);
+            ctx.fill();
+        });
+
+                // 9. UI Hourglass (Песочные часы таймера заданий)
+        this.createCanvas('ui_hourglass', 36, 36, (ctx) => {
+            ctx.clearRect(0, 0, 36, 36);
+            const grad = ctx.createLinearGradient(0, 4, 0, 32);
+            grad.addColorStop(0, '#0284c7');
+            grad.addColorStop(1, '#0369a1');
+            ctx.fillStyle = grad;
+
+            ctx.beginPath();
+            ctx.moveTo(8, 6); ctx.lineTo(28, 6); ctx.lineTo(18, 18); ctx.lineTo(28, 30); ctx.lineTo(8, 30); ctx.lineTo(18, 18); ctx.closePath();
+            ctx.fill();
+
+            ctx.strokeStyle = '#38bdf8';
+            ctx.lineWidth = 1.8;
+            ctx.stroke();
+
+            // Золотой светящийся песок
+            ctx.fillStyle = '#ffd166';
+            ctx.fillRect(13, 22, 10, 6);
+            ctx.fillRect(17, 12, 2, 8);
+        });
+
+        // 8. UI Skull (Иконка черепа для счетчика убийств)
+        this.createCanvas('ui_skull', 32, 32, (ctx) => {
+            ctx.clearRect(0, 0, 32, 32);
+            ctx.fillStyle = '#f8fafc';
+            ctx.beginPath();
+            ctx.arc(16, 13, 10, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.fillRect(11, 18, 10, 7);
+
+            // Глазницы
+            ctx.fillStyle = '#0f172a';
+            ctx.beginPath();
+            ctx.arc(12, 13, 3, 0, Math.PI * 2);
+            ctx.arc(20, 13, 3, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Нос
+            ctx.beginPath();
+            ctx.moveTo(16, 17); ctx.lineTo(14.5, 20); ctx.lineTo(17.5, 20); ctx.closePath();
+            ctx.fill();
+
+            // Зубы
+            ctx.fillStyle = '#0f172a';
+            ctx.fillRect(13, 22, 1.5, 3);
+            ctx.fillRect(15.5, 22, 1.5, 3);
+            ctx.fillRect(18, 22, 1.5, 3);
+        });
+    }
+
     static createGlassUIComponents() {
         // 1. PLAY BUTTON (Rich Arcane Purple Gradient + Glossy Pill)
         this.createCanvas('btn_play_bg', 285, 68, (ctx) => {

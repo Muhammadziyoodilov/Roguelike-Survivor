@@ -498,30 +498,6 @@ class MenuScene extends Phaser.Scene {
             fontFamily: CONFIG.FONTS.TITLE, fontSize: '10.5px', fontStyle: 'bold', color: '#ffffff', letterSpacing: 1
         }).setOrigin(0.5).setDepth(12);
 
-        // 3. ВИДЖЕТ НОВОСТЕЙ (РЕЖИМ НА ДВОИХ УЖЕ ДОСТУПЕН!)
-        if (height >= 520) {
-            const newsY = seasonY + 120;
-            if (this.textures.exists('panel_chamfer_news')) {
-                this.add.image(rightColX, newsY, 'panel_chamfer_news').setDisplaySize(questBoxW, 120).setDepth(10);
-            } else {
-                const newsBox = this.add.rectangle(rightColX, newsY, questBoxW, 120, 0x0b1120, 0.95).setDepth(10);
-                newsBox.setStrokeStyle(1.5, 0x252b47);
-            }
-
-            this.add.text(rightColX - questBoxW / 2 + 14, newsY - 44, 'НОВОСТИ', {
-                fontFamily: CONFIG.FONTS.TITLE, fontSize: '11px', fontStyle: 'bold', color: '#94a3b8'
-            }).setOrigin(0, 0.5).setDepth(11);
-
-            if (this.textures.exists('ui_news_banner')) {
-                this.add.image(rightColX, newsY + 4, 'ui_news_banner').setDisplaySize(questBoxW - 14, 68).setDepth(11);
-            }
-
-            // 4 точки карусели внизу
-            for (let i = 0; i < 4; i++) {
-                const dotX = rightColX - 18 + (i * 12);
-                this.add.circle(dotX, newsY + 46, 2.5, i === 0 ? 0xa855f7 : 0x334155).setDepth(12);
-            }
-        }
     }
 
         createBottomTabBar(width, height, isPortrait, lang) {

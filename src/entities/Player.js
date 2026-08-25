@@ -176,9 +176,8 @@ class Player extends Phaser.GameObjects.Sprite {
             else if (vx > 0) this.flipX = false;
 
             this.walkTimer += delta * (currentSpeed / 100);
-            this.dustTimer += delta;
 
-            // Смена кадров шагов ходьбы
+            // Смена кадров шагов ходьбы (плавная походка)
             const stepCycle = Math.floor(this.walkTimer / 160) % 2;
             const walkTextureKey = `hero_${this.heroId}_walk_${stepCycle}`;
             if (this.scene.textures.exists(walkTextureKey)) {
@@ -188,36 +187,25 @@ class Player extends Phaser.GameObjects.Sprite {
                 if (this.texture.key !== baseKey) this.setTexture(baseKey);
             }
 
-            // Динамический наклон тела и подпрыгивание при беге
-            const bob = Math.abs(Math.sin(this.walkTimer * 0.018)) * 2;
-            const tilt = (vx !== 0 ? Math.sign(vx) * 3 : 0) + Math.sin(this.walkTimer * 0.018) * 2;
-            this.setAngle(tilt);
-
-            const scalePulse = Math.sin(this.walkTimer * 0.018) * 0.035;
-            this.setScale(1.0 + scalePulse, 1.0 - scalePulse);
-
-            // Клубы пыли из-под ног
-            if (this.dustTimer > 200) {
-                this.dustTimer = 0;
-                this.createFootstepDust(vx, vy);
-            }
+            this.setAngle(0);
+            this.setScale(1.0, 1.0);
 
             if (this.shadow) {
-                this.shadow.setScale(1.0 - bob * 0.05, 1.0 - bob * 0.05);
+                this.shadow.setScale(1.0, 1.0);
             }
         } else {
-            // В покое: Idle-дыхание и возврат базовой текстуры
+            // В покое: плавный возврат базовой текстуры
             const baseKey = `hero_${this.heroId}`;
             if (this.texture.key !== baseKey) this.setTexture(baseKey);
 
             this.animPhase += delta * 0.0035;
-            const breath = Math.sin(this.animPhase) * 0.03;
+            const breath = Math.sin(this.animPhase) * 0.02;
             
             this.setAngle(0);
             this.setScale(1.0 - breath, 1.0 + breath);
 
             if (this.shadow) {
-                this.shadow.setScale(1.0 - breath * 0.4, 1.0 - breath * 0.4);
+                this.shadow.setScale(1.0 - breath * 0.3, 1.0 - breath * 0.3);
             }
         }
     }
