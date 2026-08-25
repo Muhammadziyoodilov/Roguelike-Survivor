@@ -37,44 +37,62 @@ canvas {
     display: block;
     width: 100% !important;
     height: 100% !important;
-    image-rendering: pixelated;
-    image-rendering: crisp-edges;
+    image-rendering: auto;
 }
 
-/* Мобильный экранный джойстик */
+/* Мобильный экранный джойстик (Всегда на фиксированном месте) */
 #joystick-zone {
     position: absolute;
-    bottom: 30px;
-    left: 30px;
-    width: 140px;
-    height: 140px;
-    display: none; /* Включается скриптом только на тач-устройствах */
+    bottom: 35px;
+    left: 45px;
+    width: 130px;
+    height: 130px;
+    display: none; /* Включается скриптом на тач-устройствах */
     touch-action: none;
     z-index: 100;
+    pointer-events: auto;
+    transition: left 0.25s ease, bottom 0.25s ease, transform 0.25s ease;
+}
+
+/* Портретный режим: строго по центру снизу */
+body.is-portrait #joystick-zone {
+    left: 50% !important;
+    bottom: 45px !important;
+    transform: translateX(-50%) !important;
+}
+
+/* Горизонтальный режим: строго слева снизу */
+body.is-landscape #joystick-zone {
+    left: 45px !important;
+    bottom: 35px !important;
+    transform: none !important;
 }
 
 #joystick-base {
-    width: 120px;
-    height: 120px;
-    background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, rgba(0,0,0,0.5) 100%);
-    border: 2px solid rgba(255, 255, 255, 0.4);
+    width: 130px;
+    height: 130px;
+    background: radial-gradient(circle, rgba(30, 41, 59, 0.75) 0%, rgba(11, 17, 32, 0.92) 100%);
+    border: 2.5px solid rgba(56, 189, 248, 0.65);
     border-radius: 50%;
     position: relative;
-    box-shadow: 0 0 15px rgba(0, 200, 255, 0.3);
+    box-shadow: 0 0 20px rgba(6, 182, 212, 0.4), inset 0 0 15px rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 #joystick-knob {
-    width: 50px;
-    height: 50px;
-    background: radial-gradient(circle, #00e5ff 0%, #0077b6 100%);
+    width: 52px;
+    height: 52px;
+    background: radial-gradient(circle, #38bdf8 0%, #0284c7 60%, #0369a1 100%);
     border: 2px solid #ffffff;
     border-radius: 50%;
     position: absolute;
-    top: 35px;
-    left: 35px;
-    box-shadow: 0 0 10px #00e5ff;
+    top: 39px;
+    left: 39px;
+    box-shadow: 0 0 14px rgba(56, 189, 248, 0.85);
     pointer-events: none;
-    transition: transform 0.05s ease-out;
+    transition: transform 0.04s ease-out;
 }
 
 /* Виртуальные джойстики для Co-op режима */
@@ -211,4 +229,636 @@ canvas {
     font-size: 13px;
     line-height: 1.5;
     color: #94a3b8;
+}
+
+
+/* ==========================================================================
+   3D SWIPER.JS MAP / ARENA SELECTION MODAL
+   ========================================================================== */
+.map-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    height: 100dvh;
+    background: rgba(4, 7, 18, 0.92);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    z-index: 10000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 12px;
+    opacity: 1;
+    transition: opacity 0.22s ease;
+}
+
+.map-modal-overlay.modal-opening {
+    animation: modalFadeIn 0.22s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.map-modal-overlay.modal-closing {
+    opacity: 0;
+    pointer-events: none;
+}
+
+@keyframes modalFadeIn {
+    from { opacity: 0; transform: scale(0.96); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+.map-modal-container {
+    width: 100%;
+    max-width: 860px;
+    height: auto;
+    max-height: 94vh;
+    max-height: 94dvh;
+    background: linear-gradient(180deg, rgba(17, 24, 39, 0.98) 0%, rgba(9, 13, 24, 0.99) 100%);
+    border: 2px solid rgba(56, 189, 248, 0.5);
+    border-radius: 22px;
+    box-shadow: 0 0 45px rgba(14, 165, 233, 0.3), 0 25px 60px rgba(0, 0, 0, 0.9);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    position: relative;
+    padding: 16px 20px 20px 20px;
+    gap: 12px;
+}
+
+/* Header */
+.map-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 8px;
+    border-bottom: 1px solid rgba(51, 65, 85, 0.6);
+    position: relative;
+}
+
+.btn-ghost-nav {
+    background: rgba(30, 41, 59, 0.8);
+    border: 1px solid #d97706;
+    color: #ffd166;
+    font-family: 'Russo One', sans-serif;
+    font-size: 11px;
+    letter-spacing: 1px;
+    padding: 6px 14px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.btn-ghost-nav:hover {
+    background: #d97706;
+    color: #ffffff;
+    box-shadow: 0 0 12px rgba(217, 119, 6, 0.6);
+}
+
+.map-modal-title-box {
+    text-align: center;
+}
+
+.map-modal-title {
+    font-family: 'Russo One', sans-serif;
+    font-size: 17px;
+    letter-spacing: 1.5px;
+    color: #38bdf8;
+    text-shadow: 0 0 10px rgba(56, 189, 248, 0.6);
+    margin: 0;
+}
+
+.hero-selected-tag {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    color: #ffd166;
+    letter-spacing: 0.5px;
+    margin-top: 2px;
+}
+
+.hero-selected-tag b {
+    color: #ffffff;
+}
+
+.btn-circle-close {
+    width: 30px;
+    height: 30px;
+    background: radial-gradient(circle, rgba(239, 68, 68, 0.9) 0%, rgba(185, 28, 28, 0.95) 100%);
+    border: 1.5px solid #fca5a5;
+    border-radius: 50%;
+    color: #ffffff;
+    font-size: 13px;
+    font-weight: bold;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.btn-circle-close:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 14px rgba(239, 68, 68, 0.7);
+}
+
+/* Swiper Carousel Styling */
+.arena-swiper {
+    width: 100%;
+    padding-top: 14px;
+    padding-bottom: 30px;
+    overflow: hidden;
+}
+
+.arena-swiper .swiper-slide {
+    width: 320px;
+    transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.3s ease;
+    opacity: 0.6;
+    transform: scale(0.92);
+}
+
+.arena-swiper .swiper-slide-active {
+    opacity: 1;
+    transform: scale(1);
+}
+
+/* Arena Card Base */
+.arena-card {
+    background: rgba(15, 23, 42, 0.96);
+    border-radius: 16px;
+    border: 2px solid #334155;
+    overflow: hidden;
+    position: relative;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6);
+    display: flex;
+    flex-direction: column;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.swiper-slide-active .arena-card {
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.8), 0 0 20px rgba(56, 189, 248, 0.35);
+}
+
+/* Theme Borders & Glows */
+.castle-theme {
+    border-color: #38bdf8;
+    background: linear-gradient(180deg, #0f1c33 0%, #080f1e 100%);
+}
+.swiper-slide-active .castle-theme {
+    box-shadow: 0 0 25px rgba(56, 189, 248, 0.4);
+}
+
+.forest-theme {
+    border-color: #10b981;
+    background: linear-gradient(180deg, #09261a 0%, #04140e 100%);
+}
+.swiper-slide-active .forest-theme {
+    box-shadow: 0 0 25px rgba(16, 185, 129, 0.4);
+}
+
+.inferno-theme {
+    border-color: #ef4444;
+    background: linear-gradient(180deg, #2b0b0b 0%, #150505 100%);
+}
+.swiper-slide-active .inferno-theme {
+    box-shadow: 0 0 25px rgba(239, 68, 68, 0.45);
+}
+
+.frost-theme {
+    border-color: #06b6d4;
+    background: linear-gradient(180deg, #0a233c 0%, #051220 100%);
+}
+.swiper-slide-active .frost-theme {
+    box-shadow: 0 0 25px rgba(6, 182, 212, 0.4);
+}
+
+/* Arena Art Frames & Graphics */
+.arena-art-frame {
+    height: 135px;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.arena-art {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+.arena-art svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+.art-castle {
+    background: radial-gradient(circle at 50% 30%, #1e3a8a 0%, #0a1128 100%);
+}
+.art-castle-graphic {
+    width: 100%;
+    height: 100%;
+    background-image: 
+        radial-gradient(circle at 50% 35%, #ffd166 0%, rgba(255,209,102,0.1) 25%, transparent 40%),
+        linear-gradient(180deg, transparent 65%, #0b0f19 100%);
+}
+
+.art-forest {
+    background: radial-gradient(circle at 50% 40%, #065f46 0%, #022c22 100%);
+}
+.art-forest-graphic {
+    width: 100%;
+    height: 100%;
+    background-image: 
+        radial-gradient(circle at 40% 60%, #34d399 0%, transparent 25%),
+        radial-gradient(circle at 70% 40%, #10b981 0%, transparent 20%),
+        linear-gradient(180deg, transparent 65%, #04140e 100%);
+}
+
+.art-inferno {
+    background: radial-gradient(circle at 50% 50%, #991b1b 0%, #450a0a 100%);
+}
+.art-inferno-graphic {
+    width: 100%;
+    height: 100%;
+    background-image: 
+        radial-gradient(circle at 50% 80%, #fbbf24 0%, #ef4444 30%, transparent 60%),
+        linear-gradient(180deg, transparent 60%, #1a0404 100%);
+}
+
+.art-frost {
+    background: radial-gradient(circle at 50% 30%, #0284c7 0%, #082f49 100%);
+}
+.art-frost-graphic {
+    width: 100%;
+    height: 100%;
+    background-image: 
+        radial-gradient(circle at 50% 20%, #e0f2fe 0%, #38bdf8 30%, transparent 60%),
+        linear-gradient(180deg, transparent 65%, #03101c 100%);
+}
+
+/* Corner Badges */
+.arena-badge-corner {
+    position: absolute;
+    top: 8px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+    padding: 3px 8px;
+    border-radius: 8px;
+    background: rgba(15, 23, 42, 0.85);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: #facc15;
+    z-index: 2;
+    backdrop-filter: blur(4px);
+}
+.arena-badge-corner.top-left { left: 8px; }
+.arena-badge-corner.top-right { right: 8px; color: #38bdf8; }
+.arena-badge-corner.bonus-gold { color: #ffd166; border-color: #d97706; }
+.arena-badge-corner.bonus-xp { color: #a78bfa; border-color: #7c3aed; }
+
+/* Card Body */
+.arena-card-body {
+    padding: 12px 14px 14px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    text-align: center;
+}
+
+.arena-card-title {
+    font-family: 'Russo One', sans-serif;
+    font-size: 15px;
+    letter-spacing: 1px;
+    color: #ffffff;
+    margin: 0;
+}
+
+.castle-theme .arena-card-title { color: #38bdf8; }
+.forest-theme .arena-card-title { color: #34d399; }
+.inferno-theme .arena-card-title { color: #f87171; }
+.frost-theme .arena-card-title { color: #38bdf8; }
+
+.arena-card-desc {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 10px;
+    line-height: 1.4;
+    color: #cbd5e1;
+    margin: 0;
+    min-height: 38px;
+}
+
+.arena-card-info-row {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-top: 4px;
+}
+
+.info-tag {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 9.5px;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 6px;
+    background: rgba(30, 41, 59, 0.7);
+    color: #e2e8f0;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.info-tag.record {
+    color: #94a3b8;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9.5px;
+}
+
+.info-tag.record.has-record {
+    color: #ffd166;
+    border-color: rgba(251, 191, 36, 0.4);
+    background: rgba(245, 158, 11, 0.15);
+}
+
+/* Lock Overlay */
+.lock-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(7, 10, 22, 0.62);
+    backdrop-filter: blur(2.5px);
+    -webkit-backdrop-filter: blur(2.5px);
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 16px;
+    gap: 8px;
+    text-align: center;
+    border-radius: 16px;
+}
+
+.lock-icon {
+    font-size: 32px;
+    animation: lockPulse 1.5s ease-in-out infinite;
+}
+
+@keyframes lockPulse {
+    0%, 100% { transform: scale(1); filter: drop-shadow(0 0 6px rgba(239, 68, 68, 0.5)); }
+    50% { transform: scale(1.1); filter: drop-shadow(0 0 14px rgba(239, 68, 68, 0.9)); }
+}
+
+.lock-text {
+    font-family: 'Russo One', sans-serif;
+    font-size: 10.5px;
+    color: #ffd166;
+    letter-spacing: 0.5px;
+    line-height: 1.4;
+    background: rgba(220, 38, 38, 0.35);
+    border: 1px solid rgba(239, 68, 68, 0.7);
+    padding: 6px 12px;
+    border-radius: 20px;
+    box-shadow: 0 0 14px rgba(239, 68, 68, 0.5);
+}
+
+/* Shake Animation */
+.shake-anim {
+    animation: shakeCard 0.4s ease;
+}
+
+@keyframes shakeCard {
+    0%, 100% { transform: translateX(0); }
+    20%, 60% { transform: translateX(-8px); }
+    40%, 80% { transform: translateX(8px); }
+}
+
+/* Swiper Navigation Arrows */
+.arena-nav-btn {
+    width: 36px !important;
+    height: 36px !important;
+    background: rgba(15, 23, 42, 0.9) !important;
+    border: 1.5px solid #38bdf8 !important;
+    border-radius: 50% !important;
+    color: #ffffff !important;
+    font-family: 'Russo One', sans-serif !important;
+    font-size: 20px !important;
+    font-weight: bold !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    box-shadow: 0 0 14px rgba(56, 189, 248, 0.5) !important;
+    transition: all 0.15s ease !important;
+}
+
+.arena-nav-btn::after {
+    display: none !important;
+}
+
+.arena-nav-btn:hover {
+    background: #0284c7 !important;
+    transform: scale(1.1);
+}
+
+.swiper-button-prev { left: 4px !important; }
+.swiper-button-next { right: 4px !important; }
+
+/* Swiper Pagination Bullets */
+.arena-pagination .swiper-pagination-bullet {
+    background: #475569 !important;
+    opacity: 0.8 !important;
+    width: 8px !important;
+    height: 6px !important;
+    border-radius: 3px !important;
+    transition: all 0.25s ease !important;
+}
+
+.arena-pagination .swiper-pagination-bullet-active {
+    background: #38bdf8 !important;
+    width: 22px !important;
+    box-shadow: 0 0 10px #38bdf8 !important;
+}
+
+/* Epic Battle Start Button */
+.map-modal-footer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-top: 4px;
+}
+
+.epic-start-btn {
+    width: 100%;
+    max-width: 320px;
+    height: 48px;
+    background: linear-gradient(180deg, #f59e0b 0%, #d97706 50%, #b45309 100%);
+    border: 2px solid #fde047;
+    border-radius: 12px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 0 20px rgba(245, 158, 11, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.4);
+    transition: transform 0.15s ease, box-shadow 0.15s ease, filter 0.15s ease;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.epic-start-btn:hover {
+    transform: scale(1.02);
+    box-shadow: 0 0 30px rgba(245, 158, 11, 0.8);
+    filter: brightness(1.1);
+}
+
+.epic-start-btn:active {
+    transform: scale(0.98);
+}
+
+.epic-start-btn.btn-locked {
+    background: linear-gradient(180deg, #1f2937 0%, #111827 100%) !important;
+    border-color: #ef4444 !important;
+    box-shadow: 0 0 14px rgba(239, 68, 68, 0.3) !important;
+}
+
+.epic-start-btn.btn-locked:hover {
+    box-shadow: 0 0 20px rgba(239, 68, 68, 0.6) !important;
+}
+
+.epic-start-btn.btn-locked .btn-label {
+    color: #ef4444 !important;
+    font-size: 11px !important;
+}
+
+.btn-shimmer {
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.35), transparent);
+    transform: skewX(-20deg);
+    animation: shimmerPass 2.4s infinite;
+}
+
+@keyframes shimmerPass {
+    0% { left: -100%; }
+    50%, 100% { left: 200%; }
+}
+
+.btn-label {
+    font-family: 'Russo One', sans-serif;
+    font-size: 16px;
+    letter-spacing: 1.5px;
+    color: #ffffff;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.7);
+    position: relative;
+    z-index: 2;
+}
+
+/* ==========================================================================
+   RESPONSIVE BREAKPOINTS (PORTRAIT & COMPACT)
+   ========================================================================== */
+@media (max-width: 480px) {
+    .map-modal-container {
+        padding: 10px 12px 14px 12px;
+        gap: 6px;
+    }
+
+    .map-modal-title {
+        font-size: 14px;
+    }
+
+    .hero-selected-tag {
+        font-size: 10px;
+    }
+
+    .btn-ghost-nav {
+        font-size: 10px;
+        padding: 4px 10px;
+    }
+
+    .arena-swiper {
+        padding-top: 8px;
+        padding-bottom: 24px;
+    }
+
+    .arena-swiper .swiper-slide {
+        width: 250px;
+    }
+
+    .arena-art-frame {
+        height: 105px;
+    }
+
+    .arena-card-desc {
+        font-size: 9px;
+        min-height: 32px;
+    }
+
+    .info-tag {
+        font-size: 8.5px;
+    }
+
+    .epic-start-btn {
+        height: 42px;
+    }
+
+    .btn-label {
+        font-size: 14px;
+    }
+}
+
+@media (max-height: 500px) and (orientation: landscape) {
+    .map-modal-container {
+        padding: 6px 12px 10px 12px;
+        gap: 4px;
+        max-height: 98vh;
+    }
+
+    .map-modal-title {
+        font-size: 13px;
+    }
+
+    .hero-selected-tag {
+        display: none;
+    }
+
+    .arena-swiper {
+        padding-top: 4px;
+        padding-bottom: 18px;
+    }
+
+    .arena-swiper .swiper-slide {
+        width: 220px;
+    }
+
+    .arena-art-frame {
+        height: 75px;
+    }
+
+    .arena-card-body {
+        padding: 6px 10px;
+        gap: 3px;
+    }
+
+    .arena-card-title {
+        font-size: 12px;
+    }
+
+    .arena-card-desc {
+        display: none;
+    }
+
+    .epic-start-btn {
+        height: 34px;
+    }
+
+    .btn-label {
+        font-size: 12px;
+    }
 }

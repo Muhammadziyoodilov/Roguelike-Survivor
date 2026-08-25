@@ -8,7 +8,10 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@600;700;800&family=Montserrat:wght@600;700;800;900&family=Russo+One&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="lib/swiper-bundle.min.css">
     <link rel="stylesheet" href="styles.css">
+    <!-- Swiper.js Bundle (Локальный оффлайн) -->
+    <script src="lib/swiper-bundle.min.js"></script>
     <!-- Phaser 3 CDN -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/phaser/3.80.1/phaser.min.js"></script>
     <!-- Yandex Games SDK (Подключается в среде Яндекса) -->
@@ -60,6 +63,250 @@
         </div>
     </div>
 
+    <!-- 3D Swiper.js Модальное окно выбора арены -->
+    <div id="map-swiper-modal" class="map-modal-overlay" style="display: none;">
+        <div class="map-modal-container">
+            <!-- Шапка модального окна -->
+            <div class="map-modal-header">
+                <button id="swiper-btn-heroes" class="btn-ghost-nav" type="button">‹ К ГЕРОЯМ</button>
+                <div class="map-modal-title-box">
+                    <h2 class="map-modal-title">ВЫБОР АРЕНЫ БИТВЫ</h2>
+                    <div id="swiper-selected-hero" class="hero-selected-tag">⚔️ ГЕРОЙ: <b>РЫЦАРЬ</b></div>
+                </div>
+                <button id="swiper-btn-close" class="btn-circle-close" type="button">✕</button>
+            </div>
+
+            <!-- Swiper 3D Карусель Арен -->
+            <div class="swiper arena-swiper">
+                <div class="swiper-wrapper">
+                    <!-- 1. Тёмный Замок -->
+                    <div class="swiper-slide" data-map-id="dark_castle">
+                        <div class="arena-card castle-theme">
+                            <div class="card-glow-bg"></div>
+                            <div class="arena-art-frame">
+                                <div class="arena-art art-castle">
+                                    <svg viewBox="0 0 320 140" width="100%" height="100%" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+                                        <defs>
+                                            <linearGradient id="sky-castle" x1="0" y1="0" x2="0" y2="1">
+                                                <stop offset="0%" stop-color="#0b132b"/>
+                                                <stop offset="60%" stop-color="#1c2541"/>
+                                                <stop offset="100%" stop-color="#0b0f19"/>
+                                            </linearGradient>
+                                            <radialGradient id="moon-glow" cx="50%" cy="35%" r="50%">
+                                                <stop offset="0%" stop-color="#ffd166" stop-opacity="1"/>
+                                                <stop offset="40%" stop-color="#f59e0b" stop-opacity="0.6"/>
+                                                <stop offset="80%" stop-color="#ef4444" stop-opacity="0.2"/>
+                                                <stop offset="100%" stop-color="transparent"/>
+                                            </radialGradient>
+                                        </defs>
+                                        <rect width="320" height="140" fill="url(#sky-castle)"/>
+                                        <circle cx="35" cy="20" r="1.5" fill="#ffffff" opacity="0.8"/>
+                                        <circle cx="85" cy="15" r="1" fill="#ffffff" opacity="0.6"/>
+                                        <circle cx="240" cy="25" r="1.5" fill="#ffffff" opacity="0.8"/>
+                                        <circle cx="285" cy="18" r="1" fill="#ffffff" opacity="0.5"/>
+                                        <circle cx="160" cy="12" r="1.5" fill="#ffffff" opacity="0.7"/>
+                                        <circle cx="160" cy="45" r="38" fill="url(#moon-glow)"/>
+                                        <circle cx="160" cy="45" r="20" fill="#ffd166"/>
+                                        <circle cx="166" cy="41" r="17" fill="#1c2541" opacity="0.88"/>
+                                        <path d="M 0 140 L 0 95 L 25 80 L 50 95 L 80 85 L 105 65 L 125 85 L 145 55 L 175 55 L 195 85 L 215 65 L 240 85 L 270 95 L 295 80 L 320 95 L 320 140 Z" fill="#070a14" opacity="0.95"/>
+                                        <path d="M 20 140 L 20 70 L 32 70 L 32 80 L 44 80 L 44 70 L 56 70 L 56 140 Z" fill="#0f172a"/>
+                                        <path d="M 264 140 L 264 70 L 276 70 L 276 80 L 288 80 L 288 70 L 300 70 L 300 140 Z" fill="#0f172a"/>
+                                        <path d="M 120 140 L 120 65 L 130 65 L 130 55 L 140 55 L 140 65 L 150 65 L 150 55 L 160 55 L 160 45 L 170 45 L 170 55 L 180 55 L 180 65 L 190 65 L 190 55 L 200 55 L 200 65 L 200 140 Z" fill="#0a0f1d"/>
+                                        <circle cx="38" cy="90" r="3" fill="#38bdf8"/>
+                                        <circle cx="282" cy="90" r="3" fill="#38bdf8"/>
+                                        <circle cx="160" cy="80" r="4" fill="#ef4444"/>
+                                    </svg>
+                                </div>
+                                <div class="arena-badge-corner top-left">⭐ ЛЕГКО</div>
+                                <div class="arena-badge-corner top-right">БОНУС +0%</div>
+                            </div>
+                            <div class="arena-card-body">
+                                <h3 class="arena-card-title">ТЁМНЫЙ ЗАМОК</h3>
+                                <p class="arena-card-desc">Древняя каменная крипта с полчищами нежити, летучими мышами, скелетами и бронированными орками.</p>
+                                <div class="arena-card-info-row">
+                                    <div class="info-tag">💀 БОСС: ПОВЕЛИТЕЛЬ ТЬМЫ</div>
+                                    <div class="info-tag record" id="rec-dark_castle">🏆 РЕКОРД: 00:00</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 2. Проклятый Лес -->
+                    <div class="swiper-slide" data-map-id="cursed_forest">
+                        <div class="arena-card forest-theme">
+                            <div class="card-glow-bg"></div>
+                            <div class="arena-art-frame">
+                                <div class="arena-art art-forest">
+                                    <svg viewBox="0 0 320 140" width="100%" height="100%" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+                                        <defs>
+                                            <linearGradient id="sky-forest" x1="0" y1="0" x2="0" y2="1">
+                                                <stop offset="0%" stop-color="#022c22"/>
+                                                <stop offset="60%" stop-color="#064e3b"/>
+                                                <stop offset="100%" stop-color="#021c16"/>
+                                            </linearGradient>
+                                            <radialGradient id="forest-glow" cx="50%" cy="60%" r="50%">
+                                                <stop offset="0%" stop-color="#34d399" stop-opacity="0.8"/>
+                                                <stop offset="50%" stop-color="#10b981" stop-opacity="0.3"/>
+                                                <stop offset="100%" stop-color="transparent"/>
+                                            </radialGradient>
+                                        </defs>
+                                        <rect width="320" height="140" fill="url(#sky-forest)"/>
+                                        <ellipse cx="160" cy="110" rx="140" ry="40" fill="url(#forest-glow)"/>
+                                        <path d="M 30 140 L 45 50 L 60 140 M 100 140 L 120 40 L 140 140 M 180 140 L 200 45 L 220 140 M 260 140 L 280 55 L 300 140" stroke="#04231a" stroke-width="8" stroke-linecap="round" fill="none"/>
+                                        <path d="M 55 140 Q 75 90 90 70 Q 110 50 120 30 M 90 70 Q 60 55 50 40 M 90 70 Q 110 75 135 65" stroke="#063527" stroke-width="12" stroke-linecap="round" fill="none"/>
+                                        <path d="M 265 140 Q 245 90 230 70 Q 210 50 200 30 M 230 70 Q 260 55 270 40 M 230 70 Q 210 75 185 65" stroke="#063527" stroke-width="12" stroke-linecap="round" fill="none"/>
+                                        <circle cx="95" cy="80" r="2.5" fill="#a7f3d0"/>
+                                        <circle cx="150" cy="65" r="3" fill="#34d399"/>
+                                        <circle cx="175" cy="85" r="2" fill="#a7f3d0"/>
+                                        <circle cx="225" cy="75" r="3.5" fill="#34d399"/>
+                                        <circle cx="120" cy="110" r="2" fill="#facc15"/>
+                                        <circle cx="200" cy="105" r="2" fill="#facc15"/>
+                                    </svg>
+                                </div>
+                                <div class="arena-badge-corner top-left">⭐⭐ СРЕДНЕ</div>
+                                <div class="arena-badge-corner top-right bonus-gold">💰 +15% ЗОЛОТО</div>
+                            </div>
+                            <div class="arena-card-body">
+                                <h3 class="arena-card-title">ПРОКЛЯТЫЙ ЛЕС</h3>
+                                <p class="arena-card-desc">Окутанная ядовитым туманом чаща, где рыщут теневые волки, ядовитые пауки и древние энты.</p>
+                                <div class="arena-card-info-row">
+                                    <div class="info-tag">💀 БОСС: ДУХ ЧАЩИ</div>
+                                    <div class="info-tag record" id="rec-cursed_forest">🏆 РЕКОРД: 00:00</div>
+                                </div>
+                            </div>
+                            <div class="lock-overlay" id="lock-cursed_forest">
+                                <div class="lock-icon">🔒</div>
+                                <div class="lock-text">ВЫЖИВИТЕ 5 МИН В "ТЁМНЫЙ ЗАМОК"</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 3. Пылающие Недра -->
+                    <div class="swiper-slide" data-map-id="infernal_abyss">
+                        <div class="arena-card inferno-theme">
+                            <div class="card-glow-bg"></div>
+                            <div class="arena-art-frame">
+                                <div class="arena-art art-inferno">
+                                    <svg viewBox="0 0 320 140" width="100%" height="100%" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+                                        <defs>
+                                            <linearGradient id="sky-inferno" x1="0" y1="0" x2="0" y2="1">
+                                                <stop offset="0%" stop-color="#450a0a"/>
+                                                <stop offset="50%" stop-color="#7f1d1d"/>
+                                                <stop offset="100%" stop-color="#1c0505"/>
+                                            </linearGradient>
+                                            <radialGradient id="magma-glow" cx="50%" cy="100%" r="60%">
+                                                <stop offset="0%" stop-color="#fef08a" stop-opacity="1"/>
+                                                <stop offset="30%" stop-color="#f97316" stop-opacity="0.8"/>
+                                                <stop offset="70%" stop-color="#dc2626" stop-opacity="0.4"/>
+                                                <stop offset="100%" stop-color="transparent"/>
+                                            </radialGradient>
+                                        </defs>
+                                        <rect width="320" height="140" fill="url(#sky-inferno)"/>
+                                        <polygon points="0,140 50,70 110,140" fill="#1f0707"/>
+                                        <polygon points="210,140 270,65 320,140" fill="#1f0707"/>
+                                        <polygon points="90,140 160,40 230,140" fill="#180404"/>
+                                        <ellipse cx="160" cy="42" rx="18" ry="6" fill="#fef08a"/>
+                                        <rect y="100" width="320" height="40" fill="url(#magma-glow)"/>
+                                        <path d="M 160 45 Q 150 80 120 105 Q 90 125 0 135 L 0 140 L 320 140 L 320 130 Q 230 120 190 100 Q 170 75 160 45 Z" fill="#ea580c"/>
+                                        <path d="M 160 45 Q 155 80 135 105 Q 115 125 50 140 L 270 140 Q 205 125 185 105 Q 165 80 160 45 Z" fill="#fbbf24"/>
+                                        <circle cx="150" cy="25" r="2" fill="#fef08a"/>
+                                        <circle cx="165" cy="18" r="2.5" fill="#fef08a"/>
+                                        <circle cx="175" cy="28" r="1.5" fill="#f97316"/>
+                                        <circle cx="130" cy="35" r="1.5" fill="#f97316"/>
+                                        <circle cx="190" cy="32" r="2" fill="#f97316"/>
+                                    </svg>
+                                </div>
+                                <div class="arena-badge-corner top-left">⭐⭐⭐ СЛОЖНО</div>
+                                <div class="arena-badge-corner top-right bonus-gold">🔥 +20% ЗОЛОТО</div>
+                            </div>
+                            <div class="arena-card-body">
+                                <h3 class="arena-card-title">ПЫЛАЮЩИЕ НЕДРА</h3>
+                                <p class="arena-card-desc">Раскаленный вулкан с реками магмы, роем адских бесов, церберами и титанами кузни.</p>
+                                <div class="arena-card-info-row">
+                                    <div class="info-tag">💀 БОСС: ВЛАДЫКА АДА</div>
+                                    <div class="info-tag record" id="rec-infernal_abyss">🏆 РЕКОРД: 00:00</div>
+                                </div>
+                            </div>
+                            <div class="lock-overlay" id="lock-infernal_abyss">
+                                <div class="lock-icon">🔒</div>
+                                <div class="lock-text">ВЫЖИВИТЕ 5 МИН В "ПРОКЛЯТЫЙ ЛЕС"</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 4. Ледяная Пустошь -->
+                    <div class="swiper-slide" data-map-id="frozen_citadel">
+                        <div class="arena-card frost-theme">
+                            <div class="card-glow-bg"></div>
+                            <div class="arena-art-frame">
+                                <div class="arena-art art-frost">
+                                    <svg viewBox="0 0 320 140" width="100%" height="100%" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+                                        <defs>
+                                            <linearGradient id="sky-frost" x1="0" y1="0" x2="0" y2="1">
+                                                <stop offset="0%" stop-color="#082f49"/>
+                                                <stop offset="50%" stop-color="#0369a1"/>
+                                                <stop offset="100%" stop-color="#021929"/>
+                                            </linearGradient>
+                                            <linearGradient id="aurora" x1="0" y1="0" x2="1" y2="0">
+                                                <stop offset="0%" stop-color="transparent"/>
+                                                <stop offset="25%" stop-color="#38bdf8" stop-opacity="0.6"/>
+                                                <stop offset="50%" stop-color="#a855f7" stop-opacity="0.7"/>
+                                                <stop offset="75%" stop-color="#2dd4bf" stop-opacity="0.6"/>
+                                                <stop offset="100%" stop-color="transparent"/>
+                                            </radialGradient>
+                                        </defs>
+                                        <rect width="320" height="140" fill="url(#sky-frost)"/>
+                                        <path d="M 0 30 Q 80 5 160 30 T 320 20 L 320 60 Q 240 75 160 50 T 0 60 Z" fill="url(#aurora)"/>
+                                        <polygon points="20,140 60,60 100,140" fill="#0c4a6e" opacity="0.9"/>
+                                        <polygon points="220,140 260,55 300,140" fill="#0c4a6e" opacity="0.9"/>
+                                        <polygon points="80,140 160,35 240,140" fill="#075985"/>
+                                        <polygon points="120,140 160,35 160,140" fill="#38bdf8" opacity="0.4"/>
+                                        <polygon points="0,140 30,105 60,140" fill="#0284c7"/>
+                                        <polygon points="260,140 290,100 320,140" fill="#0284c7"/>
+                                        <polygon points="130,140 160,95 190,140" fill="#e0f2fe" opacity="0.85"/>
+                                        <circle cx="50" cy="40" r="1.5" fill="#ffffff"/>
+                                        <circle cx="110" cy="25" r="2" fill="#ffffff" opacity="0.9"/>
+                                        <circle cx="210" cy="30" r="1.5" fill="#ffffff"/>
+                                        <circle cx="270" cy="45" r="2" fill="#ffffff" opacity="0.9"/>
+                                        <circle cx="160" cy="20" r="2.5" fill="#ffffff"/>
+                                    </svg>
+                                </div>
+                                <div class="arena-badge-corner top-left">⭐⭐⭐⭐ КОШМАР</div>
+                                <div class="arena-badge-corner top-right bonus-xp">❄️ +25% ОПЫТ</div>
+                            </div>
+                            <div class="arena-card-body">
+                                <h3 class="arena-card-title">ЛЕДЯНАЯ ПУСТОШЬ</h3>
+                                <p class="arena-card-desc">Замерзшая крепость вечной мерзлоты со снежными бурями, ледяными призраками и колоссом.</p>
+                                <div class="arena-card-info-row">
+                                    <div class="info-tag">💀 БОСС: ЛЕДЯНОЙ КОЛОСС</div>
+                                    <div class="info-tag record" id="rec-frozen_citadel">🏆 РЕКОРД: 00:00</div>
+                                </div>
+                            </div>
+                            <div class="lock-overlay" id="lock-frozen_citadel">
+                                <div class="lock-icon">🔒</div>
+                                <div class="lock-text">ВЫЖИВИТЕ 5 МИН В "ПЫЛАЮЩИЕ НЕДРА"</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Кнопки навигации -->
+                <div class="swiper-button-prev arena-nav-btn">‹</div>
+                <div class="swiper-button-next arena-nav-btn">›</div>
+                <!-- Индикаторы пагинации -->
+                <div class="swiper-pagination arena-pagination"></div>
+            </div>
+
+            <!-- Нижняя панель с кнопкой СТАРТ -->
+            <div class="map-modal-footer">
+                <button id="swiper-start-battle-btn" class="epic-start-btn" type="button">
+                    <span class="btn-shimmer"></span>
+                    <span class="btn-label">⚔️ СТАРТ БИТВЫ! ⚔️</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- Загрузка скриптов игры -->
     <script src="src/config.js"></script>
     <script src="src/audio-synth.js"></script>
@@ -67,6 +314,7 @@
     <script src="src/yandex-sdk.js"></script>
     
     <script src="src/systems/SaveManager.js"></script>
+    <script src="src/systems/MapSwiperModal.js"></script>
     <script src="src/entities/DropItem.js"></script>
     <script src="src/entities/Projectile.js"></script>
     <script src="src/entities/Enemy.js"></script>
