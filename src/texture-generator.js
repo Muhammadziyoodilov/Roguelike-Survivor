@@ -2175,513 +2175,886 @@ class TextureGenerator {
         });
     }
 
-    // --- CLEAN UI VECTOR BADGES ---
+    // --- HIGH-DEFINITION VECTOR SVG & AAA POLISHED UI ICONS (Lucide/React-Icons inspired) ---
     static createUIIcons() {
-        // UI Skull Icon (Череп)
-        this.createCanvas('ui_skull', 22, 22, (ctx) => {
-            ctx.fillStyle = '#e2e8f0';
-            ctx.beginPath();
-            ctx.arc(11, 9, 8, 0, Math.PI * 2);
-            ctx.fill();
-            ctx.fillRect(8, 14, 6, 6);
-            ctx.fillStyle = '#0f172a';
-            ctx.fillRect(7, 8, 3, 4);
-            ctx.fillRect(12, 8, 3, 4);
-            ctx.fillRect(9, 17, 1, 3);
-            ctx.fillRect(12, 17, 1, 3);
-        });
+        // UI Skull Icon (Череп убийств / Босс)
+        this.createCanvas('ui_skull', 36, 36, (ctx) => {
+            // Мягкое неоновое свечение черепа
+            ctx.shadowColor = 'rgba(239, 68, 68, 0.4)';
+            ctx.shadowBlur = 6;
 
-        // UI Coin Icon (Монета)
-        this.createCanvas('ui_coin', 22, 22, (ctx) => {
-            ctx.fillStyle = '#ffd166';
-            ctx.beginPath();
-            ctx.arc(11, 11, 9, 0, Math.PI * 2);
-            ctx.fill();
-            ctx.strokeStyle = '#d97706';
-            ctx.lineWidth = 2;
-            ctx.stroke();
-            ctx.fillStyle = '#b45309';
-            ctx.font = 'bold 12px monospace';
-            ctx.fillText('$', 8, 15);
-        });
+            // Черепная коробка
+            const grad = ctx.createLinearGradient(0, 4, 0, 32);
+            grad.addColorStop(0, '#f8fafc');
+            grad.addColorStop(0.7, '#cbd5e1');
+            grad.addColorStop(1, '#94a3b8');
+            ctx.fillStyle = grad;
 
-        // UI Gem Icon (Кристалл душ)
-        this.createCanvas('ui_gem', 24, 24, (ctx) => {
-            ctx.fillStyle = '#9333ea';
             ctx.beginPath();
-            ctx.moveTo(12, 3);
-            ctx.lineTo(20, 9);
-            ctx.lineTo(12, 21);
-            ctx.lineTo(4, 9);
+            ctx.arc(18, 15, 12, Math.PI * 0.8, Math.PI * 0.2, false);
+            ctx.lineTo(24, 25);
+            ctx.lineTo(21, 29);
+            ctx.lineTo(15, 29);
+            ctx.lineTo(12, 25);
             ctx.closePath();
             ctx.fill();
 
-            ctx.fillStyle = '#d8b4fe';
-            ctx.beginPath();
-            ctx.moveTo(12, 3);
-            ctx.lineTo(16, 9);
-            ctx.lineTo(12, 17);
-            ctx.lineTo(8, 9);
-            ctx.closePath();
-            ctx.fill();
-
-            ctx.strokeStyle = '#c084fc';
+            ctx.shadowBlur = 0;
+            ctx.strokeStyle = '#475569';
             ctx.lineWidth = 1.5;
             ctx.stroke();
-        });
 
-        // UI Clock Icon (Часы)
-        this.createCanvas('ui_clock', 22, 22, (ctx) => {
+            // Глазницы
             ctx.fillStyle = '#0f172a';
             ctx.beginPath();
-            ctx.arc(11, 12, 8, 0, Math.PI * 2);
+            ctx.ellipse(14, 16, 3.5, 4.5, -0.2, 0, Math.PI * 2);
+            ctx.ellipse(22, 16, 3.5, 4.5, 0.2, 0, Math.PI * 2);
             ctx.fill();
-            ctx.strokeStyle = '#38bdf8';
-            ctx.lineWidth = 2;
-            ctx.stroke();
-            ctx.fillStyle = '#38bdf8';
-            ctx.fillRect(9, 2, 4, 3);
-            ctx.strokeStyle = '#ffffff';
-            ctx.lineWidth = 1.5;
-            ctx.beginPath();
-            ctx.moveTo(11, 12); ctx.lineTo(11, 7);
-            ctx.moveTo(11, 12); ctx.lineTo(14, 12);
-            ctx.stroke();
-        });
 
-        // UI Heart Icon (Сердце)
-        this.createCanvas('ui_heart', 22, 22, (ctx) => {
+            // Зловещие красные зрачки
             ctx.fillStyle = '#ef4444';
             ctx.beginPath();
-            ctx.moveTo(11, 19);
-            ctx.bezierCurveTo(4, 13, 3, 5, 11, 5);
-            ctx.bezierCurveTo(19, 5, 18, 13, 11, 19);
+            ctx.arc(14, 16, 1.5, 0, Math.PI * 2);
+            ctx.arc(22, 16, 1.5, 0, Math.PI * 2);
             ctx.fill();
-            ctx.fillStyle = '#ffffff';
-            ctx.fillRect(7, 7, 2, 2);
+
+            // Носовая полость
+            ctx.fillStyle = '#0f172a';
+            ctx.beginPath();
+            ctx.moveTo(18, 19); ctx.lineTo(16.5, 23); ctx.lineTo(19.5, 23); ctx.closePath();
+            ctx.fill();
+
+            // Зубные швы
+            ctx.strokeStyle = '#475569';
+            ctx.lineWidth = 1.5;
+            ctx.beginPath();
+            ctx.moveTo(15.5, 26); ctx.lineTo(15.5, 29);
+            ctx.moveTo(18, 25); ctx.lineTo(18, 29);
+            ctx.moveTo(20.5, 26); ctx.lineTo(20.5, 29);
+            ctx.stroke();
         });
 
-        // UI Trophy Icon (Кубок / Квесты)
-        this.createCanvas('ui_trophy', 22, 22, (ctx) => {
+        // UI Coin Icon (3D Золотая монета)
+        this.createCanvas('ui_coin', 36, 36, (ctx) => {
+            // Внешний золотой обод
+            const rimGrad = ctx.createLinearGradient(4, 4, 32, 32);
+            rimGrad.addColorStop(0, '#fef08a');
+            rimGrad.addColorStop(0.5, '#f59e0b');
+            rimGrad.addColorStop(1, '#b45309');
+            ctx.fillStyle = rimGrad;
+            ctx.beginPath();
+            ctx.arc(18, 18, 15, 0, Math.PI * 2);
+            ctx.fill();
+
+            ctx.strokeStyle = '#78350f';
+            ctx.lineWidth = 1.5;
+            ctx.stroke();
+
+            // Внутреннее поле монеты
+            const innerGrad = ctx.createRadialGradient(15, 15, 2, 18, 18, 12);
+            innerGrad.addColorStop(0, '#fef08a');
+            innerGrad.addColorStop(0.6, '#fbbf24');
+            innerGrad.addColorStop(1, '#d97706');
+            ctx.fillStyle = innerGrad;
+            ctx.beginPath();
+            ctx.arc(18, 18, 12, 0, Math.PI * 2);
+            ctx.fill();
+
+            ctx.strokeStyle = '#fef08a';
+            ctx.lineWidth = 1;
+            ctx.stroke();
+
+            // Тисненная 4-конечная звезда
+            ctx.fillStyle = '#92400e';
+            ctx.beginPath();
+            ctx.moveTo(18, 10);
+            ctx.quadraticCurveTo(18, 18, 26, 18);
+            ctx.quadraticCurveTo(18, 18, 18, 26);
+            ctx.quadraticCurveTo(18, 18, 10, 18);
+            ctx.quadraticCurveTo(18, 18, 18, 10);
+            ctx.closePath();
+            ctx.fill();
+
+            // Центр звезды
+            ctx.fillStyle = '#ffffff';
+            ctx.beginPath();
+            ctx.arc(18, 18, 2, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Диагональный блик (Gloss)
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.45)';
+            ctx.beginPath();
+            ctx.ellipse(14, 12, 6, 2.5, -Math.PI / 4, 0, Math.PI * 2);
+            ctx.fill();
+        });
+
+        // UI Gem Icon (Алмаз / Кристалл душ)
+        this.createCanvas('ui_gem', 36, 36, (ctx) => {
+            ctx.shadowColor = 'rgba(168, 85, 247, 0.5)';
+            ctx.shadowBlur = 8;
+
+            // Верхняя грань
+            const crownGrad = ctx.createLinearGradient(8, 6, 28, 14);
+            crownGrad.addColorStop(0, '#f0abfc');
+            crownGrad.addColorStop(0.5, '#c084fc');
+            crownGrad.addColorStop(1, '#9333ea');
+            ctx.fillStyle = crownGrad;
+            ctx.beginPath();
+            ctx.moveTo(18, 4);
+            ctx.lineTo(29, 12);
+            ctx.lineTo(7, 12);
+            ctx.closePath();
+            ctx.fill();
+
+            // Нижний павильон кристалла
+            const pavGrad = ctx.createLinearGradient(18, 12, 18, 32);
+            pavGrad.addColorStop(0, '#a855f7');
+            pavGrad.addColorStop(0.7, '#7e22ce');
+            pavGrad.addColorStop(1, '#581c87');
+            ctx.fillStyle = pavGrad;
+            ctx.beginPath();
+            ctx.moveTo(7, 12);
+            ctx.lineTo(29, 12);
+            ctx.lineTo(18, 32);
+            ctx.closePath();
+            ctx.fill();
+
+            ctx.shadowBlur = 0;
+
+            // Центральная грань (Highlight facet)
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.35)';
+            ctx.beginPath();
+            ctx.moveTo(18, 4);
+            ctx.lineTo(23, 12);
+            ctx.lineTo(18, 32);
+            ctx.lineTo(13, 12);
+            ctx.closePath();
+            ctx.fill();
+
+            // Контурные ребра
+            ctx.strokeStyle = '#f5d0fe';
+            ctx.lineWidth = 1.2;
+            ctx.beginPath();
+            ctx.moveTo(18, 4); ctx.lineTo(29, 12); ctx.lineTo(18, 32); ctx.lineTo(7, 12); ctx.closePath();
+            ctx.moveTo(7, 12); ctx.lineTo(29, 12);
+            ctx.moveTo(18, 4); ctx.lineTo(18, 32);
+            ctx.stroke();
+
+            // Точечный сверкающий блик
+            ctx.fillStyle = '#ffffff';
+            ctx.beginPath();
+            ctx.arc(15, 9, 1.5, 0, Math.PI * 2);
+            ctx.fill();
+        });
+
+        // UI Clock Icon (Часы / Таймер - Lucide Clock)
+        this.createCanvas('ui_clock', 36, 36, (ctx) => {
+            // Корпус хронометра
+            const grad = ctx.createLinearGradient(0, 4, 0, 32);
+            grad.addColorStop(0, '#1e293b');
+            grad.addColorStop(1, '#0f172a');
+            ctx.fillStyle = grad;
+            ctx.beginPath();
+            ctx.arc(18, 19, 14, 0, Math.PI * 2);
+            ctx.fill();
+
+            ctx.strokeStyle = '#38bdf8';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+
+            // Верхняя заводная головка
+            ctx.fillStyle = '#38bdf8';
+            ctx.beginPath();
+            ctx.roundRect(15, 2, 6, 4, 2);
+            ctx.fill();
+
+            // Циферблатные риски (12, 3, 6, 9)
+            ctx.fillStyle = '#94a3b8';
+            ctx.fillRect(17.5, 8, 1, 3);
+            ctx.fillRect(17.5, 27, 1, 3);
+            ctx.fillRect(7, 18.5, 3, 1);
+            ctx.fillRect(26, 18.5, 3, 1);
+
+            // Стрелки на 10:10
+            ctx.strokeStyle = '#38bdf8';
+            ctx.lineWidth = 2;
+            ctx.lineCap = 'round';
+            ctx.beginPath();
+            ctx.moveTo(18, 19); ctx.lineTo(18, 11); // Часовая
+            ctx.moveTo(18, 19); ctx.lineTo(23, 15); // Минутная
+            ctx.stroke();
+
+            // Центральная заклепка
+            ctx.fillStyle = '#ffffff';
+            ctx.beginPath();
+            ctx.arc(18, 19, 2, 0, Math.PI * 2);
+            ctx.fill();
+        });
+
+        // UI Heart Icon (Рубиновое сердце - Lucide Heart)
+        this.createCanvas('ui_heart', 36, 36, (ctx) => {
+            ctx.shadowColor = 'rgba(239, 68, 68, 0.6)';
+            ctx.shadowBlur = 8;
+
+            const grad = ctx.createRadialGradient(14, 12, 2, 18, 18, 16);
+            grad.addColorStop(0, '#fda4af');
+            grad.addColorStop(0.3, '#f43f5e');
+            grad.addColorStop(0.7, '#e11d48');
+            grad.addColorStop(1, '#881337');
+            ctx.fillStyle = grad;
+
+            ctx.beginPath();
+            ctx.moveTo(18, 30);
+            ctx.bezierCurveTo(6, 21, 4, 9, 12, 6);
+            ctx.bezierCurveTo(16, 4.5, 17.5, 7, 18, 9);
+            ctx.bezierCurveTo(18.5, 7, 20, 4.5, 24, 6);
+            ctx.bezierCurveTo(32, 9, 30, 21, 18, 30);
+            ctx.closePath();
+            ctx.fill();
+
+            ctx.shadowBlur = 0;
+            ctx.strokeStyle = '#ffe4e6';
+            ctx.lineWidth = 1.2;
+            ctx.stroke();
+
+            // Глянцевый полумесяц
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.45)';
+            ctx.beginPath();
+            ctx.ellipse(12, 10, 4, 2, -Math.PI / 4, 0, Math.PI * 2);
+            ctx.fill();
+        });
+
+        // UI Trophy Icon (Золотой кубок - Lucide Trophy)
+        this.createCanvas('ui_trophy', 36, 36, (ctx) => {
+            ctx.shadowColor = 'rgba(245, 158, 11, 0.5)';
+            ctx.shadowBlur = 8;
+
+            const gold = ctx.createLinearGradient(6, 4, 30, 32);
+            gold.addColorStop(0, '#fef08a');
+            gold.addColorStop(0.3, '#f59e0b');
+            gold.addColorStop(0.7, '#d97706');
+            gold.addColorStop(1, '#92400e');
+            ctx.fillStyle = gold;
+
+            // Чаша кубка
+            ctx.beginPath();
+            ctx.moveTo(10, 6);
+            ctx.lineTo(26, 6);
+            ctx.lineTo(24, 18);
+            ctx.bezierCurveTo(23, 23, 13, 23, 12, 18);
+            ctx.closePath();
+            ctx.fill();
+
+            // Ручки кубка
+            ctx.strokeStyle = '#f59e0b';
+            ctx.lineWidth = 2.5;
+            ctx.beginPath();
+            ctx.arc(8, 12, 4.5, Math.PI * 0.5, Math.PI * 1.6);
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.arc(28, 12, 4.5, -Math.PI * 0.6, Math.PI * 0.5);
+            ctx.stroke();
+
+            // Ножка и постамент
+            ctx.fillStyle = '#b45309';
+            ctx.fillRect(16, 21, 4, 6);
             ctx.fillStyle = '#f59e0b';
             ctx.beginPath();
-            ctx.moveTo(6, 4); ctx.lineTo(16, 4); ctx.lineTo(14, 13); ctx.lineTo(8, 13); ctx.closePath();
+            ctx.roundRect(11, 27, 14, 5, 2);
             ctx.fill();
-            ctx.fillRect(10, 13, 2, 4);
-            ctx.fillRect(7, 17, 8, 3);
-            ctx.strokeStyle = '#fbbf24';
-            ctx.lineWidth = 1.5;
-            ctx.strokeRect(4, 5, 14, 7);
+
+            ctx.shadowBlur = 0;
+            ctx.strokeStyle = '#fef08a';
+            ctx.lineWidth = 1;
+            ctx.stroke();
+
+            // Сверкающая звездочка на чаше
+            ctx.fillStyle = '#ffffff';
+            ctx.beginPath();
+            ctx.arc(15, 11, 1.5, 0, Math.PI * 2);
+            ctx.fill();
         });
 
-        // UI Book Icon (Книга рецептов)
-        this.createCanvas('ui_book', 22, 22, (ctx) => {
-            ctx.fillStyle = '#0284c7';
+        // UI Book Icon (Гримуар / Коллекция - Lucide BookOpen)
+        this.createCanvas('ui_book', 36, 36, (ctx) => {
+            const grad = ctx.createLinearGradient(4, 6, 32, 30);
+            grad.addColorStop(0, '#0284c7');
+            grad.addColorStop(0.5, '#0369a1');
+            grad.addColorStop(1, '#075985');
+            ctx.fillStyle = grad;
+
             ctx.beginPath();
-            ctx.roundRect(4, 3, 14, 16, 2);
+            ctx.roundRect(6, 6, 24, 24, 4);
             ctx.fill();
+
             ctx.strokeStyle = '#38bdf8';
             ctx.lineWidth = 1.5;
             ctx.stroke();
-            ctx.fillStyle = '#ffd166';
-            ctx.fillRect(10, 3, 3, 8); // закладка
-            ctx.fillStyle = '#ffffff';
-            ctx.fillRect(6, 14, 10, 2);
-        });
 
-        // UI Star Icon (Таланты)
-        this.createCanvas('ui_star', 22, 22, (ctx) => {
-            ctx.fillStyle = '#a855f7';
+            // Страницы
+            ctx.fillStyle = '#f8fafc';
+            ctx.fillRect(10, 9, 16, 18);
+
+            // Закладка-лента
+            ctx.fillStyle = '#ef4444';
             ctx.beginPath();
-            ctx.arc(11, 11, 9, 0, Math.PI * 2);
+            ctx.moveTo(15, 6); ctx.lineTo(19, 6); ctx.lineTo(19, 18); ctx.lineTo(17, 15); ctx.lineTo(15, 18); ctx.closePath();
             ctx.fill();
 
-            // 5-лучевая звезда через vector path
-            ctx.fillStyle = '#ffd166';
+            // Золотые уголки
+            ctx.fillStyle = '#fbbf24';
+            ctx.beginPath();
+            ctx.moveTo(6, 6); ctx.lineTo(12, 6); ctx.lineTo(6, 12); ctx.closePath();
+            ctx.moveTo(30, 6); ctx.lineTo(24, 6); ctx.lineTo(30, 12); ctx.closePath();
+            ctx.moveTo(6, 30); ctx.lineTo(12, 30); ctx.lineTo(6, 24); ctx.closePath();
+            ctx.moveTo(30, 30); ctx.lineTo(24, 30); ctx.lineTo(30, 24); ctx.closePath();
+            ctx.fill();
+        });
+
+        // UI Star Icon (Звезда талантов - Lucide Sparkles)
+        this.createCanvas('ui_star', 36, 36, (ctx) => {
+            ctx.shadowColor = 'rgba(250, 204, 21, 0.6)';
+            ctx.shadowBlur = 8;
+
+            const grad = ctx.createRadialGradient(18, 18, 2, 18, 18, 16);
+            grad.addColorStop(0, '#fef9c3');
+            grad.addColorStop(0.3, '#fde047');
+            grad.addColorStop(0.7, '#eab308');
+            grad.addColorStop(1, '#a16207');
+            ctx.fillStyle = grad;
+
             ctx.beginPath();
             for (let i = 0; i < 5; i++) {
-                const a = (i * 4 * Math.PI) / 5 - Math.PI / 2;
-                const x = 11 + Math.cos(a) * 6;
-                const y = 11 + Math.sin(a) * 6;
-                if (i === 0) ctx.moveTo(x, y);
-                else ctx.lineTo(x, y);
+                const outerA = (i * 4 * Math.PI) / 5 - Math.PI / 2;
+                const innerA = outerA + (2 * Math.PI) / 10;
+                const ox = 18 + Math.cos(outerA) * 14;
+                const oy = 18 + Math.sin(outerA) * 14;
+                const ix = 18 + Math.cos(innerA) * 6;
+                const iy = 18 + Math.sin(innerA) * 6;
+                if (i === 0) ctx.moveTo(ox, oy);
+                else ctx.lineTo(ox, oy);
+                ctx.lineTo(ix, iy);
             }
             ctx.closePath();
             ctx.fill();
+
+            ctx.shadowBlur = 0;
+            ctx.strokeStyle = '#ffffff';
+            ctx.lineWidth = 1;
+            ctx.stroke();
         });
 
-        // UI Play Icon
-        this.createCanvas('ui_play', 22, 22, (ctx) => {
-            ctx.fillStyle = '#10b981';
+        // UI Play Icon (Play Button Triangle)
+        this.createCanvas('ui_play', 36, 36, (ctx) => {
+            ctx.shadowColor = 'rgba(16, 185, 129, 0.6)';
+            ctx.shadowBlur = 8;
+
+            const grad = ctx.createLinearGradient(10, 8, 28, 26);
+            grad.addColorStop(0, '#34d399');
+            grad.addColorStop(0.5, '#10b981');
+            grad.addColorStop(1, '#047857');
+            ctx.fillStyle = grad;
+
             ctx.beginPath();
-            ctx.moveTo(7, 4); ctx.lineTo(18, 11); ctx.lineTo(7, 18); ctx.closePath();
+            ctx.moveTo(12, 7);
+            ctx.lineTo(28, 18);
+            ctx.lineTo(12, 29);
+            ctx.closePath();
+            ctx.fill();
+
+            ctx.shadowBlur = 0;
+            ctx.strokeStyle = '#a7f3d0';
+            ctx.lineWidth = 1.5;
+            ctx.lineJoin = 'round';
+            ctx.stroke();
+
+            // Внутренний глянец
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
+            ctx.beginPath();
+            ctx.moveTo(13, 9); ctx.lineTo(23, 16); ctx.lineTo(13, 18); ctx.closePath();
             ctx.fill();
         });
 
-        // UI Co-op Icon
-        this.createCanvas('ui_coop', 22, 22, (ctx) => {
-            ctx.fillStyle = '#38bdf8';
+        // UI Co-op Icon (Два героя - Lucide Users)
+        this.createCanvas('ui_coop', 36, 36, (ctx) => {
+            // Герой 1 (Синий)
+            ctx.fillStyle = '#0284c7';
             ctx.beginPath();
-            ctx.arc(8, 7, 4, 0, Math.PI * 2);
+            ctx.arc(13, 12, 6, 0, Math.PI * 2);
             ctx.fill();
-            ctx.fillRect(4, 12, 8, 7);
+            ctx.beginPath();
+            ctx.arc(13, 27, 9, Math.PI * 1.1, Math.PI * 1.9);
+            ctx.fill();
+            ctx.strokeStyle = '#38bdf8'; ctx.lineWidth = 1.5; ctx.stroke();
 
-            ctx.fillStyle = '#a855f7';
+            // Герой 2 (Фиолетовый)
+            ctx.fillStyle = '#7e22ce';
             ctx.beginPath();
-            ctx.arc(15, 7, 4, 0, Math.PI * 2);
+            ctx.arc(23, 13, 5.5, 0, Math.PI * 2);
             ctx.fill();
-            ctx.fillRect(11, 12, 8, 7);
+            ctx.beginPath();
+            ctx.arc(23, 27, 8.5, Math.PI * 1.1, Math.PI * 1.9);
+            ctx.fill();
+            ctx.strokeStyle = '#c084fc'; ctx.lineWidth = 1.5; ctx.stroke();
         });
 
-        // UI Pause Icon
-        this.createCanvas('ui_pause', 22, 22, (ctx) => {
-            ctx.fillStyle = '#38bdf8';
-            ctx.fillRect(6, 4, 4, 14);
-            ctx.fillRect(12, 4, 4, 14);
+        // UI Pause Icon (Две вертикальные полосы)
+        this.createCanvas('ui_pause', 36, 36, (ctx) => {
+            const grad = ctx.createLinearGradient(0, 8, 0, 28);
+            grad.addColorStop(0, '#7dd3fc');
+            grad.addColorStop(1, '#0284c7');
+            ctx.fillStyle = grad;
+
+            ctx.beginPath();
+            ctx.roundRect(9, 7, 6, 22, 3);
+            ctx.roundRect(21, 7, 6, 22, 3);
+            ctx.fill();
+
+            ctx.strokeStyle = '#e0f2fe';
+            ctx.lineWidth = 1.5;
+            ctx.stroke();
         });
 
-        // UI Sound On / Off Icons
-        this.createCanvas('ui_sound_on', 22, 22, (ctx) => {
-            ctx.fillStyle = '#38bdf8';
+        // UI Sound On & Off (Динамик и волны - Lucide Volume2 & VolumeX)
+        this.createCanvas('ui_sound_on', 36, 36, (ctx) => {
+            const grad = ctx.createLinearGradient(0, 6, 0, 30);
+            grad.addColorStop(0, '#7dd3fc');
+            grad.addColorStop(1, '#0369a1');
+            ctx.fillStyle = grad;
+
+            // Корпус динамика
             ctx.beginPath();
-            ctx.moveTo(4, 8); ctx.lineTo(8, 8); ctx.lineTo(12, 4); ctx.lineTo(12, 18); ctx.lineTo(8, 14); ctx.lineTo(4, 14); ctx.closePath();
+            ctx.moveTo(6, 13);
+            ctx.lineTo(12, 13);
+            ctx.lineTo(19, 7);
+            ctx.lineTo(19, 29);
+            ctx.lineTo(12, 23);
+            ctx.lineTo(6, 23);
+            ctx.closePath();
             ctx.fill();
             ctx.strokeStyle = '#38bdf8';
             ctx.lineWidth = 1.5;
+            ctx.stroke();
+
+            // Волны звука
+            ctx.strokeStyle = '#38bdf8';
+            ctx.lineWidth = 2.2;
+            ctx.lineCap = 'round';
             ctx.beginPath();
-            ctx.arc(12, 11, 5, -Math.PI * 0.3, Math.PI * 0.3);
+            ctx.arc(19, 18, 6, -Math.PI * 0.35, Math.PI * 0.35);
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.arc(19, 18, 11, -Math.PI * 0.35, Math.PI * 0.35);
             ctx.stroke();
         });
 
-        this.createCanvas('ui_sound_off', 22, 22, (ctx) => {
-            ctx.fillStyle = '#94a3b8';
+        this.createCanvas('ui_sound_off', 36, 36, (ctx) => {
+            ctx.fillStyle = '#64748b';
             ctx.beginPath();
-            ctx.moveTo(4, 8); ctx.lineTo(8, 8); ctx.lineTo(12, 4); ctx.lineTo(12, 18); ctx.lineTo(8, 14); ctx.lineTo(4, 14); ctx.closePath();
+            ctx.moveTo(6, 13);
+            ctx.lineTo(12, 13);
+            ctx.lineTo(19, 7);
+            ctx.lineTo(19, 29);
+            ctx.lineTo(12, 23);
+            ctx.lineTo(6, 23);
+            ctx.closePath();
             ctx.fill();
+
+            // Красный крест выключения звука
             ctx.strokeStyle = '#ef4444';
-            ctx.lineWidth = 2;
+            ctx.lineWidth = 2.5;
+            ctx.lineCap = 'round';
             ctx.beginPath();
-            ctx.moveTo(3, 3); ctx.lineTo(19, 19);
+            ctx.moveTo(23, 13); ctx.lineTo(31, 23);
+            ctx.moveTo(31, 13); ctx.lineTo(23, 23);
             ctx.stroke();
         });
 
-        // UI Settings Gear (Шестеренка)
-        this.createCanvas('ui_settings', 24, 24, (ctx) => {
-            ctx.fillStyle = '#94a3b8';
+        // UI Settings Gear (Шестеренка настроек - Lucide Settings)
+        this.createCanvas('ui_settings', 36, 36, (ctx) => {
+            ctx.shadowColor = 'rgba(129, 140, 248, 0.4)';
+            ctx.shadowBlur = 6;
+
+            const grad = ctx.createLinearGradient(4, 4, 32, 32);
+            grad.addColorStop(0, '#cbd5e1');
+            grad.addColorStop(0.5, '#94a3b8');
+            grad.addColorStop(1, '#475569');
+            ctx.fillStyle = grad;
+
+            // 8 зубьев шестерни
             ctx.beginPath();
-            ctx.arc(12, 12, 5, 0, Math.PI * 2);
-            ctx.fill();
-            ctx.lineWidth = 3;
-            ctx.strokeStyle = '#94a3b8';
-            for (let i = 0; i < 6; i++) {
-                const angle = (i * Math.PI) / 3;
-                const x1 = 12 + Math.cos(angle) * 5;
-                const y1 = 12 + Math.sin(angle) * 5;
-                const x2 = 12 + Math.cos(angle) * 9;
-                const y2 = 12 + Math.sin(angle) * 9;
-                ctx.beginPath();
-                ctx.moveTo(x1, y1); ctx.lineTo(x2, y2);
-                ctx.stroke();
+            for (let i = 0; i < 8; i++) {
+                const angle = (i * Math.PI) / 4;
+                const x1 = 18 + Math.cos(angle - 0.2) * 15;
+                const y1 = 18 + Math.sin(angle - 0.2) * 15;
+                const x2 = 18 + Math.cos(angle + 0.2) * 15;
+                const y2 = 18 + Math.sin(angle + 0.2) * 15;
+                const x3 = 18 + Math.cos(angle + 0.28) * 11;
+                const y3 = 18 + Math.sin(angle + 0.28) * 11;
+                const x4 = 18 + Math.cos(angle + Math.PI/4 - 0.28) * 11;
+                const y4 = 18 + Math.sin(angle + Math.PI/4 - 0.28) * 11;
+                if (i === 0) ctx.moveTo(x1, y1);
+                else ctx.lineTo(x1, y1);
+                ctx.lineTo(x2, y2);
+                ctx.lineTo(x3, y3);
+                ctx.lineTo(x4, y4);
             }
+            ctx.closePath();
+            ctx.fill();
+
+            ctx.shadowBlur = 0;
+            ctx.strokeStyle = '#e2e8f0';
+            ctx.lineWidth = 1.2;
+            ctx.stroke();
+
+            // Центральное отверстие
             ctx.fillStyle = '#0f172a';
             ctx.beginPath();
-            ctx.arc(12, 12, 2.5, 0, Math.PI * 2);
+            ctx.arc(18, 18, 5, 0, Math.PI * 2);
             ctx.fill();
+            ctx.strokeStyle = '#818cf8';
+            ctx.lineWidth = 1.5;
+            ctx.stroke();
         });
 
-        // UI Stats Chart (График лидерборда)
-        this.createCanvas('ui_chart', 24, 24, (ctx) => {
-            ctx.fillStyle = '#38bdf8';
-            ctx.fillRect(4, 13, 4, 8);
-            ctx.fillRect(10, 8, 4, 13);
-            ctx.fillRect(16, 3, 4, 18);
-        });
+        // UI Stats Chart (График таблицы лидеров - Lucide BarChart3)
+        this.createCanvas('ui_chart', 36, 36, (ctx) => {
+            // 3 нарастающих столбика
+            const colors = [
+                { f: '#38bdf8', s: '#7dd3fc', h: 10, x: 6 },
+                { f: '#818cf8', s: '#a5b4fc', h: 18, x: 15 },
+                { f: '#c084fc', s: '#e879f9', h: 25, x: 24 }
+            ];
 
-        // UI Socials: Discord, VK, YouTube
-        this.createCanvas('ui_discord', 24, 24, (ctx) => {
-            ctx.fillStyle = '#5865f2';
-            ctx.beginPath();
-            ctx.roundRect(2, 2, 20, 20, 5);
-            ctx.fill();
-            ctx.fillStyle = '#ffffff';
-            ctx.beginPath();
-            ctx.arc(8, 12, 2.5, 0, Math.PI*2);
-            ctx.arc(16, 12, 2.5, 0, Math.PI*2);
-            ctx.fill();
-            ctx.beginPath();
-            ctx.moveTo(7, 16); ctx.quadraticCurveTo(12, 18, 17, 16);
-            ctx.strokeStyle = '#ffffff'; ctx.lineWidth = 1.5; ctx.stroke();
-        });
+            colors.forEach(b => {
+                ctx.fillStyle = b.f;
+                ctx.beginPath();
+                ctx.roundRect(b.x, 30 - b.h, 6.5, b.h, [3, 3, 1, 1]);
+                ctx.fill();
+                ctx.strokeStyle = b.s;
+                ctx.lineWidth = 1.2;
+                ctx.stroke();
+            });
 
-        this.createCanvas('ui_vk', 24, 24, (ctx) => {
-            ctx.fillStyle = '#0077ff';
+            // Восходящая стрелка тренда
+            ctx.strokeStyle = '#fbbf24';
+            ctx.lineWidth = 2;
+            ctx.lineCap = 'round';
             ctx.beginPath();
-            ctx.roundRect(2, 2, 20, 20, 5);
-            ctx.fill();
-            ctx.fillStyle = '#ffffff';
-            ctx.font = 'bold 13px sans-serif';
-            ctx.fillText('VK', 4, 16);
-        });
-
-        this.createCanvas('ui_youtube', 24, 24, (ctx) => {
-            ctx.fillStyle = '#ff0000';
-            ctx.beginPath();
-            ctx.roundRect(2, 4, 20, 16, 4);
-            ctx.fill();
-            ctx.fillStyle = '#ffffff';
-            ctx.beginPath();
-            ctx.moveTo(9, 7); ctx.lineTo(16, 12); ctx.lineTo(9, 17); ctx.closePath();
-            ctx.fill();
+            ctx.moveTo(6, 22); ctx.lineTo(15, 14); ctx.lineTo(26, 6);
+            ctx.lineTo(31, 6); ctx.lineTo(31, 11);
+            ctx.stroke();
         });
 
         // UI Quest Badges (Круглые цветные бейджи для заданий)
-        this.createCanvas('ui_badge_skull', 32, 32, (ctx) => {
-            ctx.fillStyle = '#0c4a6e';
-            ctx.beginPath(); ctx.arc(16, 16, 15, 0, Math.PI*2); ctx.fill();
-            ctx.strokeStyle = '#0284c7'; ctx.lineWidth = 1.5; ctx.stroke();
+        this.createCanvas('ui_badge_skull', 36, 36, (ctx) => {
+            const grad = ctx.createLinearGradient(0, 0, 36, 36);
+            grad.addColorStop(0, '#0c4a6e'); grad.addColorStop(1, '#082f49');
+            ctx.fillStyle = grad;
+            ctx.beginPath(); ctx.arc(18, 18, 16, 0, Math.PI * 2); ctx.fill();
+            ctx.strokeStyle = '#0284c7'; ctx.lineWidth = 2; ctx.stroke();
+
             ctx.fillStyle = '#38bdf8';
-            ctx.beginPath(); ctx.arc(16, 14, 7, 0, Math.PI*2); ctx.fill();
-            ctx.fillRect(13, 19, 6, 4);
-            ctx.fillStyle = '#0c4a6e';
-            ctx.fillRect(12, 13, 3, 3); ctx.fillRect(17, 13, 3, 3);
+            ctx.beginPath(); ctx.arc(18, 16, 7, 0, Math.PI * 2); ctx.fill();
+            ctx.fillRect(15, 21, 6, 4);
+            ctx.fillStyle = '#082f49';
+            ctx.fillRect(14, 15, 3, 3); ctx.fillRect(19, 15, 3, 3);
         });
 
-        this.createCanvas('ui_badge_chest', 32, 32, (ctx) => {
-            ctx.fillStyle = '#1e1b4b';
-            ctx.beginPath(); ctx.arc(16, 16, 15, 0, Math.PI*2); ctx.fill();
-            ctx.strokeStyle = '#6366f1'; ctx.lineWidth = 1.5; ctx.stroke();
-            ctx.fillStyle = '#38bdf8';
-            ctx.fillRect(8, 12, 16, 10);
-            ctx.fillStyle = '#67e8f9';
-            ctx.fillRect(8, 9, 16, 4);
-            ctx.fillStyle = '#ffffff';
-            ctx.fillRect(15, 14, 2, 3);
+        this.createCanvas('ui_badge_chest', 36, 36, (ctx) => {
+            const grad = ctx.createLinearGradient(0, 0, 36, 36);
+            grad.addColorStop(0, '#1e1b4b'); grad.addColorStop(1, '#0f172a');
+            ctx.fillStyle = grad;
+            ctx.beginPath(); ctx.arc(18, 18, 16, 0, Math.PI * 2); ctx.fill();
+            ctx.strokeStyle = '#6366f1'; ctx.lineWidth = 2; ctx.stroke();
+
+            ctx.fillStyle = '#818cf8';
+            ctx.beginPath(); ctx.roundRect(9, 14, 18, 12, 2); ctx.fill();
+            ctx.fillStyle = '#c7d2fe';
+            ctx.fillRect(9, 11, 18, 4);
+            ctx.fillStyle = '#fbbf24';
+            ctx.fillRect(16, 16, 4, 4);
         });
 
-        this.createCanvas('ui_badge_xp', 32, 32, (ctx) => {
-            ctx.fillStyle = '#064e3b';
-            ctx.beginPath(); ctx.arc(16, 16, 15, 0, Math.PI*2); ctx.fill();
-            ctx.strokeStyle = '#10b981'; ctx.lineWidth = 1.5; ctx.stroke();
+        this.createCanvas('ui_badge_xp', 36, 36, (ctx) => {
+            const grad = ctx.createLinearGradient(0, 0, 36, 36);
+            grad.addColorStop(0, '#064e3b'); grad.addColorStop(1, '#022c22');
+            ctx.fillStyle = grad;
+            ctx.beginPath(); ctx.arc(18, 18, 16, 0, Math.PI * 2); ctx.fill();
+            ctx.strokeStyle = '#10b981'; ctx.lineWidth = 2; ctx.stroke();
+
             ctx.fillStyle = '#34d399';
-            ctx.font = 'bold 12px sans-serif';
+            ctx.font = '900 13px system-ui, -apple-system, sans-serif';
             ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-            ctx.fillText('XP', 16, 16);
+            ctx.fillText('XP', 18, 18);
         });
 
         // UI Battle Pass Rank 15 Hex Badge
-        this.createCanvas('ui_badge_rank15', 38, 38, (ctx) => {
-            ctx.fillStyle = '#581c87';
+        this.createCanvas('ui_badge_rank15', 40, 40, (ctx) => {
+            const grad = ctx.createLinearGradient(0, 0, 40, 40);
+            grad.addColorStop(0, '#581c87'); grad.addColorStop(1, '#2e1065');
+            ctx.fillStyle = grad;
             ctx.beginPath();
             for (let i = 0; i < 6; i++) {
                 const a = (i * Math.PI) / 3;
-                const x = 19 + Math.cos(a) * 17;
-                const y = 19 + Math.sin(a) * 17;
-                if (i === 0) ctx.moveTo(x, y);
-                else ctx.lineTo(x, y);
+                const x = 20 + Math.cos(a) * 18;
+                const y = 20 + Math.sin(a) * 18;
+                if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
             }
             ctx.closePath();
             ctx.fill();
-            ctx.strokeStyle = '#c084fc';
-            ctx.lineWidth = 2;
-            ctx.stroke();
+            ctx.strokeStyle = '#c084fc'; ctx.lineWidth = 2; ctx.stroke();
 
-            ctx.fillStyle = '#e9d5ff';
+            ctx.fillStyle = '#f5d0fe';
             ctx.beginPath();
-            ctx.moveTo(19, 8); ctx.lineTo(26, 16); ctx.lineTo(19, 28); ctx.lineTo(12, 16); ctx.closePath();
+            ctx.moveTo(20, 8); ctx.lineTo(28, 18); ctx.lineTo(20, 31); ctx.lineTo(12, 18); ctx.closePath();
             ctx.fill();
         });
 
         // UI 3D Card: Gem (Усиления)
-        this.createCanvas('ui_3d_gem_card', 44, 44, (ctx) => {
-            ctx.fillStyle = '#7e22ce';
+        this.createCanvas('ui_3d_gem_card', 48, 48, (ctx) => {
+            const grad = ctx.createLinearGradient(0, 0, 48, 48);
+            grad.addColorStop(0, '#7e22ce'); grad.addColorStop(1, '#3b0764');
+            ctx.fillStyle = grad;
             ctx.beginPath();
             for (let i = 0; i < 6; i++) {
                 const a = (i * Math.PI) / 3;
-                const x = 22 + Math.cos(a) * 19;
-                const y = 22 + Math.sin(a) * 19;
+                const x = 24 + Math.cos(a) * 21;
+                const y = 24 + Math.sin(a) * 21;
                 if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
             }
             ctx.closePath();
             ctx.fill();
-            ctx.strokeStyle = '#d8b4fe';
-            ctx.lineWidth = 2;
-            ctx.stroke();
+            ctx.strokeStyle = '#d8b4fe'; ctx.lineWidth = 2; ctx.stroke();
 
             ctx.fillStyle = '#c084fc';
             ctx.beginPath();
-            ctx.moveTo(22, 9); ctx.lineTo(31, 19); ctx.lineTo(22, 33); ctx.lineTo(13, 19); ctx.closePath();
+            ctx.moveTo(24, 10); ctx.lineTo(34, 21); ctx.lineTo(24, 36); ctx.lineTo(14, 21); ctx.closePath();
             ctx.fill();
 
             ctx.fillStyle = '#ffffff';
             ctx.beginPath();
-            ctx.moveTo(22, 9); ctx.lineTo(27, 19); ctx.lineTo(22, 28); ctx.closePath();
+            ctx.moveTo(24, 10); ctx.lineTo(29, 21); ctx.lineTo(24, 31); ctx.closePath();
             ctx.fill();
         });
 
         // UI 3D Card: Book (Коллекция)
-        this.createCanvas('ui_3d_book_card', 44, 44, (ctx) => {
-            ctx.fillStyle = '#92400e';
+        this.createCanvas('ui_3d_book_card', 48, 48, (ctx) => {
+            const grad = ctx.createLinearGradient(0, 0, 48, 48);
+            grad.addColorStop(0, '#92400e'); grad.addColorStop(1, '#451a03');
+            ctx.fillStyle = grad;
             ctx.beginPath();
-            ctx.roundRect(8, 7, 28, 30, 3);
+            ctx.roundRect(8, 7, 32, 34, 4);
             ctx.fill();
-            ctx.strokeStyle = '#f59e0b';
-            ctx.lineWidth = 2;
-            ctx.stroke();
+            ctx.strokeStyle = '#f59e0b'; ctx.lineWidth = 2; ctx.stroke();
 
             ctx.fillStyle = '#fef3c7';
-            ctx.fillRect(11, 10, 11, 24);
-            ctx.fillRect(22, 10, 11, 24);
+            ctx.fillRect(12, 11, 12, 26);
+            ctx.fillRect(24, 11, 12, 26);
 
             ctx.fillStyle = '#d97706';
-            ctx.fillRect(20, 7, 4, 30);
+            ctx.fillRect(22, 7, 4, 34);
 
             ctx.fillStyle = '#ef4444';
-            ctx.fillRect(21, 28, 2, 12);
+            ctx.fillRect(23, 31, 2, 13);
         });
 
         // UI 3D Card: Shield (Таблицы Лидеров)
-        this.createCanvas('ui_3d_shield_card', 44, 44, (ctx) => {
-            ctx.fillStyle = '#b45309';
+        this.createCanvas('ui_3d_shield_card', 48, 48, (ctx) => {
+            const grad = ctx.createLinearGradient(0, 0, 48, 48);
+            grad.addColorStop(0, '#b45309'); grad.addColorStop(1, '#78350f');
+            ctx.fillStyle = grad;
             ctx.beginPath();
-            ctx.moveTo(22, 5); ctx.lineTo(36, 10); ctx.lineTo(32, 30); ctx.lineTo(22, 39); ctx.lineTo(12, 30); ctx.lineTo(8, 10); ctx.closePath();
+            ctx.moveTo(24, 6); ctx.lineTo(39, 11); ctx.lineTo(35, 33); ctx.lineTo(24, 43); ctx.lineTo(13, 33); ctx.lineTo(9, 11); ctx.closePath();
             ctx.fill();
-            ctx.strokeStyle = '#fde047';
-            ctx.lineWidth = 2;
-            ctx.stroke();
+            ctx.strokeStyle = '#fde047'; ctx.lineWidth = 2; ctx.stroke();
 
             ctx.fillStyle = '#fef08a';
             ctx.beginPath();
-            ctx.moveTo(22, 9); ctx.lineTo(31, 13); ctx.lineTo(28, 27); ctx.lineTo(22, 34); ctx.lineTo(16, 27); ctx.lineTo(13, 13); ctx.closePath();
+            ctx.moveTo(24, 11); ctx.lineTo(34, 15); ctx.lineTo(31, 30); ctx.lineTo(24, 38); ctx.lineTo(17, 30); ctx.lineTo(14, 15); ctx.closePath();
             ctx.fill();
 
             ctx.fillStyle = '#0284c7';
             ctx.beginPath();
-            ctx.arc(22, 20, 5, 0, Math.PI*2);
+            ctx.arc(24, 22, 5.5, 0, Math.PI * 2);
             ctx.fill();
         });
 
         // UI Hex Avatar (PLAYER_01)
-        this.createCanvas('ui_avatar_hex', 52, 52, (ctx) => {
-            ctx.fillStyle = '#1e1b4b';
+        this.createCanvas('ui_avatar_hex', 56, 56, (ctx) => {
+            const grad = ctx.createLinearGradient(0, 0, 56, 56);
+            grad.addColorStop(0, '#1e1b4b'); grad.addColorStop(1, '#0f172a');
+            ctx.fillStyle = grad;
             ctx.beginPath();
             for (let i = 0; i < 6; i++) {
                 const a = (i * Math.PI) / 3;
-                const x = 26 + Math.cos(a) * 23;
-                const y = 26 + Math.sin(a) * 23;
+                const x = 28 + Math.cos(a) * 25;
+                const y = 28 + Math.sin(a) * 25;
                 if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
             }
             ctx.closePath();
             ctx.fill();
-            ctx.strokeStyle = '#a855f7';
-            ctx.lineWidth = 2.5;
-            ctx.stroke();
+            ctx.strokeStyle = '#a855f7'; ctx.lineWidth = 2.5; ctx.stroke();
 
             // Теневой рыцарь внутри
             ctx.fillStyle = '#09090b';
             ctx.beginPath();
-            ctx.arc(26, 24, 14, 0, Math.PI*2);
+            ctx.arc(28, 26, 15, 0, Math.PI * 2);
             ctx.fill();
 
             // Светящиеся глаза
-            ctx.fillStyle = '#ffffff';
+            ctx.fillStyle = '#38bdf8';
             ctx.beginPath();
-            ctx.ellipse(21, 23, 3, 1.5, 0.2, 0, Math.PI*2);
-            ctx.ellipse(31, 23, 3, 1.5, -0.2, 0, Math.PI*2);
+            ctx.ellipse(22, 25, 3.5, 1.8, 0.2, 0, Math.PI * 2);
+            ctx.ellipse(34, 25, 3.5, 1.8, -0.2, 0, Math.PI * 2);
             ctx.fill();
         });
 
         // UI Boss Horn Skull
-        this.createCanvas('ui_boss_skull', 26, 26, (ctx) => {
-            ctx.fillStyle = '#ef4444';
+        this.createCanvas('ui_boss_skull', 36, 36, (ctx) => {
+            ctx.shadowColor = 'rgba(239, 68, 68, 0.7)';
+            ctx.shadowBlur = 8;
+
+            const grad = ctx.createLinearGradient(0, 4, 0, 32);
+            grad.addColorStop(0, '#ef4444'); grad.addColorStop(1, '#7f1d1d');
+            ctx.fillStyle = grad;
+
             ctx.beginPath();
-            ctx.arc(13, 12, 9, 0, Math.PI * 2);
+            ctx.arc(18, 17, 12, 0, Math.PI * 2);
             ctx.fill();
-            ctx.fillRect(10, 19, 6, 5);
+            ctx.fillRect(14, 26, 8, 7);
+
+            // Рога
             ctx.beginPath();
-            ctx.moveTo(6, 7); ctx.lineTo(2, 2); ctx.lineTo(9, 5); ctx.closePath();
-            ctx.moveTo(20, 7); ctx.lineTo(24, 2); ctx.lineTo(17, 5); ctx.closePath();
+            ctx.moveTo(9, 10); ctx.quadraticCurveTo(2, 2, 4, 16); ctx.closePath();
+            ctx.moveTo(27, 10); ctx.quadraticCurveTo(34, 2, 32, 16); ctx.closePath();
             ctx.fill();
+
+            ctx.shadowBlur = 0;
             ctx.fillStyle = '#ffd166';
-            ctx.fillRect(9, 11, 3, 3);
-            ctx.fillRect(14, 11, 3, 3);
+            ctx.fillRect(12, 15, 4, 4);
+            ctx.fillRect(20, 15, 4, 4);
         });
 
-        // UI Chest
-        this.createCanvas('ui_chest', 26, 24, (ctx) => {
-            ctx.fillStyle = '#854d0e';
-            ctx.fillRect(2, 8, 22, 14);
+        // UI Chest (Сундук сокровищ)
+        this.createCanvas('ui_chest', 36, 36, (ctx) => {
+            const grad = ctx.createLinearGradient(0, 6, 0, 30);
+            grad.addColorStop(0, '#a16207'); grad.addColorStop(1, '#713f12');
+            ctx.fillStyle = grad;
+
+            ctx.beginPath();
+            ctx.roundRect(4, 12, 28, 18, 3);
+            ctx.fill();
+
+            // Крышка сундука
             ctx.fillStyle = '#ca8a04';
-            ctx.fillRect(2, 4, 22, 6);
+            ctx.beginPath();
+            ctx.roundRect(3, 6, 30, 8, 3);
+            ctx.fill();
+
             ctx.strokeStyle = '#fde047';
-            ctx.lineWidth = 2;
-            ctx.strokeRect(2, 4, 22, 18);
+            ctx.lineWidth = 1.5;
+            ctx.strokeRect(3, 6, 30, 24);
+
+            // Золотой замок
+            ctx.fillStyle = '#f59e0b';
+            ctx.beginPath();
+            ctx.arc(18, 18, 4, 0, Math.PI * 2);
+            ctx.fill();
             ctx.fillStyle = '#ef4444';
-            ctx.fillRect(11, 10, 4, 4);
+            ctx.beginPath();
+            ctx.arc(18, 18, 2, 0, Math.PI * 2);
+            ctx.fill();
         });
 
-        // UI Crossed Swords (Скрещенные мечи)
-        this.createCanvas('ui_swords', 26, 26, (ctx) => {
-            ctx.strokeStyle = '#ffffff';
+        // UI Crossed Swords (Скрещенные мечи - Lucide Swords)
+        this.createCanvas('ui_swords', 36, 36, (ctx) => {
+            // Меч 1
+            ctx.strokeStyle = '#f8fafc';
             ctx.lineWidth = 2.5;
+            ctx.lineCap = 'round';
             ctx.beginPath();
-            ctx.moveTo(4, 4); ctx.lineTo(22, 22);
-            ctx.moveTo(22, 4); ctx.lineTo(4, 22);
+            ctx.moveTo(6, 6); ctx.lineTo(30, 30);
             ctx.stroke();
 
-            ctx.strokeStyle = '#ffd166';
-            ctx.lineWidth = 3.5;
+            // Меч 2
             ctx.beginPath();
-            ctx.moveTo(2, 8); ctx.lineTo(8, 2);
-            ctx.moveTo(24, 8); ctx.lineTo(18, 2);
+            ctx.moveTo(30, 6); ctx.lineTo(6, 30);
+            ctx.stroke();
+
+            // Гарды
+            ctx.strokeStyle = '#fbbf24';
+            ctx.lineWidth = 4;
+            ctx.beginPath();
+            ctx.moveTo(4, 11); ctx.lineTo(11, 4);
+            ctx.moveTo(32, 11); ctx.lineTo(25, 4);
             ctx.stroke();
         });
 
-        // UI Shield (Щит героя)
-        this.createCanvas('ui_shield', 24, 24, (ctx) => {
-            ctx.fillStyle = '#6366f1';
+        // UI Shield (Щит героя - Lucide Shield)
+        this.createCanvas('ui_shield', 36, 36, (ctx) => {
+            const grad = ctx.createLinearGradient(0, 3, 0, 33);
+            grad.addColorStop(0, '#6366f1'); grad.addColorStop(1, '#3730a3');
+            ctx.fillStyle = grad;
+
             ctx.beginPath();
-            ctx.moveTo(12, 2);
-            ctx.lineTo(21, 5);
-            ctx.lineTo(18, 16);
-            ctx.lineTo(12, 22);
-            ctx.lineTo(6, 16);
-            ctx.lineTo(3, 5);
+            ctx.moveTo(18, 3);
+            ctx.lineTo(31, 7);
+            ctx.lineTo(27, 24);
+            ctx.lineTo(18, 33);
+            ctx.lineTo(9, 24);
+            ctx.lineTo(5, 7);
             ctx.closePath();
             ctx.fill();
+
             ctx.strokeStyle = '#a5b4fc';
             ctx.lineWidth = 2;
             ctx.stroke();
+
+            // Геральдический крест
             ctx.fillStyle = '#ffffff';
-            ctx.fillRect(11, 6, 2, 8);
-            ctx.fillRect(8, 9, 8, 2);
+            ctx.fillRect(16.5, 9, 3, 14);
+            ctx.fillRect(11, 14, 14, 3);
         });
 
-        // UI Scroll (Свиток заданий)
-        this.createCanvas('ui_scroll', 24, 24, (ctx) => {
-            ctx.fillStyle = '#fde68a';
+        // UI Scroll (Свиток заданий - Lucide Scroll)
+        this.createCanvas('ui_scroll', 36, 36, (ctx) => {
+            const grad = ctx.createLinearGradient(0, 6, 0, 30);
+            grad.addColorStop(0, '#fef3c7'); grad.addColorStop(1, '#fde68a');
+            ctx.fillStyle = grad;
+
             ctx.beginPath();
-            ctx.roundRect(4, 4, 16, 16, 3);
+            ctx.roundRect(6, 6, 24, 24, 4);
             ctx.fill();
+
             ctx.strokeStyle = '#d97706';
-            ctx.lineWidth = 1.5;
+            ctx.lineWidth = 1.8;
             ctx.stroke();
+
+            // Линии рун
             ctx.fillStyle = '#92400e';
-            ctx.fillRect(7, 8, 10, 2);
-            ctx.fillRect(7, 12, 8, 2);
-            ctx.fillRect(7, 16, 6, 2);
+            ctx.fillRect(10, 12, 16, 2.5);
+            ctx.fillRect(10, 17, 13, 2.5);
+            ctx.fillRect(10, 22, 10, 2.5);
         });
 
-        // UI Hourglass (Песочные часы)
-        this.createCanvas('ui_hourglass', 22, 22, (ctx) => {
-            ctx.fillStyle = '#38bdf8';
+        // UI Hourglass (Песочные часы - Lucide Hourglass)
+        this.createCanvas('ui_hourglass', 36, 36, (ctx) => {
+            const grad = ctx.createLinearGradient(0, 4, 0, 32);
+            grad.addColorStop(0, '#0284c7'); grad.addColorStop(1, '#0369a1');
+            ctx.fillStyle = grad;
+
             ctx.beginPath();
-            ctx.moveTo(4, 3); ctx.lineTo(18, 3); ctx.lineTo(12, 11); ctx.lineTo(18, 19); ctx.lineTo(4, 19); ctx.lineTo(10, 11); ctx.closePath();
+            ctx.moveTo(6, 5); ctx.lineTo(30, 5); ctx.lineTo(18, 18); ctx.lineTo(30, 31); ctx.lineTo(6, 31); ctx.lineTo(18, 18); ctx.closePath();
             ctx.fill();
+
             ctx.strokeStyle = '#bae6fd';
-            ctx.lineWidth = 1.5;
+            ctx.lineWidth = 2;
             ctx.stroke();
+
+            // Светящийся песок
             ctx.fillStyle = '#ffd166';
-            ctx.fillRect(10, 14, 4, 4);
+            ctx.fillRect(14, 22, 8, 6);
         });
     }
 
@@ -2920,48 +3293,173 @@ class TextureGenerator {
             ctx.fill();
         });
 
-        // 11. STAT BAR ICONS (Миниатюрные стильные иконки для параметров)
-        this.createCanvas('stat_icon_hp', 18, 18, (ctx) => {
+        // 11. HIGH-DEFINITION STAT BAR ICONS (Lucide / React-Icons styled vector badges)
+        this.createCanvas('stat_icon_hp', 32, 32, (ctx) => {
+            const grad = ctx.createRadialGradient(13, 11, 2, 16, 16, 14);
+            grad.addColorStop(0, '#fca5a5');
+            grad.addColorStop(0.3, '#ef4444');
+            grad.addColorStop(0.8, '#b91c1c');
+            grad.addColorStop(1, '#7f1d1d');
+            ctx.fillStyle = grad;
+
+            ctx.beginPath();
+            ctx.moveTo(16, 27);
+            ctx.bezierCurveTo(5, 19, 3, 8, 10, 5.5);
+            ctx.bezierCurveTo(14, 4, 15.5, 6.5, 16, 8);
+            ctx.bezierCurveTo(16.5, 6.5, 18, 4, 22, 5.5);
+            ctx.bezierCurveTo(29, 8, 27, 19, 16, 27);
+            ctx.closePath();
+            ctx.fill();
+
+            ctx.strokeStyle = '#fee2e2';
+            ctx.lineWidth = 1.2;
+            ctx.stroke();
+
+            // Глянец
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
+            ctx.beginPath();
+            ctx.ellipse(11, 9, 3.5, 1.8, -Math.PI / 4, 0, Math.PI * 2);
+            ctx.fill();
+        });
+
+        this.createCanvas('stat_icon_spd', 32, 32, (ctx) => {
+            // Золотая молния / Сапог скорости
+            const grad = ctx.createLinearGradient(8, 4, 24, 28);
+            grad.addColorStop(0, '#fef08a');
+            grad.addColorStop(0.5, '#eab308');
+            grad.addColorStop(1, '#ca8a04');
+            ctx.fillStyle = grad;
+
+            ctx.beginPath();
+            ctx.moveTo(19, 3);
+            ctx.lineTo(8, 15);
+            ctx.lineTo(15, 15);
+            ctx.lineTo(11, 29);
+            ctx.lineTo(24, 14);
+            ctx.lineTo(17, 14);
+            ctx.closePath();
+            ctx.fill();
+
+            ctx.strokeStyle = '#ffffff';
+            ctx.lineWidth = 1.2;
+            ctx.stroke();
+        });
+
+        this.createCanvas('stat_icon_dmg', 32, 32, (ctx) => {
+            // Огненный клинок урона
+            ctx.strokeStyle = '#f8fafc';
+            ctx.lineWidth = 2.5;
+            ctx.lineCap = 'round';
+            ctx.beginPath();
+            ctx.moveTo(7, 25); ctx.lineTo(25, 7);
+            ctx.stroke();
+
+            // Пламя на клинке
+            ctx.fillStyle = '#f97316';
+            ctx.beginPath();
+            ctx.arc(22, 10, 4.5, 0, Math.PI * 2);
+            ctx.fill();
             ctx.fillStyle = '#ef4444';
             ctx.beginPath();
-            ctx.arc(6, 6, 5, Math.PI, 0, false);
-            ctx.arc(12, 6, 5, Math.PI, 0, false);
-            ctx.lineTo(9, 16);
-            ctx.closePath();
+            ctx.arc(17, 15, 3.5, 0, Math.PI * 2);
             ctx.fill();
+
+            // Гарда
+            ctx.strokeStyle = '#fbbf24';
+            ctx.lineWidth = 3.5;
+            ctx.beginPath();
+            ctx.moveTo(6, 19); ctx.lineTo(13, 26);
+            ctx.stroke();
         });
 
-        this.createCanvas('stat_icon_spd', 18, 18, (ctx) => {
-            ctx.fillStyle = '#facc15';
+        this.createCanvas('stat_icon_crit', 32, 32, (ctx) => {
+            // Прицел / Мишень критического удара
+            ctx.strokeStyle = '#c084fc';
+            ctx.lineWidth = 2;
             ctx.beginPath();
-            ctx.moveTo(11, 2); ctx.lineTo(4, 10); ctx.lineTo(9, 10); ctx.lineTo(7, 16); ctx.lineTo(14, 8); ctx.lineTo(9, 8); ctx.closePath();
-            ctx.fill();
-        });
+            ctx.arc(16, 16, 10, 0, Math.PI * 2);
+            ctx.stroke();
 
-        this.createCanvas('stat_icon_dmg', 18, 18, (ctx) => {
-            ctx.fillStyle = '#f97316';
-            ctx.strokeStyle = '#ffffff';
-            ctx.lineWidth = 1.5;
+            // Перекрестие
+            ctx.strokeStyle = '#f5d0fe';
+            ctx.lineWidth = 1.8;
             ctx.beginPath();
-            ctx.moveTo(3, 15); ctx.lineTo(13, 5); ctx.stroke();
-            ctx.fillStyle = '#f97316';
-            ctx.fillRect(11, 3, 4, 4);
-            ctx.fillRect(2, 14, 3, 3);
-        });
+            ctx.moveTo(16, 3); ctx.lineTo(16, 9);
+            ctx.moveTo(16, 23); ctx.lineTo(16, 29);
+            ctx.moveTo(3, 16); ctx.lineTo(9, 16);
+            ctx.moveTo(23, 16); ctx.lineTo(29, 16);
+            ctx.stroke();
 
-        this.createCanvas('stat_icon_crit', 18, 18, (ctx) => {
-            ctx.fillStyle = '#c084fc';
+            // Красная точка попадания в яблочко
+            ctx.fillStyle = '#ef4444';
             ctx.beginPath();
-            for (let i = 0; i < 4; i++) {
-                const a = (i * Math.PI) / 2;
-                const x = 9 + Math.cos(a) * 8;
-                const y = 9 + Math.sin(a) * 8;
-                if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
-            }
-            ctx.closePath();
+            ctx.arc(16, 16, 3, 0, Math.PI * 2);
             ctx.fill();
             ctx.fillStyle = '#ffffff';
-            ctx.fillRect(8, 8, 2, 2);
+            ctx.beginPath();
+            ctx.arc(15, 15, 1, 0, Math.PI * 2);
+            ctx.fill();
+        });
+
+        this.createCanvas('stat_icon_atkspeed', 32, 32, (ctx) => {
+            // Скорость атаки (Двойные искры)
+            ctx.fillStyle = '#38bdf8';
+            ctx.beginPath();
+            ctx.moveTo(12, 4); ctx.lineTo(6, 16); ctx.lineTo(12, 16); ctx.lineTo(8, 28); ctx.lineTo(18, 14); ctx.lineTo(12, 14); ctx.closePath();
+            ctx.fill();
+
+            ctx.fillStyle = '#818cf8';
+            ctx.beginPath();
+            ctx.moveTo(22, 6); ctx.lineTo(17, 16); ctx.lineTo(21, 16); ctx.lineTo(18, 26); ctx.lineTo(26, 15); ctx.lineTo(22, 15); ctx.closePath();
+            ctx.fill();
+        });
+
+        this.createCanvas('stat_icon_area', 32, 32, (ctx) => {
+            // Магнит / Радиус действия
+            ctx.strokeStyle = '#ef4444';
+            ctx.lineWidth = 4.5;
+            ctx.beginPath();
+            ctx.arc(16, 18, 9, Math.PI, 0, false);
+            ctx.stroke();
+
+            // Полюса магнита
+            ctx.fillStyle = '#38bdf8';
+            ctx.fillRect(5, 18, 4.5, 6);
+            ctx.fillStyle = '#ef4444';
+            ctx.fillRect(22.5, 18, 4.5, 6);
+        });
+
+        this.createCanvas('stat_icon_regen', 32, 32, (ctx) => {
+            // Регенерация (Изумрудное сердце с крестом)
+            ctx.fillStyle = '#10b981';
+            ctx.beginPath();
+            ctx.arc(12, 12, 7, 0, Math.PI * 2);
+            ctx.arc(20, 12, 7, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.moveTo(6, 15); ctx.lineTo(26, 15); ctx.lineTo(16, 27); ctx.closePath();
+            ctx.fill();
+
+            // Белый крест исцеления
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(14.5, 9, 3, 10);
+            ctx.fillRect(11, 12.5, 10, 3);
+        });
+
+        this.createCanvas('stat_icon_luck', 32, 32, (ctx) => {
+            // Удача (4-листный клевер)
+            ctx.fillStyle = '#22c55e';
+            const leaves = [{x:11, y:11}, {x:21, y:11}, {x:11, y:21}, {x:21, y:21}];
+            leaves.forEach(l => {
+                ctx.beginPath();
+                ctx.arc(l.x, l.y, 4.5, 0, Math.PI * 2);
+                ctx.fill();
+            });
+            ctx.strokeStyle = '#15803d';
+            ctx.lineWidth = 1.5;
+            ctx.beginPath();
+            ctx.moveTo(16, 16); ctx.quadraticCurveTo(14, 28, 9, 29);
+            ctx.stroke();
         });
     }
 

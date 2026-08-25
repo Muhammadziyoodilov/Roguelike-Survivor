@@ -291,29 +291,7 @@ class MenuScene extends Phaser.Scene {
             }
         });
 
-        // Соцсети внизу слева (показываем только если хватает высоты экрана)
-        if (height >= 580) {
-            const socY = height - 34;
-            const socW = 28;
-            const socSpacing = 34;
-            const socStartX = leftColX - 60;
 
-            this.add.text(leftColX - 60, socY - 20, 'ПРИСОЕДИНЯЙСЯ К НАМ:', {
-                fontFamily: CONFIG.FONTS.UI, fontSize: '9px', fontStyle: 'bold', color: '#64748b', letterSpacing: 0.5
-            }).setOrigin(0, 0.5).setDepth(10);
-
-            const socials = [
-                { icon: 'ui_discord', url: 'https://discord.com' },
-                { icon: 'ui_vk', url: 'https://vk.com' },
-                { icon: 'ui_youtube', url: 'https://youtube.com' }
-            ];
-
-            socials.forEach((soc, idx) => {
-                const sx = socStartX + (idx * socSpacing) + 14;
-                const sBtn = this.add.image(sx, socY, soc.icon).setDisplaySize(socW, socW).setInteractive({ useHandCursor: true }).setDepth(10);
-                sBtn.on('pointerdown', () => window.open(soc.url, '_blank'));
-            });
-        }
 
         // === ПРАВАЯ КОЛОНКА: Виджеты ===
         const rightColX = isCompact ? Math.max(width - 130, width * 0.84) : Math.max(width - 200, width * 0.82);
