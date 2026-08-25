@@ -641,21 +641,30 @@ class TextureGenerator {
             p(12, 24, '#78350f', 13, 3);
             p(17, 24, '#f59e0b', 3, 3);
 
-            // 4. Изогнутый золотой композитный лук (Правая рука)
+            // 4. Изогнутый золотой композитный лук (Лучник держит лук вперед, натягивая тетиву)
             const bowY = 5 + armOffset;
-            p(29, bowY, '#090d16', 3, 2);
-            p(28, bowY + 2, '#d97706', 2, 4);
-            p(27, bowY + 6, '#f59e0b', 2, 8);
-            p(28, bowY + 14, '#d97706', 2, 4);
-            p(29, bowY + 18, '#090d16', 3, 2);
-            p(28, bowY + 7, '#fef08a', 1, 6);    // Золотая гравировка
+            
+            // Древко лука изгибается вперед (вправо):
+            // Верхний рог
+            p(26, bowY, '#090d16', 3, 2);
+            p(27, bowY + 2, '#d97706', 2, 3);
+            p(29, bowY + 5, '#f59e0b', 2, 4);
+            // Центральная рукоять (выгнута вперед к x=30..31)
+            p(30, bowY + 8, '#78350f', 2, 4);
+            p(31, bowY + 9, '#fef08a', 1, 2); // Золотая инкрустация
+            // Нижний рог
+            p(29, bowY + 11, '#f59e0b', 2, 4);
+            p(27, bowY + 15, '#d97706', 2, 3);
+            p(26, bowY + 18, '#090d16', 3, 2);
 
-            // Тетива и наложенная магическая стрела
-            p(30, bowY + 1, '#38bdf8', 1, 18);
-            p(21, bowY + 10, '#ffffff', 10, 1);
-            p(31, bowY + 9, '#f59e0b', 2, 3);   // Оперение
-            p(20, bowY + 9, '#00f5d4', 3, 3);   // Магический наконечник
-            p(19, bowY + 10, '#ffffff', 2, 1);
+            // Тетива (натянута вертикально сзади рукояти)
+            p(26, bowY + 1, '#38bdf8', 1, 18);
+
+            // Наложенная магическая стрела (направлена ВПЕРЕД вправо!)
+            p(21, bowY + 9, '#f59e0b', 2, 2);   // Оперение (сзади у тетивы)
+            p(23, bowY + 9, '#f8fafc', 8, 1);   // Древко стрелы
+            p(31, bowY + 8, '#00f5d4', 4, 3);   // Магический наконечник (спереди!)
+            p(34, bowY + 9, '#ffffff', 2, 1);   // Острие стрелы
 
             // 5. Ноги и кожаные сапоги
             const leftLegY = 27 + legOffset;
@@ -1543,16 +1552,36 @@ class TextureGenerator {
             ctx.fillRect(7, 4, 4, 4);
         });
 
-        // Magnet
-        this.createCanvas('pickup_magnet', 22, 22, (ctx) => {
-            ctx.strokeStyle = '#ef233c';
+        // Magnet Pickup (Симметричный магнит притяжения всех кристаллов)
+        this.createCanvas('pickup_magnet', 24, 24, (ctx) => {
+            const grad = ctx.createLinearGradient(6, 4, 18, 4);
+            grad.addColorStop(0, '#ef4444');
+            grad.addColorStop(0.5, '#818cf8');
+            grad.addColorStop(1, '#3b82f6');
+            ctx.strokeStyle = grad;
             ctx.lineWidth = 4;
+            ctx.lineCap = 'butt';
             ctx.beginPath();
-            ctx.arc(11, 11, 8, Math.PI, 0, false);
+            ctx.arc(12, 10, 6.5, Math.PI, 0, false);
             ctx.stroke();
-            ctx.fillStyle = '#4cc9f0';
-            ctx.fillRect(3, 11, 4, 6);
-            ctx.fillRect(15, 11, 4, 6);
+
+            // Полюса
+            ctx.fillStyle = '#ef4444';
+            ctx.fillRect(4, 10, 3.5, 5);
+            ctx.fillStyle = '#f8fafc';
+            ctx.fillRect(4, 15, 3.5, 3);
+
+            ctx.fillStyle = '#3b82f6';
+            ctx.fillRect(16.5, 10, 3.5, 5);
+            ctx.fillStyle = '#f8fafc';
+            ctx.fillRect(16.5, 15, 3.5, 3);
+
+            // Искры
+            ctx.strokeStyle = '#ffd166';
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.arc(12, 16, 4, Math.PI, 0, false);
+            ctx.stroke();
         });
     }
 
@@ -2001,16 +2030,60 @@ class TextureGenerator {
             ctx.closePath(); ctx.fill();
         });
 
-        // --- Сфера Притяжения (Электромагнит) ---
+        // --- Сфера Притяжения (Симметричный неоновый электромагнит) ---
         createSquareIcon('icon_magnet', '#0369a1', false, (ctx) => {
-            ctx.strokeStyle = '#38bdf8'; ctx.lineWidth = 6;
-            ctx.beginPath(); ctx.arc(24, 22, 11, Math.PI, 0, false); ctx.stroke();
-            // Полюса магнита
-            ctx.fillStyle = '#ef4444'; ctx.fillRect(10, 22, 6, 9);
-            ctx.fillStyle = '#ffffff'; ctx.fillRect(22, 22, 6, 9);
-            // Магнитные силовые линии
-            ctx.strokeStyle = '#ffd166'; ctx.lineWidth = 1.5;
-            ctx.beginPath(); ctx.arc(24, 33, 5, Math.PI, 0, false); ctx.stroke();
+            // Верхняя дуга подковы (плавный градиент от красного к синему)
+            const grad = ctx.createLinearGradient(12, 10, 36, 10);
+            grad.addColorStop(0, '#ef4444');
+            grad.addColorStop(0.5, '#818cf8');
+            grad.addColorStop(1, '#3b82f6');
+            ctx.strokeStyle = grad;
+            ctx.lineWidth = 7;
+            ctx.lineCap = 'butt';
+            ctx.beginPath();
+            ctx.arc(24, 21, 12, Math.PI, 0, false);
+            ctx.stroke();
+
+            // Левый полюс (Красный - North)
+            ctx.fillStyle = '#ef4444';
+            ctx.fillRect(9, 21, 6, 9);
+            // Серебряный наконечник левого полюса
+            ctx.fillStyle = '#f8fafc';
+            ctx.fillRect(9, 30, 6, 4);
+
+            // Правый полюс (Синий - South)
+            ctx.fillStyle = '#3b82f6';
+            ctx.fillRect(33, 21, 6, 9);
+            // Серебряный наконечник правого полюса
+            ctx.fillStyle = '#f8fafc';
+            ctx.fillRect(33, 30, 6, 4);
+
+            // Тонкий контур полюсов
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.4)';
+            ctx.lineWidth = 1;
+            ctx.strokeRect(8.5, 20.5, 7, 14);
+            ctx.strokeRect(32.5, 20.5, 7, 14);
+
+            // Магнитные силовые волны и золотые искры между полюсами
+            ctx.strokeStyle = '#ffd166';
+            ctx.lineWidth = 1.8;
+            ctx.beginPath();
+            ctx.arc(24, 32, 7, Math.PI, 0, false);
+            ctx.stroke();
+
+            ctx.strokeStyle = '#38bdf8';
+            ctx.lineWidth = 1.2;
+            ctx.beginPath();
+            ctx.arc(24, 32, 11, Math.PI, 0, false);
+            ctx.stroke();
+
+            // Искры
+            ctx.fillStyle = '#ffffff';
+            ctx.beginPath();
+            ctx.arc(24, 28, 1.5, 0, Math.PI * 2);
+            ctx.arc(20, 30, 1.2, 0, Math.PI * 2);
+            ctx.arc(28, 30, 1.2, 0, Math.PI * 2);
+            ctx.fill();
         });
 
         // --- Камень Жизни (Кристалл здоровья) ---
@@ -3415,18 +3488,36 @@ class TextureGenerator {
         });
 
         this.createCanvas('stat_icon_area', 32, 32, (ctx) => {
-            // Магнит / Радиус действия
-            ctx.strokeStyle = '#ef4444';
-            ctx.lineWidth = 4.5;
+            // Симметричный магнит радиуса действия
+            const grad = ctx.createLinearGradient(8, 6, 24, 6);
+            grad.addColorStop(0, '#ef4444');
+            grad.addColorStop(0.5, '#818cf8');
+            grad.addColorStop(1, '#3b82f6');
+            ctx.strokeStyle = grad;
+            ctx.lineWidth = 5;
+            ctx.lineCap = 'butt';
             ctx.beginPath();
-            ctx.arc(16, 18, 9, Math.PI, 0, false);
+            ctx.arc(16, 14, 8, Math.PI, 0, false);
             ctx.stroke();
 
-            // Полюса магнита
-            ctx.fillStyle = '#38bdf8';
-            ctx.fillRect(5, 18, 4.5, 6);
+            // Левый полюс (Красный)
             ctx.fillStyle = '#ef4444';
-            ctx.fillRect(22.5, 18, 4.5, 6);
+            ctx.fillRect(6, 14, 4.5, 6);
+            ctx.fillStyle = '#f8fafc';
+            ctx.fillRect(6, 20, 4.5, 3);
+
+            // Правый полюс (Синий)
+            ctx.fillStyle = '#3b82f6';
+            ctx.fillRect(21.5, 14, 4.5, 6);
+            ctx.fillStyle = '#f8fafc';
+            ctx.fillRect(21.5, 20, 4.5, 3);
+
+            // Силовая дуга
+            ctx.strokeStyle = '#ffd166';
+            ctx.lineWidth = 1.2;
+            ctx.beginPath();
+            ctx.arc(16, 22, 4.5, Math.PI, 0, false);
+            ctx.stroke();
         });
 
         this.createCanvas('stat_icon_regen', 32, 32, (ctx) => {

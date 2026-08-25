@@ -672,15 +672,15 @@ class CoopGameScene extends Phaser.Scene {
             const textStartX = centerX - cardW / 2 + 66;
 
             const tag = this.add.text(textStartX, cy - cardH / 2 + 10, tagText, {
-                fontFamily: CONFIG.FONTS.MONO, fontSize: '10px', fontStyle: 'bold', color: tagColor
+                fontFamily: CONFIG.FONTS.MONO, fontSize: '10px', fontStyle: 'bold', color: tagColor, letterSpacing: 0.8
             }).setDepth(247);
 
             const name = this.add.text(textStartX, cy - cardH / 2 + 24, upg.name, {
-                fontFamily: CONFIG.FONTS.TITLE, fontSize: '13px', fontStyle: 'bold', color: '#ffffff'
+                fontFamily: CONFIG.FONTS.UI, fontSize: '13px', fontStyle: 'bold', color: '#ffffff', letterSpacing: 0.5
             }).setDepth(247);
 
             const desc = this.add.text(textStartX, cy + 3, upg.desc, {
-                fontFamily: CONFIG.FONTS.BODY, fontSize: '10px', color: '#94a3b8', wordWrap: { width: cardW - 105 }
+                fontFamily: CONFIG.FONTS.BODY, fontSize: '10px', color: '#94a3b8', lineSpacing: 2, wordWrap: { width: cardW - 105 }
             }).setDepth(247);
 
             // Бейдж горячей клавиши
@@ -802,15 +802,15 @@ class CoopGameScene extends Phaser.Scene {
             const textStartX = centerX - cardW / 2 + 66;
 
             const tag = this.add.text(textStartX, cy - cardH / 2 + 10, tagText, {
-                fontFamily: CONFIG.FONTS.MONO, fontSize: '10px', fontStyle: 'bold', color: tagColor
+                fontFamily: CONFIG.FONTS.MONO, fontSize: '10px', fontStyle: 'bold', color: tagColor, letterSpacing: 0.8
             }).setDepth(247);
 
             const name = this.add.text(textStartX, cy - cardH / 2 + 24, upg.name, {
-                fontFamily: CONFIG.FONTS.TITLE, fontSize: '13px', fontStyle: 'bold', color: '#ffffff'
+                fontFamily: CONFIG.FONTS.UI, fontSize: '13px', fontStyle: 'bold', color: '#ffffff', letterSpacing: 0.5
             }).setDepth(247);
 
             const desc = this.add.text(textStartX, cy + 3, upg.desc, {
-                fontFamily: CONFIG.FONTS.BODY, fontSize: '10px', color: '#94a3b8', wordWrap: { width: cardW - 105 }
+                fontFamily: CONFIG.FONTS.BODY, fontSize: '10px', color: '#94a3b8', lineSpacing: 2, wordWrap: { width: cardW - 105 }
             }).setDepth(247);
 
             // Бейдж горячей клавиши

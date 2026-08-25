@@ -12,7 +12,7 @@ const CONFIG = {
     },
 
     FONTS: {
-        TITLE: "'Russo One', sans-serif",
+        TITLE: "'Montserrat', sans-serif",
         UI: "'Montserrat', sans-serif",
         BODY: "'Inter', sans-serif",
         MONO: "'JetBrains Mono', monospace"

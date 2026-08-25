@@ -122,19 +122,19 @@ class UpgradeScene extends Phaser.Scene {
                 const textStartX = width / 2 - cardWidth / 2 + iconSize + 28;
 
                 const tag = this.add.text(textStartX, cardY - cardHeight / 2 + 14, tagText, {
-                    fontFamily: CONFIG.FONTS.MONO, fontSize: '11px', fontStyle: 'bold', color: tagColor
+                    fontFamily: CONFIG.FONTS.MONO, fontSize: '10px', fontStyle: 'bold', color: tagColor, letterSpacing: 0.8
                 });
                 this.cardsGroup.add(tag);
 
-                const name = this.add.text(textStartX, cardY - cardHeight / 2 + 28, upg.name, {
-                    fontFamily: CONFIG.FONTS.TITLE, fontSize: '14px', fontStyle: 'bold', color: '#ffffff',
-                    wordWrap: { width: cardWidth - iconSize - 40 }
+                const name = this.add.text(textStartX, cardY - cardHeight / 2 + 30, upg.name, {
+                    fontFamily: CONFIG.FONTS.UI, fontSize: '14px', fontStyle: 'bold', color: '#ffffff', letterSpacing: 0.5,
+                    wordWrap: { width: cardWidth - iconSize - 44 }
                 });
                 this.cardsGroup.add(name);
 
                 const desc = this.add.text(textStartX, cardY + 8, upg.desc, {
-                    fontFamily: CONFIG.FONTS.BODY, fontSize: '11px', color: '#94a3b8',
-                    wordWrap: { width: cardWidth - iconSize - 40 }
+                    fontFamily: CONFIG.FONTS.BODY, fontSize: '11px', color: '#94a3b8', lineSpacing: 3,
+                    wordWrap: { width: cardWidth - iconSize - 44 }
                 });
                 this.cardsGroup.add(desc);
 
@@ -159,30 +159,30 @@ class UpgradeScene extends Phaser.Scene {
 
                 let tagText = upg.isSuper ? '[ЭВОЛЮЦИЯ]' : (upg.isNew ? '[НОВОЕ]' : `УРОВЕНЬ ${upg.level}`);
                 let tagColor = upg.isSuper ? '#ffd166' : (upg.isNew ? '#c084fc' : '#38bdf8');
-                const tag = this.add.text(cardX, centerY - cardHeight / 2 + (isCompact ? 14 : 20), tagText, {
-                    fontFamily: CONFIG.FONTS.MONO, fontSize: isCompact ? '11px' : '13px', fontStyle: 'bold', color: tagColor
+                const tag = this.add.text(cardX, centerY - cardHeight / 2 + (isCompact ? 16 : 22), tagText, {
+                    fontFamily: CONFIG.FONTS.MONO, fontSize: isCompact ? '10px' : '12px', fontStyle: 'bold', color: tagColor, letterSpacing: 0.8
                 }).setOrigin(0.5);
                 this.cardsGroup.add(tag);
 
                 const iconBoxSize = isCompact ? 46 : 64;
-                const iconY = centerY - cardHeight / 2 + (isCompact ? 52 : 74);
+                const iconY = centerY - cardHeight / 2 + (isCompact ? 54 : 76);
                 const iconBg = this.add.rectangle(cardX, iconY, iconBoxSize, iconBoxSize, 0x1e293b);
                 iconBg.setStrokeStyle(1.5, borderColor);
                 const icon = this.add.image(cardX, iconY, upg.icon).setScale(isCompact ? 0.75 : 1.1);
                 this.cardsGroup.add(iconBg);
                 this.cardsGroup.add(icon);
 
-                const nameY = centerY - cardHeight / 2 + (isCompact ? 95 : 138);
+                const nameY = centerY - cardHeight / 2 + (isCompact ? 98 : 142);
                 const name = this.add.text(cardX, nameY, upg.name, {
-                    fontFamily: CONFIG.FONTS.TITLE, fontSize: isCompact ? '12px' : '15px', fontStyle: 'bold', color: '#ffffff',
-                    align: 'center', wordWrap: { width: cardWidth - 16 }
+                    fontFamily: CONFIG.FONTS.UI, fontSize: isCompact ? '13px' : '15px', fontStyle: 'bold', color: '#ffffff',
+                    align: 'center', letterSpacing: 0.5, wordWrap: { width: cardWidth - 24 }
                 }).setOrigin(0.5);
                 this.cardsGroup.add(name);
 
-                const descY = centerY - cardHeight / 2 + (isCompact ? 135 : 195);
+                const descY = centerY - cardHeight / 2 + (isCompact ? 134 : 194);
                 const desc = this.add.text(cardX, descY, upg.desc, {
-                    fontFamily: CONFIG.FONTS.BODY, fontSize: isCompact ? '10px' : '12px', color: '#cbd5e1',
-                    align: 'center', wordWrap: { width: cardWidth - 18 }, lineSpacing: 1
+                    fontFamily: CONFIG.FONTS.BODY, fontSize: isCompact ? '10px' : '12px', color: '#94a3b8',
+                    align: 'center', wordWrap: { width: cardWidth - 28 }, lineSpacing: 3
                 }).setOrigin(0.5, 0);
                 this.cardsGroup.add(desc);
 
