@@ -217,7 +217,7 @@ class MenuScene extends Phaser.Scene {
         }
     }
 
-    createLandscapeLayout(width, height, lang) {
+        createLandscapeLayout(width, height, lang) {
         const isCompact = height < 520;
         const leftColX = isCompact ? Math.min(170, width * 0.20) : Math.min(235, width * 0.18);
         const leftTopY = isCompact ? 48 : 105;
@@ -237,45 +237,89 @@ class MenuScene extends Phaser.Scene {
             });
         }
 
-        // 2. ГЛАВНАЯ КНОПКА #1: PLAY (8-УГОЛЬНАЯ С НЕОНОВЫМ ФИОЛЕТОВЫМ СВЕЧЕНИЕМ)
+        // 2. ГЛАВНАЯ КНОПКА #1: PLAY (ЕДИНЫЙ КОНТЕЙНЕР С АНИМАЦИЕЙ ВСЕХ ЭЛЕМЕНТОВ)
         const playBtnY = leftTopY + (isCompact ? 68 : 115);
         const playBtnW = isCompact ? 180 : 285;
         const playBtnH = isCompact ? 46 : 68;
-        const playBtn = this.add.image(leftColX, playBtnY, 'btn_play_bg').setDisplaySize(playBtnW, playBtnH).setInteractive({ useHandCursor: true }).setDepth(10);
 
+        const playContainer = this.add.container(leftColX, playBtnY).setDepth(10);
+        const playBg = this.add.image(0, 0, 'btn_play_bg').setDisplaySize(playBtnW, playBtnH);
+        const swordsIcon = this.add.image(-playBtnW / 2 + (isCompact ? 28 : 42), 0, 'ui_swords').setDisplaySize(isCompact ? 26 : 36, isCompact ? 26 : 36);
+        const playTitle = this.add.text(-playBtnW / 2 + (isCompact ? 48 : 72), isCompact ? -9 : -11, 'PLAY', {
+            fontFamily: CONFIG.FONTS.TITLE, fontSize: isCompact ? '17px' : '23px', fontStyle: 'bold', color: '#ffffff', letterSpacing: 2
+        }).setOrigin(0, 0.5);
+        const playSub = this.add.text(-playBtnW / 2 + (isCompact ? 48 : 72), isCompact ? 10 : 13, 'ОДИНОЧНЫЙ РЕЖИМ', {
+            fontFamily: CONFIG.FONTS.UI, fontSize: isCompact ? '9px' : '11px', fontStyle: '700', color: '#e9d5ff', letterSpacing: 1.2
+        }).setOrigin(0, 0.5);
+
+        playContainer.add([playBg, swordsIcon, playTitle, playSub]);
+        playContainer.setSize(playBtnW, playBtnH).setInteractive({ useHandCursor: true });
+
+        // Синхронная плавная пульсация всей кнопки PLAY целиком
         this.tweens.add({
-            targets: playBtn,
+            targets: playContainer,
             scaleX: 1.02,
             scaleY: 1.02,
-            duration: 1100,
+            duration: 1200,
             yoyo: true,
             repeat: -1,
             ease: 'Sine.easeInOut'
         });
 
-        this.add.image(leftColX - (isCompact ? 65 : 95), playBtnY, 'ui_swords').setDisplaySize(isCompact ? 28 : 36, isCompact ? 28 : 36).setDepth(11);
-        this.add.text(leftColX - (isCompact ? 42 : 58), playBtnY - (isCompact ? 9 : 11), 'PLAY', {
-            fontFamily: CONFIG.FONTS.TITLE, fontSize: isCompact ? '17px' : '23px', fontStyle: 'bold', color: '#ffffff', letterSpacing: 2
-        }).setOrigin(0, 0.5).setDepth(11);
-        this.add.text(leftColX - (isCompact ? 42 : 58), playBtnY + (isCompact ? 10 : 13), 'ОДИНОЧНЫЙ РЕЖИМ', {
-            fontFamily: CONFIG.FONTS.UI, fontSize: isCompact ? '9px' : '11px', fontStyle: '700', color: '#e9d5ff', letterSpacing: 1.2
-        }).setOrigin(0, 0.5).setDepth(11);
+        playContainer.on('pointerover', () => {
+            this.tweens.add({ targets: playContainer, scaleX: 1.05, scaleY: 1.05, duration: 140, ease: 'Back.easeOut' });
+        });
+        playContainer.on('pointerout', () => {
+            this.tweens.add({ targets: playContainer, scaleX: 1.0, scaleY: 1.0, duration: 140 });
+        });
+        playContainer.on('pointerdown', () => {
+            if (window.MapSwiperModal && window.MapSwiperModal.isOpen()) return;
+            if (this.currentModal) return;
+            this.tweens.add({
+                targets: playContainer,
+                scaleX: 0.96,
+                scaleY: 0.96,
+                duration: 70,
+                yoyo: true,
+                onComplete: () => this.openHeroSelectModal()
+            });
+        });
 
-        playBtn.on('pointerdown', () => this.openHeroSelectModal());
+        // 3. ГЛАВНАЯ КНОПКА #2: CO-OP (ЕДИНЫЙ КОНТЕЙНЕР С ЦИАНОВЫМ СВЕЧЕНИЕМ)
+        const coopBtnY = playBtnY + (isCompact ? 50 : 74);
+        const coopBtnH = isCompact ? 42 : 60;
 
-        // 3. ГЛАВНАЯ КНОПКА #2: CO-OP (8-УГОЛЬНАЯ С НЕОНОВЫМ ЦИАНОВЫМ СВЕЧЕНИЕМ)
-        const coopBtnY = playBtnY + (isCompact ? 50 : 72);
-        const coopBtn = this.add.image(leftColX, coopBtnY, 'btn_coop_bg').setDisplaySize(playBtnW, isCompact ? 42 : 60).setInteractive({ useHandCursor: true }).setDepth(10);
-
-        this.add.image(leftColX - (isCompact ? 65 : 95), coopBtnY, 'ui_coop').setDisplaySize(isCompact ? 26 : 34, isCompact ? 26 : 34).setDepth(11);
-        this.add.text(leftColX - (isCompact ? 42 : 58), coopBtnY - (isCompact ? 8 : 10), 'CO-OP', {
+        const coopContainer = this.add.container(leftColX, coopBtnY).setDepth(10);
+        const coopBg = this.add.image(0, 0, 'btn_coop_bg').setDisplaySize(playBtnW, coopBtnH);
+        const coopIcon = this.add.image(-playBtnW / 2 + (isCompact ? 28 : 42), 0, 'ui_coop').setDisplaySize(isCompact ? 24 : 34, isCompact ? 24 : 34);
+        const coopTitle = this.add.text(-playBtnW / 2 + (isCompact ? 48 : 72), isCompact ? -8 : -10, 'CO-OP', {
             fontFamily: CONFIG.FONTS.TITLE, fontSize: isCompact ? '16px' : '21px', fontStyle: 'bold', color: '#ffffff', letterSpacing: 2
-        }).setOrigin(0, 0.5).setDepth(11);
-        this.add.text(leftColX - (isCompact ? 42 : 58), coopBtnY + (isCompact ? 9 : 12), 'РЕЖИМ НА ДВОИХ', {
+        }).setOrigin(0, 0.5);
+        const coopSub = this.add.text(-playBtnW / 2 + (isCompact ? 48 : 72), isCompact ? 9 : 12, 'РЕЖИМ НА ДВОИХ', {
             fontFamily: CONFIG.FONTS.UI, fontSize: isCompact ? '9px' : '11px', fontStyle: '700', color: '#bae6fd', letterSpacing: 1.2
-        }).setOrigin(0, 0.5).setDepth(11);
+        }).setOrigin(0, 0.5);
 
-        coopBtn.on('pointerdown', () => this.openCoopModal());
+        coopContainer.add([coopBg, coopIcon, coopTitle, coopSub]);
+        coopContainer.setSize(playBtnW, coopBtnH).setInteractive({ useHandCursor: true });
+
+        coopContainer.on('pointerover', () => {
+            this.tweens.add({ targets: coopContainer, scaleX: 1.05, scaleY: 1.05, duration: 140, ease: 'Back.easeOut' });
+        });
+        coopContainer.on('pointerout', () => {
+            this.tweens.add({ targets: coopContainer, scaleX: 1.0, scaleY: 1.0, duration: 140 });
+        });
+        coopContainer.on('pointerdown', () => {
+            if (window.MapSwiperModal && window.MapSwiperModal.isOpen()) return;
+            if (this.currentModal) return;
+            this.tweens.add({
+                targets: coopContainer,
+                scaleX: 0.96,
+                scaleY: 0.96,
+                duration: 70,
+                yoyo: true,
+                onComplete: () => this.openCoopModal()
+            });
+        });
 
         // 4. СТЕКЛЯННЫЕ 8-УГОЛЬНЫЕ КНОПКИ ПОДМЕНЮ С ЖЕЛЕЗНЫМИ СЕРЫМИ ИКОНКАМИ
         const menuItems = [
@@ -293,7 +337,11 @@ class MenuScene extends Phaser.Scene {
             const btn = this.add.image(leftColX, itemY, 'btn_glass_sub').setDisplaySize(playBtnW, isCompact ? 26 : 42).setInteractive({ useHandCursor: true }).setDepth(10);
             btn.on('pointerover', () => btn.setTint(0xc4b5fd));
             btn.on('pointerout', () => btn.clearTint());
-            btn.on('pointerdown', item.action);
+            btn.on('pointerdown', () => {
+                if (window.MapSwiperModal && window.MapSwiperModal.isOpen()) return;
+                if (this.currentModal) return;
+                item.action();
+            });
 
             this.add.image(leftColX - (isCompact ? 70 : 105), itemY, item.iconKey).setDisplaySize(isCompact ? 18 : 26, isCompact ? 18 : 26).setDepth(11);
             this.add.text(leftColX - (isCompact ? 50 : 75), itemY, item.title, {
@@ -307,38 +355,6 @@ class MenuScene extends Phaser.Scene {
                 }).setOrigin(0.5).setDepth(12);
             }
         });
-
-        // 5. НИЖНИЙ ЛЕВЫЙ БЛОК: СОЦСЕТИ (Discord, VK, YouTube)
-        const socialY = subStartY + (menuItems.length * subSpacing) + (isCompact ? 14 : 26);
-        if (height >= 560) {
-            const socials = [
-                { icon: 'ui_discord', link: 'https://discord.gg' },
-                { icon: 'ui_vk', link: 'https://vk.com' },
-                { icon: 'ui_youtube', link: 'https://youtube.com' }
-            ];
-
-            const socialSpacing = 44;
-            const socStartX = leftColX - ((socials.length - 1) * socialSpacing) / 2;
-
-            socials.forEach((soc, idx) => {
-                const sx = socStartX + idx * socialSpacing;
-                const sBtn = this.add.rectangle(sx, socialY, 36, 36, 0x0b1120, 0.95).setInteractive({ useHandCursor: true }).setDepth(10);
-                sBtn.setStrokeStyle(1.2, 0x252b47);
-                sBtn.on('pointerover', () => sBtn.setStrokeStyle(1.5, 0x818cf8));
-                sBtn.on('pointerout', () => sBtn.setStrokeStyle(1.2, 0x252b47));
-                sBtn.on('pointerdown', () => {
-                    window.Sound.playCoin();
-                });
-
-                if (this.textures.exists(soc.icon)) {
-                    this.add.image(sx, socialY, soc.icon).setDisplaySize(24, 24).setDepth(11);
-                }
-            });
-
-            this.add.text(leftColX, socialY + 28, 'ПРИСОЕДИНЯЙСЯ К НАМ!', {
-                fontFamily: CONFIG.FONTS.TITLE, fontSize: '9.5px', fontStyle: 'bold', color: '#94a3b8', letterSpacing: 1.5
-            }).setOrigin(0.5).setDepth(11);
-        }
 
         // === ПРАВАЯ КОЛОНКА: Виджеты ===
         const rightColX = isCompact ? Math.max(width - 130, width * 0.84) : Math.max(width - 200, width * 0.82);
@@ -508,9 +524,9 @@ class MenuScene extends Phaser.Scene {
         }
     }
 
-    createBottomTabBar(width, height, isPortrait, lang) {
+        createBottomTabBar(width, height, isPortrait, lang) {
         const isCompact = !isPortrait && height < 520;
-        const barY = height - (isCompact ? 25 : (isPortrait ? 35 : 46));
+        const barY = height - (isCompact ? 28 : (isPortrait ? 38 : 48));
         const tabs = [
             { iconKey: 'ui_chest_gold', title: isCompact ? 'СУНДУК' : 'БЕСПЛАТНЫЙ\nСУНДУК', badge: '1', action: () => this.claimFreeChest() },
             { iconKey: 'ui_3d_gem_card', title: 'УСИЛЕНИЯ', badge: '', action: () => this.openTalentsModal() },
@@ -518,83 +534,158 @@ class MenuScene extends Phaser.Scene {
             { iconKey: 'ui_3d_shield_card', title: isCompact ? 'ЛИДЕРЫ' : 'ТАБЛИЦЫ\nЛИДЕРОВ', badge: '', action: () => this.openLeaderboardModal() }
         ];
 
-        const tabSpacing = isPortrait ? Math.min(85, (width - 40) / 4) : (isCompact ? 95 : 125);
+        const tabSpacing = isPortrait ? Math.min(88, (width - 40) / 4) : (isCompact ? 98 : 130);
         const totalW = tabSpacing * (tabs.length - 1);
         const startX = width / 2 - totalW / 2;
 
         tabs.forEach((tab, idx) => {
             const tx = startX + (idx * tabSpacing);
-            const btnW = isPortrait ? 75 : (isCompact ? 86 : 110);
-            const btnH = isPortrait ? 44 : (isCompact ? 36 : 95);
+            const cardW = isPortrait ? 78 : (isCompact ? 88 : 112);
+            const cardH = isPortrait ? 46 : (isCompact ? 38 : 56);
 
-            if (this.textures.exists('card_shortcut_bg')) {
-                const tabBg = this.add.image(tx, barY, 'card_shortcut_bg').setDisplaySize(btnW, btnH).setInteractive({ useHandCursor: true }).setDepth(10);
-                tabBg.on('pointerover', () => tabBg.setTint(0xc4b5fd));
-                tabBg.on('pointerout', () => tabBg.clearTint());
-                tabBg.on('pointerdown', tab.action);
+            const tabContainer = this.add.container(tx, barY).setDepth(10);
+
+            // 1. Базовая карточка-основание (card_tab_glass)
+            const bgKey = this.textures.exists('card_tab_glass') ? 'card_tab_glass' : (this.textures.exists('card_shortcut_bg') ? 'card_shortcut_bg' : null);
+            let tabBg;
+            if (bgKey) {
+                tabBg = this.add.image(0, isCompact ? 4 : 8, bgKey).setDisplaySize(cardW, cardH);
             } else {
-                const tabBg = this.add.rectangle(tx, barY, btnW, btnH, 0x0b1120, 0.95).setInteractive({ useHandCursor: true }).setDepth(10);
+                tabBg = this.add.rectangle(0, isCompact ? 4 : 8, cardW, cardH, 0x0b1120, 0.95);
                 tabBg.setStrokeStyle(1.5, 0x252b47);
-                tabBg.on('pointerover', () => { tabBg.setStrokeStyle(1.5, 0x818cf8); tabBg.setFillStyle(0x1e1b4b, 0.98); });
-                tabBg.on('pointerout', () => { tabBg.setStrokeStyle(1.5, 0x252b47); tabBg.setFillStyle(0x0b1120, 0.95); });
-                tabBg.on('pointerdown', tab.action);
             }
 
-            this.add.image(tx, barY - (isCompact ? 6 : (isPortrait ? 6 : 14)), tab.iconKey).setDisplaySize(isCompact ? 20 : 34, isCompact ? 20 : 34).setDepth(11);
+            // 2. Выступающая 3D Иконка (ВЫХОДИТ ЗА ВЕРХНИЕ ГРАНИЦЫ КАРТОЧКИ)
+            const iconSize = isCompact ? 32 : (isPortrait ? 36 : 48);
+            const iconY = isCompact ? -12 : (isPortrait ? -14 : -20);
+            const tabIcon = this.add.image(0, iconY, tab.iconKey).setDisplaySize(iconSize, iconSize).setDepth(1);
 
-            this.add.text(tx, barY + (isCompact ? 8 : (isPortrait ? 12 : 22)), tab.title, {
-                fontFamily: CONFIG.FONTS.TITLE, fontSize: isCompact ? '8px' : (isPortrait ? '9px' : '9.5px'), fontStyle: 'bold', color: '#cbd5e1', align: 'center'
-            }).setOrigin(0.5).setDepth(11);
+            // 3. Подпись вкладки внизу карточки
+            const textY = isCompact ? 10 : (isPortrait ? 14 : 18);
+            const tabTitle = this.add.text(0, textY, tab.title, {
+                fontFamily: CONFIG.FONTS.TITLE,
+                fontSize: isCompact ? '7.5px' : (isPortrait ? '8.5px' : '9.5px'),
+                fontStyle: 'bold',
+                color: '#cbd5e1',
+                align: 'center',
+                lineSpacing: -2
+            }).setOrigin(0.5).setDepth(1);
 
+            tabContainer.add([tabBg, tabIcon, tabTitle]);
+
+            // 4. Уведомительный красный бейдж над выступающей иконкой
             if (tab.badge) {
-                this.add.circle(tx + btnW / 2 - 10, barY - btnH / 2 + 10, isCompact ? 5 : 7, 0xef4444).setDepth(12);
-                this.add.text(tx + btnW / 2 - 10, barY - btnH / 2 + 10, tab.badge, {
-                    fontFamily: CONFIG.FONTS.MONO, fontSize: isCompact ? '7px' : '9px', fontStyle: 'bold', color: '#fff'
-                }).setOrigin(0.5).setDepth(13);
+                const badgeX = isCompact ? 12 : 18;
+                const badgeY = isCompact ? -20 : -28;
+                const badgeCircle = this.add.circle(badgeX, badgeY, isCompact ? 5.5 : 7.5, 0xef4444).setDepth(2);
+                badgeCircle.setStrokeStyle(1.2, 0xffffff);
+                const badgeText = this.add.text(badgeX, badgeY, tab.badge, {
+                    fontFamily: CONFIG.FONTS.MONO, fontSize: isCompact ? '7px' : '9px', fontStyle: 'bold', color: '#ffffff'
+                }).setOrigin(0.5).setDepth(3);
+                tabContainer.add([badgeCircle, badgeText]);
             }
+
+            tabContainer.setSize(cardW, cardH + 25).setInteractive({ useHandCursor: true });
+
+            // Интерактивная плавная анимация при наведении / клике
+            tabContainer.on('pointerover', () => {
+                this.tweens.add({ targets: tabContainer, scaleX: 1.06, scaleY: 1.06, duration: 150, ease: 'Back.easeOut' });
+                this.tweens.add({ targets: tabIcon, y: iconY - 3, duration: 150, ease: 'Sine.easeOut' });
+                tabTitle.setColor('#ffffff');
+            });
+            tabContainer.on('pointerout', () => {
+                this.tweens.add({ targets: tabContainer, scaleX: 1.0, scaleY: 1.0, duration: 150 });
+                this.tweens.add({ targets: tabIcon, y: iconY, duration: 150 });
+                tabTitle.setColor('#cbd5e1');
+            });
+            tabContainer.on('pointerdown', () => {
+                if (window.MapSwiperModal && window.MapSwiperModal.isOpen()) return;
+                if (this.currentModal) return;
+                this.tweens.add({
+                    targets: tabContainer,
+                    scaleX: 0.95,
+                    scaleY: 0.95,
+                    duration: 70,
+                    yoyo: true,
+                    onComplete: () => tab.action()
+                });
+            });
         });
     }
 
-    createPortraitLayout(width, height, lang) {
+        createPortraitLayout(width, height, lang) {
         const centerX = width / 2;
 
         if (this.textures.exists('ui_logo_crest')) {
             this.add.image(centerX, 90, 'ui_logo_crest').setDisplaySize(220, 110).setDepth(10);
         }
 
+        const btnW = Math.min(width - 40, 320);
+
+        // 1. PLAY CONTAINER
         const playY = height * 0.65;
-        const playBtn = this.add.image(centerX, playY, 'btn_play_bg').setDisplaySize(Math.min(width - 40, 320), 62).setInteractive({ useHandCursor: true }).setDepth(10);
-
-        this.add.image(centerX - 95, playY, 'ui_swords').setScale(0.9).setDepth(11);
-        this.add.text(centerX - 65, playY - 11, 'PLAY', {
+        const playContainer = this.add.container(centerX, playY).setDepth(10);
+        const playBg = this.add.image(0, 0, 'btn_play_bg').setDisplaySize(btnW, 62);
+        const swordsIcon = this.add.image(-btnW / 2 + 38, 0, 'ui_swords').setDisplaySize(34, 34);
+        const playTitle = this.add.text(-btnW / 2 + 65, -11, 'PLAY', {
             fontFamily: CONFIG.FONTS.TITLE, fontSize: '22px', fontStyle: 'bold', color: '#ffffff', letterSpacing: 2
-        }).setOrigin(0, 0.5).setDepth(11);
-        this.add.text(centerX - 65, playY + 12, 'ОДИНОЧНЫЙ РЕЖИМ', {
+        }).setOrigin(0, 0.5);
+        const playSub = this.add.text(-btnW / 2 + 65, 12, 'ОДИНОЧНЫЙ РЕЖИМ', {
             fontFamily: CONFIG.FONTS.UI, fontSize: '11px', fontStyle: '700', color: '#e9d5ff', letterSpacing: 1
-        }).setOrigin(0, 0.5).setDepth(11);
+        }).setOrigin(0, 0.5);
 
-        playBtn.on('pointerdown', () => this.openHeroSelectModal());
+        playContainer.add([playBg, swordsIcon, playTitle, playSub]);
+        playContainer.setSize(btnW, 62).setInteractive({ useHandCursor: true });
 
+        this.tweens.add({
+            targets: playContainer,
+            scaleX: 1.02,
+            scaleY: 1.02,
+            duration: 1200,
+            yoyo: true,
+            repeat: -1,
+            ease: 'Sine.easeInOut'
+        });
+
+        playContainer.on('pointerdown', () => {
+            if (window.MapSwiperModal && window.MapSwiperModal.isOpen()) return;
+            if (this.currentModal) return;
+            this.openHeroSelectModal();
+        });
+
+        // 2. CO-OP CONTAINER
         const coopY = playY + 72;
-        const coopBtn = this.add.image(centerX, coopY, 'btn_coop_bg').setDisplaySize(Math.min(width - 40, 320), 56).setInteractive({ useHandCursor: true }).setDepth(10);
-
-        this.add.image(centerX - 95, coopY, 'ui_coop').setScale(0.9).setDepth(11);
-        this.add.text(centerX - 65, coopY - 9, 'CO-OP', {
+        const coopContainer = this.add.container(centerX, coopY).setDepth(10);
+        const coopBg = this.add.image(0, 0, 'btn_coop_bg').setDisplaySize(btnW, 56);
+        const coopIcon = this.add.image(-btnW / 2 + 38, 0, 'ui_coop').setDisplaySize(32, 32);
+        const coopTitle = this.add.text(-btnW / 2 + 65, -9, 'CO-OP', {
             fontFamily: CONFIG.FONTS.TITLE, fontSize: '20px', fontStyle: 'bold', color: '#ffffff', letterSpacing: 2
-        }).setOrigin(0, 0.5).setDepth(11);
-        this.add.text(centerX - 65, coopY + 11, 'РЕЖИМ НА ДВОИХ', {
+        }).setOrigin(0, 0.5);
+        const coopSub = this.add.text(-btnW / 2 + 65, 11, 'РЕЖИМ НА ДВОИХ', {
             fontFamily: CONFIG.FONTS.UI, fontSize: '11px', fontStyle: '700', color: '#bae6fd', letterSpacing: 1
-        }).setOrigin(0, 0.5).setDepth(11);
+        }).setOrigin(0, 0.5);
 
-        coopBtn.on('pointerdown', () => this.openCoopModal());
+        coopContainer.add([coopBg, coopIcon, coopTitle, coopSub]);
+        coopContainer.setSize(btnW, 56).setInteractive({ useHandCursor: true });
 
+        coopContainer.on('pointerdown', () => {
+            if (window.MapSwiperModal && window.MapSwiperModal.isOpen()) return;
+            if (this.currentModal) return;
+            this.openCoopModal();
+        });
+
+        // 3. MAP SELECT BUTTON
         const mapY = coopY + 60;
-        const mapBtn = this.add.image(centerX, mapY, 'btn_glass_sub').setDisplaySize(Math.min(width - 40, 320), 44).setInteractive({ useHandCursor: true }).setDepth(10);
+        const mapBtn = this.add.image(centerX, mapY, 'btn_glass_sub').setDisplaySize(btnW, 44).setInteractive({ useHandCursor: true }).setDepth(10);
         this.add.image(centerX - 95, mapY, 'ui_trophy').setScale(0.8).setDepth(11);
         this.add.text(centerX - 65, mapY, 'ВЫБОР КАРТЫ (АРЕНЫ)', {
             fontFamily: CONFIG.FONTS.UI, fontSize: '13px', fontStyle: '800', color: '#38bdf8', letterSpacing: 1
         }).setOrigin(0, 0.5).setDepth(11);
-        mapBtn.on('pointerdown', () => this.openMapSelectModal());
+        mapBtn.on('pointerdown', () => {
+            if (window.MapSwiperModal && window.MapSwiperModal.isOpen()) return;
+            if (this.currentModal) return;
+            this.openMapSelectModal();
+        });
     }
 
     claimFreeChest() {

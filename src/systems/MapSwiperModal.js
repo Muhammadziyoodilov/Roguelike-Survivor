@@ -31,8 +31,18 @@ class MapSwiperModal {
     }
 
     static setupEventListeners() {
+        // Предотвращаем всплытие кликов и касаний в Phaser Canvas
+        if (this.modalEl) {
+            ['pointerdown', 'pointerup', 'pointermove', 'mousedown', 'mouseup', 'click', 'touchstart', 'touchend', 'touchmove'].forEach(evtName => {
+                this.modalEl.addEventListener(evtName, (e) => {
+                    e.stopPropagation();
+                }, { passive: false });
+            });
+        }
+
         if (this.backBtnEl) {
-            this.backBtnEl.onclick = () => {
+            this.backBtnEl.onclick = (e) => {
+                if (e) e.stopPropagation();
                 if (window.Sound && window.Sound.playShoot) window.Sound.playShoot();
                 this.close();
                 if (this.menuScene && this.menuScene.openHeroSelectModal) {
@@ -42,14 +52,16 @@ class MapSwiperModal {
         }
 
         if (this.closeBtnEl) {
-            this.closeBtnEl.onclick = () => {
+            this.closeBtnEl.onclick = (e) => {
+                if (e) e.stopPropagation();
                 if (window.Sound && window.Sound.playShoot) window.Sound.playShoot();
                 this.close();
             };
         }
 
         if (this.startBtnEl) {
-            this.startBtnEl.onclick = () => {
+            this.startBtnEl.onclick = (e) => {
+                if (e) e.stopPropagation();
                 this.handleStartBattle();
             };
         }

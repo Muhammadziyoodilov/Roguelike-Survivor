@@ -2651,6 +2651,43 @@ class TextureGenerator {
             ctx.fill();
         });
 
+                // UI Crossed Swords (Скрещенные мечи - Lucide Swords)
+        this.createCanvas('ui_swords', 36, 36, (ctx) => {
+            ctx.clearRect(0, 0, 36, 36);
+
+            // Меч 1 (Клинок)
+            ctx.strokeStyle = '#ffffff';
+            ctx.lineWidth = 3;
+            ctx.lineCap = 'round';
+            ctx.beginPath();
+            ctx.moveTo(8, 8); ctx.lineTo(28, 28);
+            ctx.stroke();
+
+            // Меч 2 (Клинок)
+            ctx.beginPath();
+            ctx.moveTo(28, 8); ctx.lineTo(8, 28);
+            ctx.stroke();
+
+            // Острия мечей
+            ctx.fillStyle = '#38bdf8';
+            ctx.fillRect(6, 6, 3, 3);
+            ctx.fillRect(27, 6, 3, 3);
+
+            // Золотые гарды
+            ctx.strokeStyle = '#f59e0b';
+            ctx.lineWidth = 4;
+            ctx.lineCap = 'butt';
+            ctx.beginPath();
+            ctx.moveTo(23, 21); ctx.lineTo(29, 27);
+            ctx.moveTo(13, 21); ctx.lineTo(7, 27);
+            ctx.stroke();
+
+            // Рукояти и навершия (Красные рубины)
+            ctx.fillStyle = '#ef4444';
+            ctx.beginPath(); ctx.arc(28, 28, 2.5, 0, Math.PI * 2); ctx.fill();
+            ctx.beginPath(); ctx.arc(8, 28, 2.5, 0, Math.PI * 2); ctx.fill();
+        });
+
         // UI Co-op Icon (Два героя - Lucide Users)
         this.createCanvas('ui_coop', 36, 36, (ctx) => {
             // Герой 1 (Синий)
@@ -2914,579 +2951,165 @@ class TextureGenerator {
             ctx.fill();
         });
 
-        // UI 3D Card: Book (Коллекция)
-        this.createCanvas('ui_3d_book_card', 48, 48, (ctx) => {
-            const grad = ctx.createLinearGradient(0, 0, 48, 48);
-            grad.addColorStop(0, '#92400e'); grad.addColorStop(1, '#451a03');
-            ctx.fillStyle = grad;
+                // UI 3D Card: Book (Коллекция / Древний Фолиант - 3D Open Tome)
+        this.createCanvas('ui_3d_book_card', 64, 64, (ctx) => {
+            ctx.clearRect(0, 0, 64, 64);
+            
+            // Золотая аура
+            const aura = ctx.createRadialGradient(32, 34, 8, 32, 34, 28);
+            aura.addColorStop(0, 'rgba(245, 158, 11, 0.4)');
+            aura.addColorStop(0.7, 'rgba(217, 119, 6, 0.15)');
+            aura.addColorStop(1, 'transparent');
+            ctx.fillStyle = aura;
             ctx.beginPath();
-            ctx.roundRect(8, 7, 32, 34, 4);
+            ctx.arc(32, 34, 28, 0, Math.PI * 2);
             ctx.fill();
-            ctx.strokeStyle = '#f59e0b'; ctx.lineWidth = 2; ctx.stroke();
 
-            ctx.fillStyle = '#fef3c7';
-            ctx.fillRect(12, 11, 12, 26);
-            ctx.fillRect(24, 11, 12, 26);
+            // Тень под книгой
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
+            ctx.beginPath();
+            ctx.ellipse(32, 54, 24, 6, 0, 0, Math.PI * 2);
+            ctx.fill();
 
+            // Кожаная обложка раскрытой книги (Коричневый с тиснением)
+            const coverGrad = ctx.createLinearGradient(8, 14, 56, 52);
+            coverGrad.addColorStop(0, '#92400e');
+            coverGrad.addColorStop(0.5, '#78350f');
+            coverGrad.addColorStop(1, '#451a03');
+            ctx.fillStyle = coverGrad;
+            
+            // Левая створка обложки
+            ctx.beginPath();
+            ctx.moveTo(8, 22); ctx.lineTo(30, 20); ctx.lineTo(30, 52); ctx.lineTo(8, 50); ctx.closePath();
+            ctx.fill();
+            // Правая створка обложки
+            ctx.beginPath();
+            ctx.moveTo(34, 20); ctx.lineTo(56, 22); ctx.lineTo(56, 50); ctx.lineTo(34, 52); ctx.closePath();
+            ctx.fill();
+
+            // Золотые кованые уголки обложки
+            ctx.fillStyle = '#fde047';
+            ctx.fillRect(8, 22, 5, 4);
+            ctx.fillRect(8, 46, 5, 4);
+            ctx.fillRect(51, 22, 5, 4);
+            ctx.fillRect(51, 46, 5, 4);
+
+            // Страницы книги (Изогнутые пергаментные листы)
+            // Левая страница
+            const pageGradL = ctx.createLinearGradient(12, 18, 31, 48);
+            pageGradL.addColorStop(0, '#fef9c3');
+            pageGradL.addColorStop(0.6, '#fef08a');
+            pageGradL.addColorStop(1, '#fde047');
+            ctx.fillStyle = pageGradL;
+            ctx.beginPath();
+            ctx.moveTo(11, 20);
+            ctx.quadraticCurveTo(20, 15, 31, 18);
+            ctx.lineTo(31, 48);
+            ctx.quadraticCurveTo(20, 46, 11, 48);
+            ctx.closePath();
+            ctx.fill();
+            ctx.strokeStyle = '#d97706'; ctx.lineWidth = 1; ctx.stroke();
+
+            // Правая страница
+            const pageGradR = ctx.createLinearGradient(33, 18, 53, 48);
+            pageGradR.addColorStop(0, '#fef08a');
+            pageGradR.addColorStop(0.4, '#fef9c3');
+            pageGradR.addColorStop(1, '#fde047');
+            ctx.fillStyle = pageGradR;
+            ctx.beginPath();
+            ctx.moveTo(33, 18);
+            ctx.quadraticCurveTo(44, 15, 53, 20);
+            ctx.lineTo(53, 48);
+            ctx.quadraticCurveTo(44, 46, 33, 48);
+            ctx.closePath();
+            ctx.fill();
+            ctx.strokeStyle = '#d97706'; ctx.lineWidth = 1; ctx.stroke();
+
+            // Строки текста/заклинаний
+            ctx.fillStyle = '#b45309';
+            [23, 28, 33, 38, 43].forEach(y => {
+                ctx.fillRect(15, y, 12, 2);
+                ctx.fillRect(37, y, 12, 2);
+            });
+
+            // Центральный золотой корешок
             ctx.fillStyle = '#d97706';
-            ctx.fillRect(22, 7, 4, 34);
+            ctx.fillRect(30, 17, 4, 33);
 
-            ctx.fillStyle = '#ef4444';
-            ctx.fillRect(23, 31, 2, 13);
-        });
-
-        // UI 3D Card: Shield (Таблицы Лидеров)
-        this.createCanvas('ui_3d_shield_card', 48, 48, (ctx) => {
-            const grad = ctx.createLinearGradient(0, 0, 48, 48);
-            grad.addColorStop(0, '#b45309'); grad.addColorStop(1, '#78350f');
-            ctx.fillStyle = grad;
-            ctx.beginPath();
-            ctx.moveTo(24, 6); ctx.lineTo(39, 11); ctx.lineTo(35, 33); ctx.lineTo(24, 43); ctx.lineTo(13, 33); ctx.lineTo(9, 11); ctx.closePath();
-            ctx.fill();
-            ctx.strokeStyle = '#fde047'; ctx.lineWidth = 2; ctx.stroke();
-
-            ctx.fillStyle = '#fef08a';
-            ctx.beginPath();
-            ctx.moveTo(24, 11); ctx.lineTo(34, 15); ctx.lineTo(31, 30); ctx.lineTo(24, 38); ctx.lineTo(17, 30); ctx.lineTo(14, 15); ctx.closePath();
-            ctx.fill();
-
-            ctx.fillStyle = '#0284c7';
-            ctx.beginPath();
-            ctx.arc(24, 22, 5.5, 0, Math.PI * 2);
-            ctx.fill();
-        });
-
-        // UI Hex Avatar (PLAYER_01)
-        this.createCanvas('ui_avatar_hex', 56, 56, (ctx) => {
-            const grad = ctx.createLinearGradient(0, 0, 56, 56);
-            grad.addColorStop(0, '#1e1b4b'); grad.addColorStop(1, '#0f172a');
-            ctx.fillStyle = grad;
-            ctx.beginPath();
-            for (let i = 0; i < 6; i++) {
-                const a = (i * Math.PI) / 3;
-                const x = 28 + Math.cos(a) * 25;
-                const y = 28 + Math.sin(a) * 25;
-                if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
-            }
-            ctx.closePath();
-            ctx.fill();
-            ctx.strokeStyle = '#a855f7'; ctx.lineWidth = 2.5; ctx.stroke();
-
-            // Теневой рыцарь внутри
-            ctx.fillStyle = '#09090b';
-            ctx.beginPath();
-            ctx.arc(28, 26, 15, 0, Math.PI * 2);
-            ctx.fill();
-
-            // Светящиеся глаза
-            ctx.fillStyle = '#38bdf8';
-            ctx.beginPath();
-            ctx.ellipse(22, 25, 3.5, 1.8, 0.2, 0, Math.PI * 2);
-            ctx.ellipse(34, 25, 3.5, 1.8, -0.2, 0, Math.PI * 2);
-            ctx.fill();
-        });
-
-        // UI Boss Horn Skull
-        this.createCanvas('ui_boss_skull', 36, 36, (ctx) => {
-            ctx.shadowColor = 'rgba(239, 68, 68, 0.7)';
-            ctx.shadowBlur = 8;
-
-            const grad = ctx.createLinearGradient(0, 4, 0, 32);
-            grad.addColorStop(0, '#ef4444'); grad.addColorStop(1, '#7f1d1d');
-            ctx.fillStyle = grad;
-
-            ctx.beginPath();
-            ctx.arc(18, 17, 12, 0, Math.PI * 2);
-            ctx.fill();
-            ctx.fillRect(14, 26, 8, 7);
-
-            // Рога
-            ctx.beginPath();
-            ctx.moveTo(9, 10); ctx.quadraticCurveTo(2, 2, 4, 16); ctx.closePath();
-            ctx.moveTo(27, 10); ctx.quadraticCurveTo(34, 2, 32, 16); ctx.closePath();
-            ctx.fill();
-
-            ctx.shadowBlur = 0;
-            ctx.fillStyle = '#ffd166';
-            ctx.fillRect(12, 15, 4, 4);
-            ctx.fillRect(20, 15, 4, 4);
-        });
-
-        // UI Chest (Сундук сокровищ)
-        this.createCanvas('ui_chest', 36, 36, (ctx) => {
-            const grad = ctx.createLinearGradient(0, 6, 0, 30);
-            grad.addColorStop(0, '#a16207'); grad.addColorStop(1, '#713f12');
-            ctx.fillStyle = grad;
-
-            ctx.beginPath();
-            ctx.roundRect(4, 12, 28, 18, 3);
-            ctx.fill();
-
-            // Крышка сундука
-            ctx.fillStyle = '#ca8a04';
-            ctx.beginPath();
-            ctx.roundRect(3, 6, 30, 8, 3);
-            ctx.fill();
-
-            ctx.strokeStyle = '#fde047';
-            ctx.lineWidth = 1.5;
-            ctx.strokeRect(3, 6, 30, 24);
-
-            // Золотой замок
-            ctx.fillStyle = '#f59e0b';
-            ctx.beginPath();
-            ctx.arc(18, 18, 4, 0, Math.PI * 2);
-            ctx.fill();
+            // Красная шелковая закладка
             ctx.fillStyle = '#ef4444';
             ctx.beginPath();
-            ctx.arc(18, 18, 2, 0, Math.PI * 2);
+            ctx.moveTo(31, 17); ctx.lineTo(33, 17); ctx.lineTo(34, 55); ctx.lineTo(32, 52); ctx.lineTo(30, 55); ctx.closePath();
             ctx.fill();
         });
 
-        // UI Crossed Swords (Скрещенные мечи - Lucide Swords)
-        this.createCanvas('ui_swords', 36, 36, (ctx) => {
-            // Меч 1
-            ctx.strokeStyle = '#f8fafc';
-            ctx.lineWidth = 2.5;
-            ctx.lineCap = 'round';
+        // UI 3D Card: Shield (Таблицы лидеров / Рекорды - 3D Shield)
+        this.createCanvas('ui_3d_shield_card', 64, 64, (ctx) => {
+            ctx.clearRect(0, 0, 64, 64);
+            
+            // Сине-золотая аура
+            const aura = ctx.createRadialGradient(32, 32, 8, 32, 32, 28);
+            aura.addColorStop(0, 'rgba(56, 189, 248, 0.45)');
+            aura.addColorStop(0.7, 'rgba(245, 158, 11, 0.15)');
+            aura.addColorStop(1, 'transparent');
+            ctx.fillStyle = aura;
             ctx.beginPath();
-            ctx.moveTo(6, 6); ctx.lineTo(30, 30);
-            ctx.stroke();
+            ctx.arc(32, 32, 28, 0, Math.PI * 2);
+            ctx.fill();
 
-            // Меч 2
+            // Тень под щитом
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
             ctx.beginPath();
-            ctx.moveTo(30, 6); ctx.lineTo(6, 30);
-            ctx.stroke();
+            ctx.ellipse(32, 54, 22, 6, 0, 0, Math.PI * 2);
+            ctx.fill();
 
-            // Гарды
-            ctx.strokeStyle = '#fbbf24';
-            ctx.lineWidth = 4;
+            // Внешний золотой щит
+            const shieldGrad = ctx.createLinearGradient(12, 6, 52, 54);
+            shieldGrad.addColorStop(0, '#fef08a');
+            shieldGrad.addColorStop(0.3, '#f59e0b');
+            shieldGrad.addColorStop(0.7, '#d97706');
+            shieldGrad.addColorStop(1, '#78350f');
+            ctx.fillStyle = shieldGrad;
             ctx.beginPath();
-            ctx.moveTo(4, 11); ctx.lineTo(11, 4);
-            ctx.moveTo(32, 11); ctx.lineTo(25, 4);
-            ctx.stroke();
-        });
-
-        // UI Shield (Щит героя - Lucide Shield)
-        this.createCanvas('ui_shield', 36, 36, (ctx) => {
-            const grad = ctx.createLinearGradient(0, 3, 0, 33);
-            grad.addColorStop(0, '#6366f1'); grad.addColorStop(1, '#3730a3');
-            ctx.fillStyle = grad;
-
-            ctx.beginPath();
-            ctx.moveTo(18, 3);
-            ctx.lineTo(31, 7);
-            ctx.lineTo(27, 24);
-            ctx.lineTo(18, 33);
-            ctx.lineTo(9, 24);
-            ctx.lineTo(5, 7);
+            ctx.moveTo(32, 8);
+            ctx.lineTo(52, 14);
+            ctx.lineTo(47, 40);
+            ctx.lineTo(32, 54);
+            ctx.lineTo(17, 40);
+            ctx.lineTo(12, 14);
             ctx.closePath();
             ctx.fill();
 
-            ctx.strokeStyle = '#a5b4fc';
+            ctx.strokeStyle = '#fef9c3';
             ctx.lineWidth = 2;
             ctx.stroke();
 
-            // Геральдический крест
-            ctx.fillStyle = '#ffffff';
-            ctx.fillRect(16.5, 9, 3, 14);
-            ctx.fillRect(11, 14, 14, 3);
-        });
-
-        // UI Scroll (Свиток заданий - Lucide Scroll)
-        this.createCanvas('ui_scroll', 36, 36, (ctx) => {
-            const grad = ctx.createLinearGradient(0, 6, 0, 30);
-            grad.addColorStop(0, '#fef3c7'); grad.addColorStop(1, '#fde68a');
-            ctx.fillStyle = grad;
-
+            // Внутреннее лазурное поле щита
+            const innerGrad = ctx.createLinearGradient(20, 16, 44, 44);
+            innerGrad.addColorStop(0, '#38bdf8');
+            innerGrad.addColorStop(0.5, '#0284c7');
+            innerGrad.addColorStop(1, '#082f49');
+            ctx.fillStyle = innerGrad;
             ctx.beginPath();
-            ctx.roundRect(6, 6, 24, 24, 4);
-            ctx.fill();
-
-            ctx.strokeStyle = '#d97706';
-            ctx.lineWidth = 1.8;
-            ctx.stroke();
-
-            // Линии рун
-            ctx.fillStyle = '#92400e';
-            ctx.fillRect(10, 12, 16, 2.5);
-            ctx.fillRect(10, 17, 13, 2.5);
-            ctx.fillRect(10, 22, 10, 2.5);
-        });
-
-        // UI Hourglass (Песочные часы - Lucide Hourglass)
-        this.createCanvas('ui_hourglass', 36, 36, (ctx) => {
-            const grad = ctx.createLinearGradient(0, 4, 0, 32);
-            grad.addColorStop(0, '#0284c7'); grad.addColorStop(1, '#0369a1');
-            ctx.fillStyle = grad;
-
-            ctx.beginPath();
-            ctx.moveTo(6, 5); ctx.lineTo(30, 5); ctx.lineTo(18, 18); ctx.lineTo(30, 31); ctx.lineTo(6, 31); ctx.lineTo(18, 18); ctx.closePath();
-            ctx.fill();
-
-            ctx.strokeStyle = '#bae6fd';
-            ctx.lineWidth = 2;
-            ctx.stroke();
-
-            // Светящийся песок
-            ctx.fillStyle = '#ffd166';
-            ctx.fillRect(14, 22, 8, 6);
-        });
-    }
-
-    static createGlassUIComponents() {
-        // 1. PLAY BUTTON (Rich Arcane Purple Gradient + Glossy Pill)
-        this.createCanvas('btn_play_bg', 260, 64, (ctx) => {
-            const grad = ctx.createLinearGradient(0, 0, 0, 64);
-            grad.addColorStop(0, '#7e22ce');
-            grad.addColorStop(0.5, '#6b21a8');
-            grad.addColorStop(1, '#581c87');
-            ctx.fillStyle = grad;
-            ctx.beginPath();
-            ctx.roundRect(2, 2, 256, 60, 16);
-            ctx.fill();
-
-            // Inner border glow
-            ctx.strokeStyle = '#c084fc';
-            ctx.lineWidth = 2;
-            ctx.stroke();
-
-            // Top gloss
-            const gloss = ctx.createLinearGradient(0, 4, 0, 28);
-            gloss.addColorStop(0, 'rgba(255, 255, 255, 0.35)');
-            gloss.addColorStop(1, 'rgba(255, 255, 255, 0.0)');
-            ctx.fillStyle = gloss;
-            ctx.beginPath();
-            ctx.roundRect(4, 4, 252, 24, [14, 14, 4, 4]);
-            ctx.fill();
-        });
-
-        // 2. CO-OP BUTTON (Celestial Cyan Gradient + Glossy Pill)
-        this.createCanvas('btn_coop_bg', 260, 56, (ctx) => {
-            const grad = ctx.createLinearGradient(0, 0, 0, 56);
-            grad.addColorStop(0, '#0284c7');
-            grad.addColorStop(0.5, '#0369a1');
-            grad.addColorStop(1, '#075985');
-            ctx.fillStyle = grad;
-            ctx.beginPath();
-            ctx.roundRect(2, 2, 256, 52, 14);
-            ctx.fill();
-
-            // Inner border glow
-            ctx.strokeStyle = '#38bdf8';
-            ctx.lineWidth = 2;
-            ctx.stroke();
-
-            // Top gloss
-            const gloss = ctx.createLinearGradient(0, 3, 0, 24);
-            gloss.addColorStop(0, 'rgba(255, 255, 255, 0.3)');
-            gloss.addColorStop(1, 'rgba(255, 255, 255, 0.0)');
-            ctx.fillStyle = gloss;
-            ctx.beginPath();
-            ctx.roundRect(4, 3, 252, 20, [12, 12, 4, 4]);
-            ctx.fill();
-        });
-
-        // 3. SUBMENU GLASS BUTTON (Dark Obsidian Glass)
-        this.createCanvas('btn_glass_sub', 260, 36, (ctx) => {
-            ctx.fillStyle = 'rgba(15, 23, 42, 0.92)';
-            ctx.beginPath();
-            ctx.roundRect(1, 1, 258, 34, 10);
-            ctx.fill();
-
-            ctx.strokeStyle = '#334155';
-            ctx.lineWidth = 1;
-            ctx.stroke();
-
-            ctx.strokeStyle = 'rgba(255, 255, 255, 0.12)';
-            ctx.beginPath();
-            ctx.moveTo(12, 2); ctx.lineTo(248, 2);
-            ctx.stroke();
-        });
-
-        // 4. BATTLE GREEN CTA BUTTON
-        this.createCanvas('btn_battle_green', 240, 46, (ctx) => {
-            const grad = ctx.createLinearGradient(0, 0, 0, 46);
-            grad.addColorStop(0, '#10b981');
-            grad.addColorStop(0.6, '#059669');
-            grad.addColorStop(1, '#047857');
-            ctx.fillStyle = grad;
-            ctx.beginPath();
-            ctx.roundRect(2, 2, 236, 42, 12);
-            ctx.fill();
-
-            ctx.strokeStyle = '#34d399';
-            ctx.lineWidth = 2;
-            ctx.stroke();
-
-            const gloss = ctx.createLinearGradient(0, 3, 0, 20);
-            gloss.addColorStop(0, 'rgba(255, 255, 255, 0.35)');
-            gloss.addColorStop(1, 'rgba(255, 255, 255, 0.0)');
-            ctx.fillStyle = gloss;
-            ctx.beginPath();
-            ctx.roundRect(4, 3, 232, 16, [10, 10, 3, 3]);
-            ctx.fill();
-        });
-
-        // 5. UNLOCK GOLD CTA BUTTON
-        this.createCanvas('btn_unlock_gold', 240, 46, (ctx) => {
-            const grad = ctx.createLinearGradient(0, 0, 0, 46);
-            grad.addColorStop(0, '#f59e0b');
-            grad.addColorStop(0.6, '#d97706');
-            grad.addColorStop(1, '#b45309');
-            ctx.fillStyle = grad;
-            ctx.beginPath();
-            ctx.roundRect(2, 2, 236, 42, 12);
-            ctx.fill();
-
-            ctx.strokeStyle = '#fbbf24';
-            ctx.lineWidth = 2;
-            ctx.stroke();
-
-            const gloss = ctx.createLinearGradient(0, 3, 0, 20);
-            gloss.addColorStop(0, 'rgba(255, 255, 255, 0.35)');
-            gloss.addColorStop(1, 'rgba(255, 255, 255, 0.0)');
-            ctx.fillStyle = gloss;
-            ctx.beginPath();
-            ctx.roundRect(4, 3, 232, 16, [10, 10, 3, 3]);
-            ctx.fill();
-        });
-
-        // 6. CARD TAB GLASS (Bottom Navigation Bar)
-        this.createCanvas('card_tab_glass', 110, 54, (ctx) => {
-            ctx.fillStyle = 'rgba(15, 23, 42, 0.94)';
-            ctx.beginPath();
-            ctx.roundRect(2, 2, 106, 50, 12);
-            ctx.fill();
-
-            ctx.strokeStyle = '#334155';
-            ctx.lineWidth = 1.5;
-            ctx.stroke();
-
-            ctx.strokeStyle = 'rgba(255, 255, 255, 0.12)';
-            ctx.beginPath();
-            ctx.moveTo(10, 3); ctx.lineTo(100, 3);
-            ctx.stroke();
-        });
-
-        // 7. WIDGET GLASS PANEL
-        this.createCanvas('panel_glass_widget', 275, 200, (ctx) => {
-            ctx.fillStyle = 'rgba(11, 15, 25, 0.94)';
-            ctx.beginPath();
-            ctx.roundRect(2, 2, 271, 196, 14);
-            ctx.fill();
-
-            ctx.strokeStyle = '#334155';
-            ctx.lineWidth = 1.5;
-            ctx.stroke();
-
-            ctx.strokeStyle = 'rgba(255, 255, 255, 0.1)';
-            ctx.beginPath();
-            ctx.moveTo(14, 3); ctx.lineTo(261, 3);
-            ctx.stroke();
-        });
-
-        // 8. CIRCULAR FROSTED CLOSE BUTTON (Ruby Glass with Gold Rim)
-        this.createCanvas('btn_close_circle', 34, 34, (ctx) => {
-            const grad = ctx.createRadialGradient(17, 17, 2, 17, 17, 16);
-            grad.addColorStop(0, 'rgba(239, 68, 68, 0.85)');
-            grad.addColorStop(0.7, 'rgba(185, 28, 28, 0.92)');
-            grad.addColorStop(1, 'rgba(127, 29, 29, 0.98)');
-            ctx.fillStyle = grad;
-            ctx.beginPath();
-            ctx.arc(17, 17, 15, 0, Math.PI * 2);
-            ctx.fill();
-
-            ctx.strokeStyle = '#fca5a5';
-            ctx.lineWidth = 1.5;
-            ctx.stroke();
-
-            // Крестик
-            ctx.strokeStyle = '#ffffff';
-            ctx.lineWidth = 2.5;
-            ctx.beginPath();
-            ctx.moveTo(11, 11); ctx.lineTo(23, 23);
-            ctx.moveTo(23, 11); ctx.lineTo(11, 23);
-            ctx.stroke();
-        });
-
-        // 9. HERO PEDESTAL GLOW (Магический светящийся рунический пьедестал)
-        this.createCanvas('hero_pedestal_glow', 160, 50, (ctx) => {
-            // Внешнее свечение
-            const glow = ctx.createRadialGradient(80, 25, 10, 80, 25, 75);
-            glow.addColorStop(0, 'rgba(56, 189, 248, 0.45)');
-            glow.addColorStop(0.5, 'rgba(99, 102, 241, 0.2)');
-            glow.addColorStop(1, 'rgba(0, 0, 0, 0)');
-            ctx.fillStyle = glow;
-            ctx.beginPath();
-            ctx.ellipse(80, 25, 78, 22, 0, 0, Math.PI * 2);
-            ctx.fill();
-
-            // Каменная плита пьедестала
-            ctx.fillStyle = '#0f172a';
-            ctx.beginPath();
-            ctx.ellipse(80, 25, 64, 16, 0, 0, Math.PI * 2);
-            ctx.fill();
-
-            ctx.strokeStyle = '#38bdf8';
-            ctx.lineWidth = 2;
-            ctx.beginPath();
-            ctx.ellipse(80, 25, 64, 16, 0, 0, Math.PI * 2);
-            ctx.stroke();
-
-            // Внутренний рунический овал
-            ctx.strokeStyle = 'rgba(255, 209, 102, 0.8)';
-            ctx.lineWidth = 1.5;
-            ctx.beginPath();
-            ctx.ellipse(80, 25, 46, 10, 0, 0, Math.PI * 2);
-            ctx.stroke();
-        });
-
-        // 10. EPIC GOLD CTA BUTTON (В БОЙ / КУПИТЬ)
-        this.createCanvas('btn_battle_gold_epic', 260, 52, (ctx) => {
-            const grad = ctx.createLinearGradient(0, 0, 0, 52);
-            grad.addColorStop(0, '#f59e0b');
-            grad.addColorStop(0.3, '#d97706');
-            grad.addColorStop(0.7, '#b45309');
-            grad.addColorStop(1, '#78350f');
-            ctx.fillStyle = grad;
-            ctx.beginPath();
-            ctx.roundRect(2, 2, 256, 48, 14);
-            ctx.fill();
-
-            // Двойная золотая окантовка
-            ctx.strokeStyle = '#fef08a';
-            ctx.lineWidth = 2;
-            ctx.stroke();
-
-            // Внутренний металлический блеск (Gloss)
-            const gloss = ctx.createLinearGradient(0, 3, 0, 24);
-            gloss.addColorStop(0, 'rgba(255, 255, 255, 0.45)');
-            gloss.addColorStop(1, 'rgba(255, 255, 255, 0.0)');
-            ctx.fillStyle = gloss;
-            ctx.beginPath();
-            ctx.roundRect(4, 3, 252, 20, [12, 12, 4, 4]);
-            ctx.fill();
-        });
-
-        // 11. HIGH-DEFINITION STAT BAR ICONS (Lucide / React-Icons styled vector badges)
-        this.createCanvas('stat_icon_hp', 32, 32, (ctx) => {
-            const grad = ctx.createRadialGradient(13, 11, 2, 16, 16, 14);
-            grad.addColorStop(0, '#fca5a5');
-            grad.addColorStop(0.3, '#ef4444');
-            grad.addColorStop(0.8, '#b91c1c');
-            grad.addColorStop(1, '#7f1d1d');
-            ctx.fillStyle = grad;
-
-            ctx.beginPath();
-            ctx.moveTo(16, 27);
-            ctx.bezierCurveTo(5, 19, 3, 8, 10, 5.5);
-            ctx.bezierCurveTo(14, 4, 15.5, 6.5, 16, 8);
-            ctx.bezierCurveTo(16.5, 6.5, 18, 4, 22, 5.5);
-            ctx.bezierCurveTo(29, 8, 27, 19, 16, 27);
+            ctx.moveTo(32, 14);
+            ctx.lineTo(46, 18);
+            ctx.lineTo(42, 36);
+            ctx.lineTo(32, 47);
+            ctx.lineTo(22, 36);
+            ctx.lineTo(18, 18);
             ctx.closePath();
             ctx.fill();
 
-            ctx.strokeStyle = '#fee2e2';
-            ctx.lineWidth = 1.2;
-            ctx.stroke();
-
-            // Глянец
-            ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
+            // Золотая корона/звезда в центре
+            ctx.fillStyle = '#fde047';
             ctx.beginPath();
-            ctx.ellipse(11, 9, 3.5, 1.8, -Math.PI / 4, 0, Math.PI * 2);
-            ctx.fill();
-        });
-
-        this.createCanvas('stat_icon_spd', 32, 32, (ctx) => {
-            // Золотая молния / Сапог скорости
-            const grad = ctx.createLinearGradient(8, 4, 24, 28);
-            grad.addColorStop(0, '#fef08a');
-            grad.addColorStop(0.5, '#eab308');
-            grad.addColorStop(1, '#ca8a04');
-            ctx.fillStyle = grad;
-
-            ctx.beginPath();
-            ctx.moveTo(19, 3);
-            ctx.lineTo(8, 15);
-            ctx.lineTo(15, 15);
-            ctx.lineTo(11, 29);
-            ctx.lineTo(24, 14);
-            ctx.lineTo(17, 14);
-            ctx.closePath();
+            ctx.moveTo(32, 22); ctx.lineTo(35, 27); ctx.lineTo(41, 28); ctx.lineTo(37, 32); ctx.lineTo(38, 38); ctx.lineTo(32, 35); ctx.lineTo(26, 38); ctx.lineTo(27, 32); ctx.lineTo(23, 28); ctx.lineTo(29, 27); ctx.closePath();
             ctx.fill();
 
-            ctx.strokeStyle = '#ffffff';
-            ctx.lineWidth = 1.2;
-            ctx.stroke();
-        });
-
-        this.createCanvas('stat_icon_dmg', 32, 32, (ctx) => {
-            // Огненный клинок урона
-            ctx.strokeStyle = '#f8fafc';
-            ctx.lineWidth = 2.5;
-            ctx.lineCap = 'round';
+            // Сверкающий блик на левом плече
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
             ctx.beginPath();
-            ctx.moveTo(7, 25); ctx.lineTo(25, 7);
-            ctx.stroke();
-
-            // Пламя на клинке
-            ctx.fillStyle = '#f97316';
-            ctx.beginPath();
-            ctx.arc(22, 10, 4.5, 0, Math.PI * 2);
-            ctx.fill();
-            ctx.fillStyle = '#ef4444';
-            ctx.beginPath();
-            ctx.arc(17, 15, 3.5, 0, Math.PI * 2);
-            ctx.fill();
-
-            // Гарда
-            ctx.strokeStyle = '#fbbf24';
-            ctx.lineWidth = 3.5;
-            ctx.beginPath();
-            ctx.moveTo(6, 19); ctx.lineTo(13, 26);
-            ctx.stroke();
-        });
-
-        this.createCanvas('stat_icon_crit', 32, 32, (ctx) => {
-            // Прицел / Мишень критического удара
-            ctx.strokeStyle = '#c084fc';
-            ctx.lineWidth = 2;
-            ctx.beginPath();
-            ctx.arc(16, 16, 10, 0, Math.PI * 2);
-            ctx.stroke();
-
-            // Перекрестие
-            ctx.strokeStyle = '#f5d0fe';
-            ctx.lineWidth = 1.8;
-            ctx.beginPath();
-            ctx.moveTo(16, 3); ctx.lineTo(16, 9);
-            ctx.moveTo(16, 23); ctx.lineTo(16, 29);
-            ctx.moveTo(3, 16); ctx.lineTo(9, 16);
-            ctx.moveTo(23, 16); ctx.lineTo(29, 16);
-            ctx.stroke();
-
-            // Красная точка попадания в яблочко
-            ctx.fillStyle = '#ef4444';
-            ctx.beginPath();
-            ctx.arc(16, 16, 3, 0, Math.PI * 2);
-            ctx.fill();
-            ctx.fillStyle = '#ffffff';
-            ctx.beginPath();
-            ctx.arc(15, 15, 1, 0, Math.PI * 2);
-            ctx.fill();
-        });
-
-        this.createCanvas('stat_icon_atkspeed', 32, 32, (ctx) => {
-            // Скорость атаки (Двойные искры)
-            ctx.fillStyle = '#38bdf8';
-            ctx.beginPath();
-            ctx.moveTo(12, 4); ctx.lineTo(6, 16); ctx.lineTo(12, 16); ctx.lineTo(8, 28); ctx.lineTo(18, 14); ctx.lineTo(12, 14); ctx.closePath();
-            ctx.fill();
-
-            ctx.fillStyle = '#818cf8';
-            ctx.beginPath();
-            ctx.moveTo(22, 6); ctx.lineTo(17, 16); ctx.lineTo(21, 16); ctx.lineTo(18, 26); ctx.lineTo(26, 15); ctx.lineTo(22, 15); ctx.closePath();
+            ctx.moveTo(17, 16); ctx.lineTo(30, 12); ctx.lineTo(24, 26); ctx.closePath();
             ctx.fill();
         });
 
@@ -3553,6 +3176,189 @@ class TextureGenerator {
             ctx.lineWidth = 1.5;
             ctx.beginPath();
             ctx.moveTo(16, 16); ctx.quadraticCurveTo(14, 28, 9, 29);
+            ctx.stroke();
+        });
+    }
+    static createGlassUIComponents() {
+        // 1. PLAY BUTTON (Rich Arcane Purple Gradient + Glossy Pill)
+        this.createCanvas('btn_play_bg', 285, 68, (ctx) => {
+            const grad = ctx.createLinearGradient(0, 0, 0, 68);
+            grad.addColorStop(0, '#7e22ce');
+            grad.addColorStop(0.5, '#6b21a8');
+            grad.addColorStop(1, '#581c87');
+            ctx.fillStyle = grad;
+            ctx.beginPath();
+            ctx.roundRect(2, 2, 281, 64, 16);
+            ctx.fill();
+
+            // Inner border glow
+            ctx.strokeStyle = '#c084fc';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+
+            // Top gloss
+            const gloss = ctx.createLinearGradient(0, 4, 0, 30);
+            gloss.addColorStop(0, 'rgba(255, 255, 255, 0.4)');
+            gloss.addColorStop(1, 'rgba(255, 255, 255, 0.0)');
+            ctx.fillStyle = gloss;
+            ctx.beginPath();
+            ctx.roundRect(4, 4, 277, 26, [14, 14, 4, 4]);
+            ctx.fill();
+        });
+
+        // 2. CO-OP BUTTON (Celestial Cyan Gradient + Glossy Pill)
+        this.createCanvas('btn_coop_bg', 285, 60, (ctx) => {
+            const grad = ctx.createLinearGradient(0, 0, 0, 60);
+            grad.addColorStop(0, '#0284c7');
+            grad.addColorStop(0.5, '#0369a1');
+            grad.addColorStop(1, '#075985');
+            ctx.fillStyle = grad;
+            ctx.beginPath();
+            ctx.roundRect(2, 2, 281, 56, 14);
+            ctx.fill();
+
+            // Inner border glow
+            ctx.strokeStyle = '#38bdf8';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+
+            // Top gloss
+            const gloss = ctx.createLinearGradient(0, 3, 0, 26);
+            gloss.addColorStop(0, 'rgba(255, 255, 255, 0.35)');
+            gloss.addColorStop(1, 'rgba(255, 255, 255, 0.0)');
+            ctx.fillStyle = gloss;
+            ctx.beginPath();
+            ctx.roundRect(4, 3, 277, 22, [12, 12, 4, 4]);
+            ctx.fill();
+        });
+
+        // 3. SUBMENU GLASS BUTTON (Dark Obsidian Glass)
+        this.createCanvas('btn_glass_sub', 285, 42, (ctx) => {
+            ctx.fillStyle = 'rgba(15, 23, 42, 0.92)';
+            ctx.beginPath();
+            ctx.roundRect(1, 1, 283, 40, 10);
+            ctx.fill();
+
+            ctx.strokeStyle = '#334155';
+            ctx.lineWidth = 1.2;
+            ctx.stroke();
+
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.12)';
+            ctx.beginPath();
+            ctx.moveTo(12, 2); ctx.lineTo(273, 2);
+            ctx.stroke();
+        });
+
+        // 4. BATTLE GREEN CTA BUTTON
+        this.createCanvas('btn_battle_green', 240, 46, (ctx) => {
+            const grad = ctx.createLinearGradient(0, 0, 0, 46);
+            grad.addColorStop(0, '#10b981');
+            grad.addColorStop(0.6, '#059669');
+            grad.addColorStop(1, '#047857');
+            ctx.fillStyle = grad;
+            ctx.beginPath();
+            ctx.roundRect(2, 2, 236, 42, 12);
+            ctx.fill();
+
+            ctx.strokeStyle = '#34d399';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+
+            const gloss = ctx.createLinearGradient(0, 3, 0, 20);
+            gloss.addColorStop(0, 'rgba(255, 255, 255, 0.35)');
+            gloss.addColorStop(1, 'rgba(255, 255, 255, 0.0)');
+            ctx.fillStyle = gloss;
+            ctx.beginPath();
+            ctx.roundRect(4, 3, 232, 16, [10, 10, 3, 3]);
+            ctx.fill();
+        });
+
+        // 5. UNLOCK GOLD CTA BUTTON
+        this.createCanvas('btn_unlock_gold', 240, 46, (ctx) => {
+            const grad = ctx.createLinearGradient(0, 0, 0, 46);
+            grad.addColorStop(0, '#f59e0b');
+            grad.addColorStop(0.6, '#d97706');
+            grad.addColorStop(1, '#b45309');
+            ctx.fillStyle = grad;
+            ctx.beginPath();
+            ctx.roundRect(2, 2, 236, 42, 12);
+            ctx.fill();
+
+            ctx.strokeStyle = '#fbbf24';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+
+            const gloss = ctx.createLinearGradient(0, 3, 0, 20);
+            gloss.addColorStop(0, 'rgba(255, 255, 255, 0.35)');
+            gloss.addColorStop(1, 'rgba(255, 255, 255, 0.0)');
+            ctx.fillStyle = gloss;
+            ctx.beginPath();
+            ctx.roundRect(4, 3, 232, 16, [10, 10, 3, 3]);
+            ctx.fill();
+        });
+
+        // 6. CARD TAB GLASS (Bottom Navigation Bar Card Base)
+        this.createCanvas('card_tab_glass', 120, 60, (ctx) => {
+            ctx.clearRect(0, 0, 120, 60);
+            
+            const grad = ctx.createLinearGradient(0, 0, 0, 60);
+            grad.addColorStop(0, 'rgba(30, 41, 59, 0.95)');
+            grad.addColorStop(0.5, 'rgba(15, 23, 42, 0.98)');
+            grad.addColorStop(1, 'rgba(9, 13, 24, 0.99)');
+            ctx.fillStyle = grad;
+            ctx.beginPath();
+            ctx.roundRect(2, 2, 116, 56, 14);
+            ctx.fill();
+
+            ctx.strokeStyle = '#334155';
+            ctx.lineWidth = 1.5;
+            ctx.stroke();
+
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
+            ctx.lineWidth = 1.2;
+            ctx.beginPath();
+            ctx.moveTo(14, 3); ctx.lineTo(106, 3);
+            ctx.stroke();
+        });
+
+        // 7. WIDGET GLASS PANEL
+        this.createCanvas('panel_glass_widget', 275, 200, (ctx) => {
+            ctx.fillStyle = 'rgba(11, 15, 25, 0.94)';
+            ctx.beginPath();
+            ctx.roundRect(2, 2, 271, 196, 14);
+            ctx.fill();
+
+            ctx.strokeStyle = '#334155';
+            ctx.lineWidth = 1.5;
+            ctx.stroke();
+
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.1)';
+            ctx.beginPath();
+            ctx.moveTo(14, 3); ctx.lineTo(261, 3);
+            ctx.stroke();
+        });
+
+        // 8. CIRCULAR FROSTED CLOSE BUTTON
+        this.createCanvas('btn_close_circle', 34, 34, (ctx) => {
+            const grad = ctx.createRadialGradient(17, 17, 2, 17, 17, 16);
+            grad.addColorStop(0, 'rgba(239, 68, 68, 0.85)');
+            grad.addColorStop(0.7, 'rgba(185, 28, 28, 0.92)');
+            grad.addColorStop(1, 'rgba(127, 29, 29, 0.98)');
+            ctx.fillStyle = grad;
+            ctx.beginPath();
+            ctx.arc(17, 17, 15, 0, Math.PI * 2);
+            ctx.fill();
+
+            ctx.strokeStyle = '#fca5a5';
+            ctx.lineWidth = 1.5;
+            ctx.stroke();
+
+            ctx.strokeStyle = '#ffffff';
+            ctx.lineWidth = 2.5;
+            ctx.lineCap = 'round';
+            ctx.beginPath();
+            ctx.moveTo(11, 11); ctx.lineTo(23, 23);
+            ctx.moveTo(23, 11); ctx.lineTo(11, 23);
             ctx.stroke();
         });
     }
