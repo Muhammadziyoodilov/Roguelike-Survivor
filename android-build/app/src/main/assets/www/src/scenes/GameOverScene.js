@@ -8,6 +8,7 @@ class GameOverScene extends Phaser.Scene {
     }
 
     init(data) {
+        this.initData = data || {};
         this.isVictory = !!data.isVictory;
         this.timeSec = data.timeSec || 0;
         this.kills = data.kills || 0;
@@ -22,6 +23,16 @@ class GameOverScene extends Phaser.Scene {
         const { width, height } = this.scale;
         const isPortrait = height > width;
         const isCompact = !isPortrait && height < 520;
+
+        // Обработка поворота экрана и ресайза
+        const onResize = () => {
+            if (this.scene.isActive('GameOverScene')) {
+                this.scene.restart(this.initData);
+            }
+        };
+        this.scale.on('resize', onResize);
+        this.events.once('shutdown', () => this.scale.off('resize', onResize));
+        this.events.once('destroy', () => this.scale.off('resize', onResize));
 
         // Закрываем любые фоновые оверлеи
         if (this.scene.isActive('UpgradeScene')) this.scene.stop('UpgradeScene');

@@ -37,44 +37,62 @@ canvas {
     display: block;
     width: 100% !important;
     height: 100% !important;
-    image-rendering: pixelated;
-    image-rendering: crisp-edges;
+    image-rendering: auto;
 }
 
-/* Мобильный экранный джойстик */
+/* Мобильный экранный джойстик (Всегда на фиксированном месте) */
 #joystick-zone {
     position: absolute;
-    bottom: 30px;
-    left: 30px;
-    width: 140px;
-    height: 140px;
-    display: none; /* Включается скриптом только на тач-устройствах */
+    bottom: 35px;
+    left: 45px;
+    width: 130px;
+    height: 130px;
+    display: none; /* Включается скриптом на тач-устройствах */
     touch-action: none;
     z-index: 100;
+    pointer-events: auto;
+    transition: left 0.25s ease, bottom 0.25s ease, transform 0.25s ease;
+}
+
+/* Портретный режим: строго по центру снизу */
+body.is-portrait #joystick-zone {
+    left: 50% !important;
+    bottom: 45px !important;
+    transform: translateX(-50%) !important;
+}
+
+/* Горизонтальный режим: строго слева снизу */
+body.is-landscape #joystick-zone {
+    left: 45px !important;
+    bottom: 35px !important;
+    transform: none !important;
 }
 
 #joystick-base {
-    width: 120px;
-    height: 120px;
-    background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, rgba(0,0,0,0.5) 100%);
-    border: 2px solid rgba(255, 255, 255, 0.4);
+    width: 130px;
+    height: 130px;
+    background: radial-gradient(circle, rgba(30, 41, 59, 0.75) 0%, rgba(11, 17, 32, 0.92) 100%);
+    border: 2.5px solid rgba(56, 189, 248, 0.65);
     border-radius: 50%;
     position: relative;
-    box-shadow: 0 0 15px rgba(0, 200, 255, 0.3);
+    box-shadow: 0 0 20px rgba(6, 182, 212, 0.4), inset 0 0 15px rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 #joystick-knob {
-    width: 50px;
-    height: 50px;
-    background: radial-gradient(circle, #00e5ff 0%, #0077b6 100%);
+    width: 52px;
+    height: 52px;
+    background: radial-gradient(circle, #38bdf8 0%, #0284c7 60%, #0369a1 100%);
     border: 2px solid #ffffff;
     border-radius: 50%;
     position: absolute;
-    top: 35px;
-    left: 35px;
-    box-shadow: 0 0 10px #00e5ff;
+    top: 39px;
+    left: 39px;
+    box-shadow: 0 0 14px rgba(56, 189, 248, 0.85);
     pointer-events: none;
-    transition: transform 0.05s ease-out;
+    transition: transform 0.04s ease-out;
 }
 
 /* Виртуальные джойстики для Co-op режима */

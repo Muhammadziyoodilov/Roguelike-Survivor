@@ -2,13 +2,17 @@
  * 10 Minutes Survivor: Hero Arena - Точка входа в игру
  */
 window.addEventListener('load', () => {
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
     const config = {
         type: Phaser.AUTO,
         parent: 'game-container',
         width: CONFIG.GAME.WIDTH,
         height: CONFIG.GAME.HEIGHT,
-        pixelArt: true,
-        roundPixels: true,
+        pixelArt: false,
+        antialias: true,
+        antialiasGL: true,
+        roundPixels: false,
+        resolution: dpr,
         scale: {
             mode: Phaser.Scale.RESIZE,
             width: '100%',

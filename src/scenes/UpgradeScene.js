@@ -83,6 +83,21 @@ class UpgradeScene extends Phaser.Scene {
         }
 
         this.renderCards(width, height);
+
+        // Обработка поворота экрана и ресайза
+        const onResize = () => {
+            if (this.scene.isActive('UpgradeScene')) {
+                this.scene.restart({
+                    player: this.player,
+                    isChest: this.isChest,
+                    forceEvolution: this.forceEvolution,
+                    sceneKey: this.callingSceneKey
+                });
+            }
+        };
+        this.scale.on('resize', onResize);
+        this.events.once('shutdown', () => this.scale.off('resize', onResize));
+        this.events.once('destroy', () => this.scale.off('resize', onResize));
     }
 
     renderCards(width, height) {

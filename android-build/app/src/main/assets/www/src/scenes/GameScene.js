@@ -44,8 +44,12 @@ class GameScene extends Phaser.Scene {
         this.weaponSystem = new WeaponSystem(this, this.player);
         this.waveSpawner = new WaveSpawner(this);
 
-        // Камера
+        // Камера с улучшенным обзором на смартфонах
         this.cameras.main.setBounds(0, 0, WORLD_WIDTH, WORLD_HEIGHT);
+        const { width, height } = this.scale;
+        const isPortrait = height > width;
+        this.cameras.main.setZoom(isPortrait ? 0.92 : 1.0);
+        this.cameras.main.setFollowOffset(0, isPortrait ? 40 : 0);
         this.cameras.main.startFollow(this.player, true, 0.08, 0.08);
 
         // Коллизии снарядов с врагами
@@ -97,6 +101,18 @@ class GameScene extends Phaser.Scene {
         // Мобильный тач-джойстик
         this.setupMobileJoystick();
 
+        // Скрытие джойстика при открытии модальных окон паузы / выбора улучшений
+        this.events.on('pause', () => {
+            const zone = document.getElementById('joystick-zone');
+            if (zone) zone.style.display = 'none';
+        });
+
+        this.events.on('resume', () => {
+            const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0 || /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
+            const zone = document.getElementById('joystick-zone');
+            if (zone && isTouch) zone.style.display = 'block';
+        });
+
         // Запуск таймера игры
         this.gameActive = true;
 
@@ -140,9 +156,22 @@ class GameScene extends Phaser.Scene {
 
     handleResize(gameSize) {
         if (!this.cameras || !this.cameras.main) return;
-        this.cameras.main.setSize(gameSize.width, gameSize.height);
+        const width = gameSize.width;
+        const height = gameSize.height;
+        this.cameras.main.setSize(width, height);
+
+        const isPortrait = height > width;
+        if (document.body) {
+            document.body.classList.toggle('is-portrait', isPortrait);
+            document.body.classList.toggle('is-landscape', !isPortrait);
+        }
+
+        // Автоматическая оптимизация обзора и угла камеры
+        this.cameras.main.setZoom(isPortrait ? 0.92 : 1.0);
+        this.cameras.main.setFollowOffset(0, isPortrait ? 40 : 0);
+
         if (typeof this.layoutHUD === 'function') {
-            this.layoutHUD(gameSize.width, gameSize.height);
+            this.layoutHUD(width, height);
         }
     }
 
@@ -1079,47 +1108,90 @@ class GameScene extends Phaser.Scene {
         const base = document.getElementById('joystick-base');
         if (!zone || !knob || !base) return;
 
-        if ('ontouchstart' in window || navigator.maxTouchPoints > 0) {
-            zone.style.display = 'block';
-            let startX = 0, startY = 0;
-            const maxRadius = 45;
-
-            zone.addEventListener('touchstart', (e) => {
-                const touch = e.touches[0];
-                // Динамическое появление джойстика под пальцем
-                startX = touch.clientX;
-                startY = touch.clientY;
-                base.style.left = `${startX}px`;
-                base.style.top = `${startY}px`;
-                base.style.transform = 'translate(-50%, -50%)';
-            }, { passive: false });
-
-            zone.addEventListener('touchmove', (e) => {
-                e.preventDefault();
-                const touch = e.touches[0];
-                const dx = touch.clientX - startX;
-                const dy = touch.clientY - startY;
-                const dist = Math.min(maxRadius, Math.sqrt(dx * dx + dy * dy));
-                const angle = Math.atan2(dy, dx);
-
-                const knobX = Math.cos(angle) * dist;
-                const knobY = Math.sin(angle) * dist;
-                knob.style.transform = `translate(${knobX}px, ${knobY}px)`;
-
-                this.joystickVector = {
-                    x: knobX / maxRadius,
-                    y: knobY / maxRadius
-                };
-            }, { passive: false });
-
-            const resetJoy = () => {
-                knob.style.transform = 'translate(0px, 0px)';
-                this.joystickVector = { x: 0, y: 0 };
-            };
-
-            zone.addEventListener('touchend', resetJoy);
-            zone.addEventListener('touchcancel', resetJoy);
+        const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0 || /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
+        
+        const isPortrait = this.scale.height > this.scale.width;
+        if (document.body) {
+            document.body.classList.toggle('is-portrait', isPortrait);
+            document.body.classList.toggle('is-landscape', !isPortrait);
         }
+
+        if (isTouch) {
+            zone.style.display = 'block';
+        }
+
+        const maxRadius = 45;
+        let activeTouchId = null;
+
+        const updateJoystickFromTouch = (touch) => {
+            const rect = base.getBoundingClientRect();
+            const centerX = rect.left + rect.width / 2;
+            const centerY = rect.top + rect.height / 2;
+            const dx = touch.clientX - centerX;
+            const dy = touch.clientY - centerY;
+            const dist = Math.min(maxRadius, Math.sqrt(dx * dx + dy * dy));
+            const angle = Math.atan2(dy, dx);
+
+            const knobX = Math.cos(angle) * dist;
+            const knobY = Math.sin(angle) * dist;
+            knob.style.transform = `translate(${knobX}px, ${knobY}px)`;
+
+            this.joystickVector = {
+                x: knobX / maxRadius,
+                y: knobY / maxRadius
+            };
+        };
+
+        const onTouchStart = (e) => {
+            e.preventDefault();
+            if (activeTouchId === null) {
+                const touch = e.changedTouches[0];
+                activeTouchId = touch.identifier;
+                updateJoystickFromTouch(touch);
+            }
+        };
+
+        const onTouchMove = (e) => {
+            e.preventDefault();
+            for (let i = 0; i < e.changedTouches.length; i++) {
+                const touch = e.changedTouches[i];
+                if (touch.identifier === activeTouchId) {
+                    updateJoystickFromTouch(touch);
+                    break;
+                }
+            }
+        };
+
+        const onTouchEnd = (e) => {
+            for (let i = 0; i < e.changedTouches.length; i++) {
+                const touch = e.changedTouches[i];
+                if (touch.identifier === activeTouchId) {
+                    activeTouchId = null;
+                    knob.style.transform = 'translate(0px, 0px)';
+                    this.joystickVector = { x: 0, y: 0 };
+                    break;
+                }
+            }
+        };
+
+        zone.addEventListener('touchstart', onTouchStart, { passive: false });
+        zone.addEventListener('touchmove', onTouchMove, { passive: false });
+        zone.addEventListener('touchend', onTouchEnd, { passive: false });
+        zone.addEventListener('touchcancel', onTouchEnd, { passive: false });
+
+        // Очистка при завершении сцены
+        const cleanupJoy = () => {
+            zone.removeEventListener('touchstart', onTouchStart);
+            zone.removeEventListener('touchmove', onTouchMove);
+            zone.removeEventListener('touchend', onTouchEnd);
+            zone.removeEventListener('touchcancel', onTouchEnd);
+            zone.style.display = 'none';
+            knob.style.transform = 'translate(0px, 0px)';
+            this.joystickVector = { x: 0, y: 0 };
+        };
+
+        this.events.once('shutdown', cleanupJoy);
+        this.events.once('destroy', cleanupJoy);
     }
 }
 

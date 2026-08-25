@@ -45,6 +45,20 @@ class PauseScene extends Phaser.Scene {
 
         // Клавиша ESC возобновляет игру
         this.input.keyboard.on('keydown-ESC', () => this.resumeGame());
+
+        // Обработка поворота экрана и ресайза
+        const onResize = () => {
+            if (this.scene.isActive('PauseScene')) {
+                this.scene.restart({
+                    player: this.player,
+                    player2: this.player2,
+                    sceneKey: this.parentSceneKey
+                });
+            }
+        };
+        this.scale.on('resize', onResize);
+        this.events.once('shutdown', () => this.scale.off('resize', onResize));
+        this.events.once('destroy', () => this.scale.off('resize', onResize));
     }
 
     createBuildPanel(x, y, lang, isPortrait, isCompact) {
