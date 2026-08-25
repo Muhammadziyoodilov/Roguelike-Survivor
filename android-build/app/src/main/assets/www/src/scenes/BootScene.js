@@ -57,11 +57,25 @@ class BootScene extends Phaser.Scene {
         this.load.image('ui_steel_chest', 'assets/sprites/ui/ui_steel_chest.png');
         this.load.image('ui_steel_scroll', 'assets/sprites/ui/ui_steel_scroll.png');
         this.load.image('ui_avatar_masked', 'assets/sprites/ui/ui_avatar_masked.png');
+        this.load.image('ui_avatar_oct', 'assets/sprites/ui/ui_avatar_oct.png');
+        this.load.image('ui_badge_oct', 'assets/sprites/ui/ui_badge_oct.png');
         this.load.image('ui_discord', 'assets/sprites/ui/ui_discord.png');
         this.load.image('ui_vk', 'assets/sprites/ui/ui_vk.png');
         this.load.image('ui_youtube', 'assets/sprites/ui/ui_youtube.png');
         this.load.image('ui_season_crest', 'assets/sprites/ui/ui_season_crest.png');
         this.load.image('ui_news_banner', 'assets/sprites/ui/ui_news_banner.png');
+
+        // --- 4. 8-УГОЛЬНЫЕ КНОПКИ И ПАНЕЛИ С НЕОНОВЫМ СВЕЧЕНИЕМ ---
+        this.load.image('btn_play_bg', 'assets/sprites/ui/btn_play_bg.png');
+        this.load.image('btn_coop_bg', 'assets/sprites/ui/btn_coop_bg.png');
+        this.load.image('btn_glass_sub', 'assets/sprites/ui/btn_glass_sub.png');
+        this.load.image('card_shortcut_bg', 'assets/sprites/ui/card_shortcut_bg.png');
+        this.load.image('panel_chamfer_quest', 'assets/sprites/ui/panel_chamfer_quest.png');
+        this.load.image('panel_chamfer_season', 'assets/sprites/ui/panel_chamfer_season.png');
+        this.load.image('panel_chamfer_news', 'assets/sprites/ui/panel_chamfer_news.png');
+        this.load.image('btn_all_quests', 'assets/sprites/ui/btn_all_quests.png');
+        this.load.image('btn_battle_pass', 'assets/sprites/ui/btn_battle_pass.png');
+        this.load.image('ui_currency_pill', 'assets/sprites/ui/ui_currency_pill.png');
     }
 
     async create() {
