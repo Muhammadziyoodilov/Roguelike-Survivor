@@ -92,6 +92,21 @@ class SoundEngine {
         else this.playBattleBGM();
     }
 
+    setVolume(volume = 1.0) {
+        if (window.game && window.game.sound) {
+            window.game.sound.volume = volume;
+        }
+    }
+
+    play(key, config = {}) {
+        if (this.isMuted) return;
+        if (typeof this[key] === 'function') {
+            this[key]();
+        } else {
+            this.playSoundFile(key, typeof config === 'number' ? config : (config.volume || 0.8), config);
+        }
+    }
+
     // --- SFX THROTTLING & PLAYBACK ---
 
     canPlaySFX(key) {

@@ -3,12 +3,18 @@
  */
 class Player extends Phaser.GameObjects.Sprite {
     constructor(scene, x, y, heroId = 'knight', playerIndex = 1) {
-        const heroConfig = CONFIG.HEROES[heroId] || CONFIG.HEROES.knight;
-        super(scene, x, y, `hero_${heroId}`);
+        let normalizedHeroId = heroId;
+        if (normalizedHeroId === 'ranger') normalizedHeroId = 'archer';
+        if (normalizedHeroId === 'pyromancer') normalizedHeroId = 'mage';
+        if (!CONFIG.HEROES[normalizedHeroId]) normalizedHeroId = 'knight';
+
+        const heroConfig = CONFIG.HEROES[normalizedHeroId];
+        const textureKey = scene.textures.exists(`hero_${normalizedHeroId}`) ? `hero_${normalizedHeroId}` : 'hero_knight';
+        super(scene, x, y, textureKey);
         scene.add.existing(this);
         scene.physics.add.existing(this);
         
-        this.heroId = heroId;
+        this.heroId = normalizedHeroId;
         this.playerIndex = playerIndex;
         this.setDisplaySize(44, 44);
         this.body.setSize(24, 24);

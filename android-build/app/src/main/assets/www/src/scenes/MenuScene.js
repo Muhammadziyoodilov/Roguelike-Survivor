@@ -207,17 +207,28 @@ class MenuScene extends Phaser.Scene {
                 fontFamily: CONFIG.FONTS.UI, fontSize: '13px', fontStyle: 'bold', color: '#e9d5ff'
             }).setOrigin(0, 0.5).setDepth(11);
         } else {
-            // ПОРТРЕТНЫЙ РЕЖИМ
-            const goldX = rightStartX - 60;
-            this.add.image(goldX, headerY, 'ui_currency_pill').setDisplaySize(115, 34).setInteractive({ useHandCursor: true }).setDepth(10).on('pointerdown', () => this.openShopModal());
-            this.add.image(goldX - 40, headerY, 'ui_coin').setDisplaySize(18, 18).setDepth(11);
-            this.goldText = this.add.text(goldX - 20, headerY, `${window.SaveManager.data.gold || '12 540'}`, {
-                fontFamily: CONFIG.FONTS.UI, fontSize: '14px', fontStyle: 'bold', color: '#ffd166'
+            // ПОРТРЕТНЫЙ РЕЖИМ (ЗОЛОТО + КРИСТАЛЛЫ)
+            const pillW = Math.min(105, (width - 120) / 2);
+            const gemsX = width - pillW / 2 - 12;
+            const goldX = gemsX - pillW - 8;
+
+            // Золото
+            this.add.image(goldX, headerY, 'ui_currency_pill').setDisplaySize(pillW, 32).setInteractive({ useHandCursor: true }).setDepth(10).on('pointerdown', () => this.openShopModal());
+            this.add.image(goldX - pillW / 2 + 14, headerY, 'ui_coin').setDisplaySize(16, 16).setDepth(11);
+            this.goldText = this.add.text(goldX - pillW / 2 + 28, headerY, `${window.SaveManager.data.gold || '12 540'}`, {
+                fontFamily: CONFIG.FONTS.MONO, fontSize: '11px', fontStyle: 'bold', color: '#ffd166'
+            }).setOrigin(0, 0.5).setDepth(11);
+
+            // Кристаллы
+            this.add.image(gemsX, headerY, 'ui_currency_pill').setDisplaySize(pillW, 32).setInteractive({ useHandCursor: true }).setDepth(10).on('pointerdown', () => this.openShopModal());
+            this.add.image(gemsX - pillW / 2 + 14, headerY, 'ui_gem').setDisplaySize(16, 16).setDepth(11);
+            this.add.text(gemsX - pillW / 2 + 28, headerY, `${window.SaveManager.data.gems || 2860}`, {
+                fontFamily: CONFIG.FONTS.MONO, fontSize: '11px', fontStyle: 'bold', color: '#f5d0fe'
             }).setOrigin(0, 0.5).setDepth(11);
         }
     }
 
-        createLandscapeLayout(width, height, lang) {
+    createLandscapeLayout(width, height, lang) {
         const isCompact = height < 520;
         const leftColX = isCompact ? Math.min(170, width * 0.20) : Math.min(235, width * 0.18);
         const leftTopY = isCompact ? 48 : 105;
@@ -647,37 +658,24 @@ class MenuScene extends Phaser.Scene {
         });
 
         // 2. CO-OP CONTAINER
-        const coopY = playY + 72;
+        const coopY = playY + (isCompact ? 68 : 74);
         const coopContainer = this.add.container(centerX, coopY).setDepth(10);
-        const coopBg = this.add.image(0, 0, 'btn_coop_bg').setDisplaySize(btnW, 56);
-        const coopIcon = this.add.image(-btnW / 2 + 38, 0, 'ui_coop').setDisplaySize(32, 32);
-        const coopTitle = this.add.text(-btnW / 2 + 65, -9, 'CO-OP', {
-            fontFamily: CONFIG.FONTS.TITLE, fontSize: '20px', fontStyle: 'bold', color: '#ffffff', letterSpacing: 2
+        const coopBg = this.add.image(0, 0, 'btn_coop_bg').setDisplaySize(btnW, 54);
+        const coopIcon = this.add.image(-btnW / 2 + 36, 0, 'ui_coop').setDisplaySize(30, 30);
+        const coopTitle = this.add.text(-btnW / 2 + 62, -9, 'CO-OP', {
+            fontFamily: CONFIG.FONTS.TITLE, fontSize: '18px', fontStyle: 'bold', color: '#ffffff', letterSpacing: 2
         }).setOrigin(0, 0.5);
-        const coopSub = this.add.text(-btnW / 2 + 65, 11, 'РЕЖИМ НА ДВОИХ', {
-            fontFamily: CONFIG.FONTS.UI, fontSize: '11px', fontStyle: '700', color: '#bae6fd', letterSpacing: 1
+        const coopSub = this.add.text(-btnW / 2 + 62, 10, 'РЕЖИМ НА ДВОИХ', {
+            fontFamily: CONFIG.FONTS.UI, fontSize: '10.5px', fontStyle: '700', color: '#bae6fd', letterSpacing: 1
         }).setOrigin(0, 0.5);
 
         coopContainer.add([coopBg, coopIcon, coopTitle, coopSub]);
-        coopContainer.setSize(btnW, 56).setInteractive({ useHandCursor: true });
+        coopContainer.setSize(btnW, 54).setInteractive({ useHandCursor: true });
 
         coopContainer.on('pointerdown', () => {
             if (window.MapSwiperModal && window.MapSwiperModal.isOpen()) return;
             if (this.currentModal) return;
             this.openCoopModal();
-        });
-
-        // 3. MAP SELECT BUTTON
-        const mapY = coopY + 60;
-        const mapBtn = this.add.image(centerX, mapY, 'btn_glass_sub').setDisplaySize(btnW, 44).setInteractive({ useHandCursor: true }).setDepth(10);
-        this.add.image(centerX - 95, mapY, 'ui_trophy').setScale(0.8).setDepth(11);
-        this.add.text(centerX - 65, mapY, 'ВЫБОР КАРТЫ (АРЕНЫ)', {
-            fontFamily: CONFIG.FONTS.UI, fontSize: '13px', fontStyle: '800', color: '#38bdf8', letterSpacing: 1
-        }).setOrigin(0, 0.5).setDepth(11);
-        mapBtn.on('pointerdown', () => {
-            if (window.MapSwiperModal && window.MapSwiperModal.isOpen()) return;
-            if (this.currentModal) return;
-            this.openMapSelectModal();
         });
     }
 
