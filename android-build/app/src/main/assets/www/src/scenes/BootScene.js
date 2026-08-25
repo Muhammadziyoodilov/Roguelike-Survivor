@@ -94,12 +94,27 @@ class BootScene extends Phaser.Scene {
             TextureGenerator.makeTextureTransparent(this, item.key, item.isCircle);
         });
 
-        // 3. Инициализация звука и сохранений
+        // 3. Установка NEAREST фильтрации для пиксель-арт спрайтов (чтобы не было размытия)
+        this.textures.each((texture) => {
+            if (texture && texture.key) {
+                const isVectorUI = texture.key.startsWith('btn_') ||
+                                   texture.key.startsWith('panel_') ||
+                                   texture.key.startsWith('card_') ||
+                                   texture.key === 'menu_bg' ||
+                                   texture.key === 'ui_podium' ||
+                                   texture.key === 'ui_news_banner';
+                if (!isVectorUI) {
+                    texture.setFilter(Phaser.Textures.FilterMode.NEAREST);
+                }
+            }
+        });
+
+        // 4. Инициализация звука и сохранений
         window.Sound.init();
         await window.YandexSDK.init();
         await window.SaveManager.init();
 
-        // 4. Ожидание полной готовности Google Fonts перед рендерингом меню
+        // 5. Ожидание полной готовности Google Fonts перед рендерингом меню
         if (document.fonts && document.fonts.ready) {
             await document.fonts.ready;
         }

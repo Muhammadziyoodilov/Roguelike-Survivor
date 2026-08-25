@@ -804,26 +804,27 @@ class MenuScene extends Phaser.Scene {
 
             // Стартовое оружие (Бейдж)
             const wepCfg = CONFIG.WEAPONS[currentHeroCfg.weapon];
-            const wepBoxW = isPortrait ? (detailW - 24) : (isCompact ? (detailW - 135) : 330);
-            const wepBoxY = isPortrait ? (detailY - detailH / 2 + 130) : (infoTopY + (isCompact ? 56 : 72));
+            const wepBoxW = isPortrait ? (detailW - 24) : (isCompact ? (detailW - 135) : 340);
+            const wepBoxH = isCompact ? 44 : 52;
+            const wepBoxY = isPortrait ? (detailY - detailH / 2 + 136) : (infoTopY + (isCompact ? 60 : 76));
             const wepBoxCenterX = isPortrait ? detailX : (infoX + wepBoxW / 2);
 
             if (wepCfg) {
-                const wepBox = this.add.rectangle(wepBoxCenterX, wepBoxY, wepBoxW, isCompact ? 28 : 34, 0x1e293b, 0.9).setDepth(1003);
+                const wepBox = this.add.rectangle(wepBoxCenterX, wepBoxY, wepBoxW, wepBoxH, 0x1e293b, 0.9).setDepth(1003);
                 wepBox.setStrokeStyle(1, 0x334155);
                 cardGroup.add(wepBox);
 
-                const wepIcon = this.add.image(wepBoxCenterX - wepBoxW / 2 + 16, wepBoxY, wepCfg.icon).setScale(isCompact ? 0.45 : 0.55).setDepth(1004);
+                const wepIcon = this.add.image(wepBoxCenterX - wepBoxW / 2 + 20, wepBoxY, wepCfg.icon).setScale(isCompact ? 0.45 : 0.55).setDepth(1004);
                 cardGroup.add(wepIcon);
 
-                const wepLabel = this.add.text(wepBoxCenterX - wepBoxW / 2 + 36, wepBoxY - (isCompact ? 6 : 8), `ОРУЖИЕ: ${wepCfg.name[lang].toUpperCase()}`, {
-                    fontFamily: CONFIG.FONTS.UI, fontSize: isCompact ? '9px' : '11px', fontStyle: 'bold', color: '#38bdf8'
-                }).setDepth(1004);
+                const wepLabel = this.add.text(wepBoxCenterX - wepBoxW / 2 + 42, wepBoxY - (isCompact ? 10 : 12), `ОРУЖИЕ: ${wepCfg.name[lang].toUpperCase()}`, {
+                    fontFamily: CONFIG.FONTS.UI, fontSize: isCompact ? '10px' : '11px', fontStyle: 'bold', color: '#38bdf8'
+                }).setOrigin(0, 0.5).setDepth(1004);
                 cardGroup.add(wepLabel);
 
-                const wepDesc = this.add.text(wepBoxCenterX - wepBoxW / 2 + 36, wepBoxY + (isCompact ? 4 : 5), wepCfg.desc[lang], {
-                    fontFamily: CONFIG.FONTS.BODY, fontSize: isCompact ? '8px' : '10px', color: '#cbd5e1', wordWrap: { width: wepBoxW - 45 }
-                }).setDepth(1004);
+                const wepDesc = this.add.text(wepBoxCenterX - wepBoxW / 2 + 42, wepBoxY + (isCompact ? 8 : 10), wepCfg.desc[lang], {
+                    fontFamily: CONFIG.FONTS.BODY, fontSize: isCompact ? '8.5px' : '10px', color: '#cbd5e1', wordWrap: { width: wepBoxW - 50 }
+                }).setOrigin(0, 0.5).setDepth(1004);
                 cardGroup.add(wepDesc);
             }
 
@@ -837,68 +838,45 @@ class MenuScene extends Phaser.Scene {
             ];
 
             const barStartX = isPortrait ? (detailX - detailW / 2 + 14) : infoX;
-            const barStartY = isPortrait ? (detailY - detailH / 2 + 160) : (wepBoxY + (isCompact ? 22 : 30));
-            const barW = isPortrait ? (detailW - 130) : (isCompact ? (detailW - 250) : 240);
-            const barSpacing = isCompact ? 18 : (isPortrait ? 20 : 24);
+            const barStartY = isPortrait ? (wepBoxY + (isCompact ? 36 : 44)) : (wepBoxY + (isCompact ? 32 : 40));
+            const barSpacing = isCompact ? 18 : (isPortrait ? 22 : 24);
+            const trackX = barStartX + (isCompact ? 95 : 102);
+            const trackW = isPortrait ? Math.min(130, detailW - 190) : (isCompact ? 115 : 155);
 
             statsData.forEach((st, sIdx) => {
                 const sy = barStartY + (sIdx * barSpacing);
 
-                const stIcon = this.add.image(barStartX + 6, sy + 6, st.icon).setScale(isCompact ? 0.7 : 0.85).setDepth(1004);
+                const stIcon = this.add.image(barStartX + 8, sy, st.icon).setScale(isCompact ? 0.7 : 0.85).setOrigin(0.5).setDepth(1004);
                 cardGroup.add(stIcon);
 
-                const stLabel = this.add.text(barStartX + 18, sy, st.label, {
-                    fontFamily: CONFIG.FONTS.UI, fontSize: isCompact ? '9px' : '11px', fontStyle: 'bold', color: '#94a3b8'
-                }).setDepth(1004);
+                const stLabel = this.add.text(barStartX + 22, sy, st.label, {
+                    fontFamily: CONFIG.FONTS.UI, fontSize: isCompact ? '9.5px' : '11px', fontStyle: 'bold', color: '#94a3b8'
+                }).setOrigin(0, 0.5).setDepth(1004);
                 cardGroup.add(stLabel);
 
-                const trackX = barStartX + 75;
-                const trackW = Math.max(30, barW);
-                const track = this.add.rectangle(trackX + trackW / 2, sy + 5, trackW, isCompact ? 4 : 6, 0x1e293b).setDepth(1003);
+                const track = this.add.rectangle(trackX, sy, trackW, isCompact ? 5 : 7, 0x1e293b).setOrigin(0, 0.5).setDepth(1003);
                 track.setStrokeStyle(1, 0x334155);
                 cardGroup.add(track);
 
                 const fillW = Math.max(3, trackW * st.ratio);
-                const fill = this.add.rectangle(trackX, sy + 5, fillW, isCompact ? 4 : 6, st.color).setOrigin(0, 0.5).setDepth(1004);
+                const fill = this.add.rectangle(trackX, sy, fillW, isCompact ? 5 : 7, st.color).setOrigin(0, 0.5).setDepth(1004);
                 cardGroup.add(fill);
 
-                const stVal = this.add.text(trackX + trackW + 8, sy, st.val, {
-                    fontFamily: CONFIG.FONTS.MONO, fontSize: isCompact ? '10px' : '11px', fontStyle: 'bold', color: '#ffffff'
-                }).setOrigin(0, 0).setDepth(1004);
+                const stVal = this.add.text(trackX + trackW + 10, sy, st.val, {
+                    fontFamily: CONFIG.FONTS.MONO, fontSize: isCompact ? '10px' : '11.5px', fontStyle: 'bold', color: '#ffffff'
+                }).setOrigin(0, 0.5).setDepth(1004);
                 cardGroup.add(stVal);
             });
 
-            // Индикатор выбранной карты
-            const currentMapId = window.SaveManager.data.selectedMap || 'dark_castle';
-            const currentMapCfg = (CONFIG.MAPS && CONFIG.MAPS[currentMapId]) ? CONFIG.MAPS[currentMapId] : CONFIG.MAPS.dark_castle;
+            // Кнопка В БОЙ / РАЗБЛОКИРОВАТЬ (Приподнята повыше, арена-бар убран)
             const isUnlocked = window.SaveManager.isHeroUnlocked(currentHeroId);
-            const actionBtnY = detailY + detailH / 2 - (isCompact ? 22 : 28);
-            const mapBarY = actionBtnY - (isCompact ? 28 : 34);
-            const barFullW = Math.min(detailW - 24, 360);
-
-            const mapBar = this.add.rectangle(detailX, mapBarY, barFullW, isCompact ? 22 : 26, 0x1e293b, 0.95).setInteractive({ useHandCursor: true }).setDepth(1003);
-            mapBar.setStrokeStyle(1, 0x0ea5e9);
-            cardGroup.add(mapBar);
-
-            const mapIcon = this.add.image(detailX - barFullW / 2 + 14, mapBarY, 'ui_trophy').setScale(isCompact ? 0.5 : 0.6).setDepth(1004);
-            cardGroup.add(mapIcon);
-
-            const mapNameText = this.add.text(detailX - barFullW / 2 + 26, mapBarY, `АРЕНА: ${currentMapCfg.name[lang].toUpperCase()}`, {
-                fontFamily: CONFIG.FONTS.UI, fontSize: isCompact ? '9px' : '11px', fontStyle: 'bold', color: '#38bdf8'
-            }).setOrigin(0, 0.5).setDepth(1004);
-            cardGroup.add(mapNameText);
-
-            const changeMapText = this.add.text(detailX + barFullW / 2 - 8, mapBarY, 'СМЕНИТЬ ›', {
-                fontFamily: CONFIG.FONTS.UI, fontSize: isCompact ? '9px' : '11px', fontStyle: 'bold', color: '#ffd166'
-            }).setOrigin(1, 0.5).setDepth(1004);
-            cardGroup.add(changeMapText);
-
-            mapBar.on('pointerdown', () => this.openMapSelectModal());
+            const actionBtnY = isPortrait ? (detailY + detailH / 2 - 32) : (detailY + detailH / 2 - (isCompact ? 24 : 32));
+            const btnFullW = Math.min(detailW - 24, 280);
 
             if (isUnlocked) {
-                const battleBtn = this.add.image(detailX, actionBtnY, 'btn_battle_gold_epic').setDisplaySize(Math.min(barFullW, 260), isCompact ? 34 : 44).setInteractive({ useHandCursor: true }).setDepth(1003);
+                const battleBtn = this.add.image(detailX, actionBtnY, 'btn_battle_gold_epic').setDisplaySize(btnFullW, isCompact ? 36 : 46).setInteractive({ useHandCursor: true }).setDepth(1003);
                 const battleTxt = this.add.text(detailX, actionBtnY, 'В БОЙ!', {
-                    fontFamily: CONFIG.FONTS.TITLE, fontSize: isCompact ? '16px' : '20px', fontStyle: 'bold', color: '#ffffff', stroke: '#000000', strokeThickness: 3, letterSpacing: 2
+                    fontFamily: CONFIG.FONTS.TITLE, fontSize: isCompact ? '17px' : '21px', fontStyle: 'bold', color: '#ffffff', stroke: '#000000', strokeThickness: 3, letterSpacing: 2
                 }).setOrigin(0.5).setDepth(1004);
 
                 battleBtn.on('pointerdown', () => {
@@ -911,7 +889,7 @@ class MenuScene extends Phaser.Scene {
                 cardGroup.add(battleBtn);
                 cardGroup.add(battleTxt);
             } else {
-                const buyBtn = this.add.image(detailX, actionBtnY, 'btn_unlock_gold').setDisplaySize(Math.min(barFullW, 260), isCompact ? 34 : 44).setInteractive({ useHandCursor: true }).setDepth(1003);
+                const buyBtn = this.add.image(detailX, actionBtnY, 'btn_unlock_gold').setDisplaySize(btnFullW, isCompact ? 36 : 46).setInteractive({ useHandCursor: true }).setDepth(1003);
                 const buyTxt = this.add.text(detailX, actionBtnY, `РАЗБЛОКИРОВАТЬ (${currentHeroCfg.price} ЗОЛ.)`, {
                     fontFamily: CONFIG.FONTS.TITLE, fontSize: isCompact ? '12px' : '14px', fontStyle: 'bold', color: '#ffffff', stroke: '#000000', strokeThickness: 3
                 }).setOrigin(0.5).setDepth(1004);

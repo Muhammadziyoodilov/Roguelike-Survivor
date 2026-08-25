@@ -49,7 +49,10 @@ class TextureGenerator {
         const ctx = canvas.getContext('2d');
         ctx.imageSmoothingEnabled = false;
         drawFn(ctx, width, height);
-        this.scene.textures.addCanvas(key, canvas);
+        const texture = this.scene.textures.addCanvas(key, canvas);
+        if (texture) {
+            texture.setFilter(Phaser.Textures.FilterMode.NEAREST);
+        }
     }
 
     // --- TILES & ARENA ДЛЯ 4 КАРТ ---
